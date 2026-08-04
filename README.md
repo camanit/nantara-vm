@@ -37,6 +37,22 @@ Terinspirasi dari [Firecracker (AWS)](https://firecracker-microvm.github.io/), [
 
 ---
 
+## 🌐 Dual Mode Execution (Cloud & Local)
+
+NantaraVM dirancang untuk bekerja secara **Dual-Mode** yang sangat fleksibel:
+
+1. **☁️ Mode Cloud Demo (`https://nantara.cloud`)**:
+   Dashboard kontrol web terpusat untuk uji coba instan di server cloud.
+2. **💻 Mode Local Edge (Di Laptop / PC Lokal Anda)**:
+   Jalankan Engine NantaraVM di laptop Windows/Linux Anda sendiri untuk memutar OS **Windows 32-bit / 64-bit, Kali Linux, atau Ubuntu** dengan 100% kecepatan hardware lokal Anda tanpa membebankan server cloud!
+   ```powershell
+   # Di Windows (PowerShell):
+   cargo build --release --bin nantara-engine
+   .\target\release\nantara-engine.exe
+   ```
+
+---
+
 ## 💻 1-Click Installation Guide
 
 ### 🪟 Di Windows (1-Click Double-Click Installer)
