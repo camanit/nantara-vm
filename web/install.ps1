@@ -29,6 +29,22 @@ If ($UserPath -notlike "*$InstallDir*") {
     [Environment]::SetEnvironmentVariable("PATH", "$UserPath;$InstallDir", "User")
 }
 
+# Download & Set Custom NantaraVM Icon
+$IcoPath = "$InstallDir\icon.ico"
+$IcoUrl = "https://raw.githubusercontent.com/camanit/nantara-vm/main/web/assets/icon.ico"
+$LocalIco = "$PSScriptRoot\assets\icon.ico"
+
+if (Test-Path $LocalIco) {
+    Copy-Item $LocalIco $IcoPath -Force
+} else {
+    try {
+        Invoke-WebRequest -Uri $IcoUrl -OutFile $IcoPath -UseBasicParsing
+    } catch {
+        # Fallback to binary path
+        $IcoPath = $TargetPath
+    }
+}
+
 # Create Desktop Shortcut for NantaraVM Workstation
 $DesktopPath = [Environment]::GetFolderPath("Desktop")
 $ShortcutPath = Join-Path $DesktopPath "NantaraVM Workstation.url"
@@ -36,11 +52,11 @@ $ShortcutLines = @(
     "[InternetShortcut]",
     "URL=https://nantara.cloud/dashboard.html",
     "IconIndex=0",
-    "IconFile=$TargetPath"
+    "IconFile=$IcoPath"
 )
 $ShortcutLines | Out-File -FilePath $ShortcutPath -Encoding ascii -Force
 
-Write-Host "[OK] Shortcut NantaraVM Workstation berhasil dibuat di Desktop Anda!" -ForegroundColor Green
+Write-Host "[OK] Shortcut NantaraVM Workstation berhasil dibuat dengan Ikon Kustom di Desktop Anda!" -ForegroundColor Green
 
 Write-Host "`n====================================================" -ForegroundColor Cyan
 Write-Host " NantaraVM Windows Installation Completed!" -ForegroundColor Green
