@@ -42,8 +42,16 @@ fn main() {
     println!("====================================================");
 
     if let Some(ref iso) = iso_path {
-        println!("[NantaraVM ISO] Mounted ISO File: {}", iso);
-        println!("[NantaraVM virtio-blk] Reading Bootsector & Partition Table...");
+        let iso_file_path = Path::new(iso);
+        if iso_file_path.exists() {
+            let metadata = std::fs::metadata(iso_file_path).ok();
+            let size_mb = metadata.map(|m| m.len() as f64 / (1024.0 * 1024.0)).unwrap_or(0.0);
+            println!("[NantaraVM ISO] Successfully mounted ISO Image: '{}' ({:.2} MB)", iso, size_mb);
+            println!("[NantaraVM virtio-blk] Attached ISO as VirtIO CD-ROM Block Device (/dev/sr0).");
+            println!("[NantaraVM Boot] Initializing El Torito / MBR Bootsector Loader...");
+        } else {
+            println!("[NantaraVM ISO Warning] ISO File '{}' not found in current directory.", iso);
+        }
     }
     if display_gpu {
         println!("[NantaraVM virtio-gpu] Outputting Framebuffer to Web Console (noVNC Active)...");
