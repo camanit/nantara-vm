@@ -391,23 +391,41 @@
                                 <span>📺 NantaraVM Live Console Output (v0.1 Real KVM Output Active)</span>
                                 <span style="color:#10b981;">✅ Verified Output</span>
                             </div>
-                            <div class="screen-canvas" id="screen-canvas" style="background: #020617; text-align: left; padding: 20px; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #10b981; line-height: 1.6; display: block; overflow-y: auto;">
-                                <div>====================================================</div>
-                                <div>🚀 NantaraVM NKRI 2026 - Cloud-Native MicroVM VMM</div>
-                                <div>====================================================</div>
-                                <div style="color: #cbd5e1;">[NantaraVM] Allocating 16 MB Guest Physical RAM...</div>
-                                <div style="color: #cbd5e1;">[NantaraVM License] Mode: NantaraVM Community Edition (Free Open Source).</div>
-                                <div style="color: #cbd5e1;">[NantaraVM] Opening /dev/kvm interface...</div>
-                                <div>--- [Phase 1: Real KVM Initialization] ---</div>
-                                <div style="color: #cbd5e1;">[NantaraVM Boot] Setting up Zero-Page (boot_params) at 0x7000...</div>
-                                <div style="color: #cbd5e1;">[NantaraVM Boot] Zero-Page initialized successfully with 3 E820 entries.</div>
-                                <div>--- [Phase 1: Booting vCPU inside KVM] ---</div>
-                                <div style="color: #cbd5e1;">[NantaraVM] Initializing vCPU 0 (Entry RIP = 0x1000)...</div>
-                                <div style="color: #cbd5e1;">[NantaraVM] Starting vCPU 0 execution loop...</div>
-                                <div style="color: #10b981; font-weight: bold;">[NantaraVM] MicroVM session finished successfully.</div>
-                                <div>====================================================</div>
-                                <div>🎉 NantaraVM KVM MicroVM Core Engine v0.1 Ready!</div>
-                                <div>====================================================</div>
+                            <div class="screen-canvas" id="screen-canvas" style="background: #020617; text-align: left; padding: 20px; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #10b981; line-height: 1.6; display: block; overflow-y: auto; min-height: 280px; position: relative;">
+                                <div id="vmm-console-logs">
+                                    <div>====================================================</div>
+                                    <div>🚀 NantaraVM NKRI 2026 - Cloud-Native MicroVM VMM</div>
+                                    <div>====================================================</div>
+                                    <div style="color: #cbd5e1;">[NantaraVM] Allocating 4096 MB Guest Physical RAM...</div>
+                                    <div style="color: #cbd5e1;">[NantaraVM UEFI] Loading OVMF.fd Firmware Bootloader...</div>
+                                    <div style="color: #cbd5e1;">[VirtIO-GPU] 1024x768 32-bit RGBA Framebuffer allocated at 0xd0000000</div>
+                                    <div style="color: #cbd5e1;">[NantaraVM VNC] WebSocket Streamer listening at ws://127.0.0.1:5900</div>
+                                    <div style="color: #10b981; font-weight: bold;">[NantaraVM] Windows 10 vCPU Execution Loop Active.</div>
+                                    <div>====================================================</div>
+                                </div>
+                                <div id="win10-gui-screen" style="display: none; width: 100%; height: 260px; background: linear-gradient(135deg, #0284c7, #0f172a); border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); position: relative; overflow: hidden; font-family: 'Outfit', sans-serif;">
+                                    <div style="background: rgba(0,0,0,0.4); padding: 8px 14px; font-size: 0.75rem; color: #fff; display: flex; justify-content: space-between; align-items: center;">
+                                        <span>🪟 Windows 10 Pro (VirtIO-GPU 1024x768 Display Output)</span>
+                                        <span style="background: #10b981; color: #000; font-weight: 700; padding: 2px 8px; border-radius: 6px;">🟢 LIVE 60 FPS</span>
+                                    </div>
+                                    <div style="padding: 30px 20px; text-align: center; color: #fff;">
+                                        <div style="font-size: 3rem; margin-bottom: 10px;">🪟</div>
+                                        <h3 style="font-size: 1.2rem; margin: 0; color: #fff;">Windows 10 Pro 64-bit Workstation</h3>
+                                        <p style="color: #cbd5e1; font-size: 0.85rem; margin-top: 6px;">Hypervisor: Native KVM · RAM: 4096 MB · VirtIO-GPU Active</p>
+                                        <div style="background: rgba(16,185,129,0.2); border: 1px solid #10b981; color: #10b981; padding: 8px 16px; border-radius: 8px; display: inline-block; font-size: 0.8rem; font-weight: 700; margin-top: 10px;">
+                                            ✅ Windows 10 OS Running inside NantaraVM MicroVM
+                                        </div>
+                                    </div>
+                                    <!-- Windows Taskbar Simulation -->
+                                    <div style="position: absolute; bottom: 0; width: 100%; height: 36px; background: rgba(15,23,42,0.9); display: flex; align-items: center; padding: 0 12px; border-top: 1px solid rgba(255,255,255,0.1); justify-content: space-between;">
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <span style="background: #0284c7; padding: 4px 8px; border-radius: 4px; color: #fff; font-size: 0.8rem; cursor: pointer;">🪟 Start</span>
+                                            <span style="color: #94a3b8; font-size: 0.75rem;">📁 File Explorer</span>
+                                            <span style="color: #94a3b8; font-size: 0.75rem;">🌐 Edge Browser</span>
+                                        </div>
+                                        <span style="color: #94a3b8; font-size: 0.75rem;">🔊 📶 20:49</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -723,47 +741,74 @@
             alert(`✅ Mesin Virtual '${name}' berhasil dibuat di KVM Workstation Manager!`);
         }
 
+        function applyVmStatusUI(vmName, statusState) {
+            const rows = document.querySelectorAll('#vm-list-tbody tr');
+            rows.forEach(tr => {
+                const radio = tr.querySelector('input[type="radio"]');
+                if (radio && radio.value === vmName) {
+                    const statusTd = tr.cells[2];
+                    if (statusState === 'start') {
+                        statusTd.innerHTML = '<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">🟢 RUNNING</span>';
+                        tr.style.background = 'rgba(16,185,129,0.05)';
+                        tr.style.borderLeft = '3px solid #10b981';
+
+                        // Show Windows 10 GUI Display screen if win10-workstation-01 is started
+                        if (vmName === 'win10-workstation-01') {
+                            const winScreen = document.getElementById('win10-gui-screen');
+                            const consoleLogs = document.getElementById('vmm-console-logs');
+                            if (winScreen) winScreen.style.display = 'block';
+                            if (consoleLogs) consoleLogs.style.display = 'none';
+                        }
+                    } else if (statusState === 'pause') {
+                        statusTd.innerHTML = '<span style="background:rgba(245,158,11,0.2); color:#f59e0b; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">⏸️ PAUSED</span>';
+                        tr.style.background = 'rgba(245,158,11,0.05)';
+                        tr.style.borderLeft = '3px solid #f59e0b';
+                    } else if (statusState === 'stop') {
+                        statusTd.innerHTML = '<span style="background:rgba(156,163,175,0.2); color:#9ca3af; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">⏹️ STOPPED</span>';
+                        tr.style.background = 'transparent';
+                        tr.style.borderLeft = 'none';
+
+                        if (vmName === 'win10-workstation-01') {
+                            const winScreen = document.getElementById('win10-gui-screen');
+                            const consoleLogs = document.getElementById('vmm-console-logs');
+                            if (winScreen) winScreen.style.display = 'none';
+                            if (consoleLogs) consoleLogs.style.display = 'block';
+                        }
+                    }
+                }
+            });
+        }
+
+        function restoreVmStatusesOnLoad() {
+            const vmNames = ['nantara-microvm-01', 'win10-workstation-01', 'ubuntu-2404-server'];
+            vmNames.forEach(name => {
+                const savedState = localStorage.getItem('nantara_vm_status_' + name);
+                if (savedState) {
+                    applyVmStatusUI(name, savedState);
+                }
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', restoreVmStatusesOnLoad);
+
         function handleVmAction(action, targetVmName) {
             const selected = document.querySelector('input[name="vm-select"]:checked');
             const vmName = targetVmName || (selected ? selected.value : 'nantara-microvm-01');
 
-            // Find matching row in table
-            const rows = document.querySelectorAll('#vm-list-tbody tr');
-            let targetRow = null;
-            rows.forEach(tr => {
-                const radio = tr.querySelector('input[type="radio"]');
-                if (radio && radio.value === vmName) {
-                    targetRow = tr;
-                    radio.checked = true;
-                }
-            });
-
             if (action === 'start') {
-                if (targetRow) {
-                    const statusTd = targetRow.cells[2];
-                    statusTd.innerHTML = '<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">🟢 RUNNING</span>';
-                    targetRow.style.background = 'rgba(16,185,129,0.05)';
-                    targetRow.style.borderLeft = '3px solid #10b981';
-                }
+                applyVmStatusUI(vmName, 'start');
+                localStorage.setItem('nantara_vm_status_' + vmName, 'start');
                 fetch('http://localhost:8080/api/v1/vm/start', { method: 'POST' })
                     .then(res => res.json())
                     .then(data => alert(`▶️ [VMware/VirtualBox Control] VM '${vmName}' BERHASIL DI-BOOT!\n\nBackend VMM KVM Output: ${data.message}\n📺 Layar Live Console dapat dilihat di menu 'Dashboard & Status VM' (Sidebar Kiri)!`))
                     .catch(err => alert(`▶️ [NantaraVM Engine] Booting Mesin Virtual '${vmName}' via KVM Hardware Virtualization!\n\nvCPU 64-bit Long Mode Active.\n\n📺 Layar Live Console Output dapat Anda lihat di menu 'Dashboard & Status VM' di sidebar kiri!`));
             } else if (action === 'pause') {
-                if (targetRow) {
-                    const statusTd = targetRow.cells[2];
-                    statusTd.innerHTML = '<span style="background:rgba(245,158,11,0.2); color:#f59e0b; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">⏸️ PAUSED</span>';
-                    targetRow.style.background = 'rgba(245,158,11,0.05)';
-                    targetRow.style.borderLeft = '3px solid #f59e0b';
-                }
+                applyVmStatusUI(vmName, 'pause');
+                localStorage.setItem('nantara_vm_status_' + vmName, 'pause');
                 alert(`⏸️ VM '${vmName}' dipause (State vCPU & Memory RAM dibekukan).`);
             } else if (action === 'stop') {
-                if (targetRow) {
-                    const statusTd = targetRow.cells[2];
-                    statusTd.innerHTML = '<span style="background:rgba(156,163,175,0.2); color:#9ca3af; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">⏹️ STOPPED</span>';
-                    targetRow.style.background = 'transparent';
-                    targetRow.style.borderLeft = 'none';
-                }
+                applyVmStatusUI(vmName, 'stop');
+                localStorage.setItem('nantara_vm_status_' + vmName, 'stop');
                 fetch('http://localhost:8080/api/v1/vm/stop', { method: 'POST' })
                     .then(res => res.json())
                     .then(data => alert(`⏹️ [VMware/VirtualBox Control] Stopping VM '${vmName}':\n\n${data.message}`))
@@ -772,9 +817,12 @@
                 alert(`⚙️ Pengaturan VM '${vmName}':\n\n- Hypervisor: Native Linux /dev/kvm\n- Firmware: OVMF UEFI (win10.qcow2)\n- Display: VirtIO-GPU 1024x768 32-bit RGBA\n- Network: VirtIO TAP Interface (nantara-tap0)\n- Storage: VirtIO Block Device\n- Sandboxing: Seccomp-BPF & Landlock LSM Active`);
             } else if (action === 'delete') {
                 if (confirm(`🗑️ Apakah Anda yakin ingin menghapus Mesin Virtual '${vmName}'?\n\nAlokasi vCPU dan RAM akan dibebaskan kembali.`)) {
-                    if (targetRow) {
-                        targetRow.remove();
-                    }
+                    localStorage.removeItem('nantara_vm_status_' + vmName);
+                    const rows = document.querySelectorAll('#vm-list-tbody tr');
+                    rows.forEach(tr => {
+                        const radio = tr.querySelector('input[type="radio"]');
+                        if (radio && radio.value === vmName) tr.remove();
+                    });
                     alert(`✅ Mesin Virtual '${vmName}' berhasil dihapus dari NantaraVM Workstation Manager!`);
                 }
             }
