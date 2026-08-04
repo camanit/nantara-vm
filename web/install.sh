@@ -1,23 +1,26 @@
 #!/bin/sh
-# NantaraVM NKRI 2026 Instant Auto-Installer Script
+# NantaraVM — Build from Source Script
+# Status: Early Alpha — Binary release belum tersedia
+# Silakan build dari source code di GitHub
+
 set -e
 
 echo "===================================================="
-echo " 🚀 Installing NantaraVM MicroVM Hypervisor"
+echo " NantaraVM — Open Source MicroVM Hypervisor"
+echo " Karya Indonesia 🇮🇩"
 echo "===================================================="
-
-INSTALL_DIR="/usr/local/bin"
-BINARY_URL="https://nantara.cloud/downloads/nantara-vm"
-
-echo "[NantaraVM Installer] Downloading latest NantaraVM binary from nantara.cloud..."
-curl -fsSL "$BINARY_URL" -o /tmp/nantara-vm || {
-    echo "[NantaraVM Installer Error] Download failed. Building from source via Cargo..."
-    cargo install nantara-vm
-    exit 0
-}
-
-chmod +x /tmp/nantara-vm
-sudo mv /tmp/nantara-vm "$INSTALL_DIR/nantara-vm"
-
-echo "[NantaraVM Installer] Installation successful!"
-echo "[NantaraVM Installer] Run 'nantara-vm' in your terminal to start."
+echo ""
+echo "[INFO] NantaraVM saat ini tersedia dalam bentuk SOURCE CODE."
+echo "[INFO] Binary release akan tersedia setelah Fase 1 selesai."
+echo ""
+echo "Untuk build dari source, jalankan:"
+echo ""
+echo "  git clone https://github.com/camanit/nantara-vm.git"
+echo "  cd nantara-vm"
+echo "  cargo build"
+echo ""
+echo "Prasyarat: Linux + Rust 1.75+ + /dev/kvm"
+echo ""
+echo "Lihat dokumentasi: https://nantara.cloud/docs.html"
+echo "GitHub: https://github.com/camanit/nantara-vm"
+echo ""
