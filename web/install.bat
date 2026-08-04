@@ -15,11 +15,15 @@ if %errorLevel% == 0 (
 
 echo.
 echo [2/3] Memasang NantaraVM Workstation Engine...
-powershell -NoProfile -ExecutionPolicy Bypass -Command "iwr -useb https://raw.githubusercontent.com/camanit/nantara-vm/main/web/install.ps1 | iex"
+if exist "%~dp0install.ps1" (
+    powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0install.ps1"
+) else (
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "iwr -useb https://nantara.cloud/install.ps1 | iex"
+)
 
 echo.
 echo ====================================================
-echo  🎉 NantaraVM Berhasil Terpasang di Sistem Windows!
+echo  NantaraVM Berhasil Terpasang di Sistem Windows!
 echo  Buka Dashboard Web: https://nantara.cloud/dashboard.html
-echo ====================================================
+echo ===================================================="
 pause
