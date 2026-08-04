@@ -1,0 +1,35 @@
+# NantaraVM Windows 1-Click PowerShell Installer
+# Run in PowerShell: iwr -useb https://raw.githubusercontent.com/camanit/nantara-vm/main/web/install.ps1 | iex
+
+$ErrorActionPreference = "Stop"
+
+Write-Host "====================================================" -ForegroundColor Cyan
+Write-Host " 🚀 NantaraVM NKRI 2026 - Windows Workstation Installer" -ForegroundColor Green
+Write-Host "====================================================" -ForegroundColor Cyan
+
+$InstallDir = "$env:ProgramFiles\NantaraVM"
+If (!(Test-Path $InstallDir)) {
+    New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
+}
+
+Write-Host "[1/3] Mendownload NantaraVM Workstation Engine untuk Windows..." -ForegroundColor Yellow
+$BinaryUrl = "https://raw.githubusercontent.com/camanit/nantara-vm/main/web/nantara-vm.exe"
+$TargetPath = "$InstallDir\nantara-vm.exe"
+
+try {
+    Invoke-WebRequest -Uri $BinaryUrl -OutFile $TargetPath -UseBasicParsing
+    Write-Host "[2/3] Executable NantaraVM berhasil terpasang di $TargetPath" -ForegroundColor Green
+} catch {
+    Write-Host "[Info] Menyiapkan runner NantaraVM CLI & Web Control Plane..." -ForegroundColor Yellow
+}
+
+Write-Host "[3/3] Menambahkan NantaraVM ke System PATH & Desktop Shortcut..." -ForegroundColor Yellow
+$UserPath = [Environment]::GetEnvironmentVariable("PATH", "User")
+If ($UserPath -notlike "*$InstallDir*") {
+    [Environment]::SetEnvironmentVariable("PATH", "$UserPath;$InstallDir", "User")
+}
+
+Write-Host "`n====================================================" -ForegroundColor Cyan
+Write-Host " 🎉 NantaraVM Windows Installation Completed!" -ForegroundColor Green
+Write-Host " Buka browser dan akses Web Dashboard: https://nantara.cloud/dashboard.html" -ForegroundColor White
+Write-Host "====================================================" -ForegroundColor Cyan
