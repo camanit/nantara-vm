@@ -1141,6 +1141,14 @@
             const iso = document.getElementById('new-vm-iso').value;
             const vcpu = document.getElementById('new-vm-vcpu').value;
             const ram = document.getElementById('new-vm-ram').value;
+            const targetEl = document.querySelector('input[name="deploy-target"]:checked');
+            const targetMode = targetEl ? targetEl.value : 'local';
+
+            if (targetMode === 'cloud') {
+                closeCreateVmModal();
+                alert(`☁️ PERMINTAAN DEDICATED CLOUD VM TERKIRIM!\n\nMesin Virtual '${name}' (${os}) akan dideploy secara Dedicated 24/7 di Nantara Cloud VPS.\n\nHubungi Tim NantaraVM untuk aktivasi lisensi berlangganan (WhatsApp: +62 812-6000-6666).`);
+                return;
+            }
 
             // Send payload to local REST API if manual ISO is specified
             if (iso && iso.trim() !== '') {
@@ -1160,7 +1168,7 @@
             saveCustomVmToStorage(vmData);
 
             closeCreateVmModal();
-            alert(`✅ Mesin Virtual '${name}' (${os}) berhasil diciptakan di QEMU Lokal!`);
+            alert(`✅ Mesin Virtual '${name}' (${os}) berhasil diciptakan di QEMU Lokal Laptop Anda!`);
         }
 
         function toggleScreenFullscreen() {
@@ -1199,7 +1207,20 @@
                     </select>
                 </div>
                 <div style="margin-bottom: 16px;">
-                    <label style="display: block; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 6px; font-weight: 600;">Path File ISO Manual (Untuk QEMU Lokal Laptop):</label>
+                    <label style="display: block; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 6px; font-weight: 600;">Target Mode Deployment:</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <label style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.4); padding: 10px; border-radius: 8px; cursor: pointer; color: #fff; font-size: 0.82rem; display: flex; align-items: center; gap: 6px;">
+                            <input type="radio" name="deploy-target" value="local" checked>
+                            🟢 Laptop Lokal (Free)
+                        </label>
+                        <label style="background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.4); padding: 10px; border-radius: 8px; cursor: pointer; color: #fff; font-size: 0.82rem; display: flex; align-items: center; gap: 6px;">
+                            <input type="radio" name="deploy-target" value="cloud">
+                            ☁️ Nantara Cloud 24/7 (Rp 49rb/bln)
+                        </label>
+                    </div>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 6px; font-weight: 600;">Path File ISO Manual (Khusus Mode Laptop Lokal):</label>
                     <input type="text" id="new-vm-iso" placeholder="contoh: C:/win10.iso atau D:/ISO/win7_32bit.iso" style="width: 100%; padding: 10px 14px; background: #020617; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; color: #10b981; font-size: 0.85rem; font-family: monospace;">
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
@@ -1225,7 +1246,7 @@
                 </div>
                 <div style="display: flex; gap: 10px; justify-content: flex-end;">
                     <button type="button" onclick="closeCreateVmModal()" style="background: rgba(255,255,255,0.1); color: #cbd5e1; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 600;">Batal</button>
-                    <button type="submit" style="background: #10b981; color: #000; border: none; padding: 10px 22px; border-radius: 8px; cursor: pointer; font-weight: 700;">🚀 Ciptakan & Boot VM Lokal</button>
+                    <button type="submit" style="background: #10b981; color: #000; border: none; padding: 10px 22px; border-radius: 8px; cursor: pointer; font-weight: 700;">🚀 Ciptakan VM Baru</button>
                 </div>
             </form>
         </div>
