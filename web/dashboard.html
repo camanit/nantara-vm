@@ -374,9 +374,12 @@
                     <!-- Architecture Diagram (Console Preview) -->
                     <div class="vm-view-area">
                         <div class="novnc-screen">
-                            <div class="screen-header">
-                                <span>📺 NantaraVM Live Console Output (v0.1 Real KVM Output Active)</span>
-                                <span style="color:#10b981;">✅ Verified Output</span>
+                            <div class="screen-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                                <span>📺 NantaraVM Live Workstation Display Output</span>
+                                <div style="display:flex; gap:8px; align-items:center;">
+                                    <button id="btn-mode-cli" onclick="switchDisplayMode('cli')" style="background:#10b981; color:#000; font-weight:700; border:none; padding:4px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer;">💻 Terminal Shell (CLI)</button>
+                                    <button id="btn-mode-gui" onclick="switchDisplayMode('gui')" style="background:rgba(255,255,255,0.1); color:#cbd5e1; font-weight:600; border:1px solid rgba(255,255,255,0.2); padding:4px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer;">🖥️ Graphical Desktop (GUI)</button>
+                                </div>
                             </div>
                             <div class="screen-canvas" id="screen-canvas" style="background: #020617; text-align: left; padding: 20px; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #10b981; line-height: 1.6; display: block; overflow-y: auto; min-height: 280px; position: relative;">
                                 <div id="vmm-console-logs" style="display: none;">
@@ -1054,8 +1057,35 @@
                 localStorage.removeItem('nantara_deleted_vms');
                 localStorage.removeItem('nantara_custom_vms');
                 const defaultNames = ['nantara-microvm-01', 'ubuntu-2404-server', 'kali-linux-sandbox'];
-                defaultNames.forEach(name => localStorage.removeItem('nantara_vm_status_' + name));
                 location.reload();
+            }
+        }
+        function switchDisplayMode(mode) {
+            const iframe = document.getElementById('terminal-iframe');
+            const btnCli = document.getElementById('btn-mode-cli');
+            const btnGui = document.getElementById('btn-mode-gui');
+            if (!iframe) return;
+
+            if (mode === 'gui') {
+                iframe.src = '/desktop/';
+                if (btnGui) {
+                    btnGui.style.background = '#06b6d4';
+                    btnGui.style.color = '#fff';
+                }
+                if (btnCli) {
+                    btnCli.style.background = 'rgba(255,255,255,0.1)';
+                    btnCli.style.color = '#cbd5e1';
+                }
+            } else {
+                iframe.src = '/console/';
+                if (btnCli) {
+                    btnCli.style.background = '#10b981';
+                    btnCli.style.color = '#000';
+                }
+                if (btnGui) {
+                    btnGui.style.background = 'rgba(255,255,255,0.1)';
+                    btnGui.style.color = '#cbd5e1';
+                }
             }
         }
     </script>
