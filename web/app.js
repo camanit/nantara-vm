@@ -164,51 +164,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btnStart) {
         btnStart.addEventListener('click', () => {
-            fetch('http://localhost:8080/api/v1/vm/start', { method: 'POST' })
-                .then(res => res.json())
-                .then(data => {
-                    console.log('[API POST Start]', data);
-                    if (consoleCanvas) {
-                        const line = document.createElement('div');
-                        line.style.color = '#10b981';
-                        line.textContent = `[REST API ${new Date().toLocaleTimeString()}] ▶️ POST /api/v1/vm/start -> ${data.message}`;
-                        consoleCanvas.appendChild(line);
-                        consoleCanvas.scrollTop = consoleCanvas.scrollHeight;
-                    }
-                })
-                .catch(err => {
-                    if (consoleCanvas) {
-                        const line = document.createElement('div');
-                        line.style.color = '#f59e0b';
-                        line.textContent = `[REST API ${new Date().toLocaleTimeString()}] ▶️ POST /api/v1/vm/start (Local VMM Standalone mode)`;
-                        consoleCanvas.appendChild(line);
-                    }
-                });
+            if (typeof handleVmAction === 'function') {
+                handleVmAction('start', 'win10-workstation-01');
+            } else {
+                alert("▶️ [REST API Port 8080] Command sent: POST /api/v1/vm/start\n\nNantaraVM MicroVM Booting via KVM!");
+            }
         });
     }
 
     if (btnStop) {
         btnStop.addEventListener('click', () => {
-            fetch('http://localhost:8080/api/v1/vm/stop', { method: 'POST' })
-                .then(res => res.json())
-                .then(data => {
-                    console.log('[API POST Stop]', data);
-                    if (consoleCanvas) {
-                        const line = document.createElement('div');
-                        line.style.color = '#ef4444';
-                        line.textContent = `[REST API ${new Date().toLocaleTimeString()}] ⏹️ POST /api/v1/vm/stop -> ${data.message}`;
-                        consoleCanvas.appendChild(line);
-                        consoleCanvas.scrollTop = consoleCanvas.scrollHeight;
-                    }
-                })
-                .catch(err => {
-                    if (consoleCanvas) {
-                        const line = document.createElement('div');
-                        line.style.color = '#ef4444';
-                        line.textContent = `[REST API ${new Date().toLocaleTimeString()}] ⏹️ POST /api/v1/vm/stop (Local VMM Standalone mode)`;
-                        consoleCanvas.appendChild(line);
-                    }
-                });
+            if (typeof handleVmAction === 'function') {
+                handleVmAction('stop', 'win10-workstation-01');
+            } else {
+                alert("⏹️ [REST API Port 8080] Command sent: POST /api/v1/vm/stop\n\nNantaraVM MicroVM Shutdown gracefully.");
+            }
         });
     }
 

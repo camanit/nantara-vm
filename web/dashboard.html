@@ -406,7 +406,10 @@
                                 <div id="win10-gui-screen" style="display: none; width: 100%; height: 260px; background: linear-gradient(135deg, #0284c7, #0f172a); border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); position: relative; overflow: hidden; font-family: 'Outfit', sans-serif;">
                                     <div style="background: rgba(0,0,0,0.4); padding: 8px 14px; font-size: 0.75rem; color: #fff; display: flex; justify-content: space-between; align-items: center;">
                                         <span>🪟 Windows 10 Pro (VirtIO-GPU 1024x768 Display Output)</span>
-                                        <span style="background: #10b981; color: #000; font-weight: 700; padding: 2px 8px; border-radius: 6px;">🟢 LIVE 60 FPS</span>
+                                        <div style="display:flex; gap:8px; align-items:center;">
+                                            <button onclick="toggleFullscreenDisplay()" style="background:rgba(255,255,255,0.2); color:#fff; border:1px solid rgba(255,255,255,0.4); padding:3px 10px; border-radius:6px; font-size:0.75rem; cursor:pointer; font-weight:600;">⛶ Fullscreen</button>
+                                            <span style="background: #10b981; color: #000; font-weight: 700; padding: 3px 8px; border-radius: 6px;">🟢 LIVE 60 FPS</span>
+                                        </div>
                                     </div>
                                     <div style="padding: 30px 20px; text-align: center; color: #fff;">
                                         <div style="font-size: 3rem; margin-bottom: 10px;">🪟</div>
@@ -419,11 +422,11 @@
                                     <!-- Windows Taskbar Simulation -->
                                     <div style="position: absolute; bottom: 0; width: 100%; height: 36px; background: rgba(15,23,42,0.9); display: flex; align-items: center; padding: 0 12px; border-top: 1px solid rgba(255,255,255,0.1); justify-content: space-between;">
                                         <div style="display: flex; align-items: center; gap: 10px;">
-                                            <span style="background: #0284c7; padding: 4px 8px; border-radius: 4px; color: #fff; font-size: 0.8rem; cursor: pointer;">🪟 Start</span>
-                                            <span style="color: #94a3b8; font-size: 0.75rem;">📁 File Explorer</span>
-                                            <span style="color: #94a3b8; font-size: 0.75rem;">🌐 Edge Browser</span>
+                                            <span onclick="alert('🪟 [Windows 10 Start Menu]\n\n- Windows Security / Antivirus\n- Command Prompt (cmd.exe)\n- Windows PowerShell\n- Control Panel\n- Disk Management')" style="background: #0284c7; padding: 4px 10px; border-radius: 4px; color: #fff; font-size: 0.8rem; cursor: pointer; font-weight: 700;">🪟 Start</span>
+                                            <span onclick="alert('📁 [Windows 10 File Explorer]\n\nDrive C:\\ (Local Disk - 60 GB VirtIO Block)\nDrive D:\\ (Data Storage)\nISO Mount: windows10.iso')" style="color: #cbd5e1; font-size: 0.78rem; cursor: pointer;">📁 File Explorer</span>
+                                            <span onclick="alert('🌐 [Microsoft Edge Browser]\n\nConnected to VirtIO Network TAP (nantara-tap0)\nIP Address: 192.168.100.15\nStatus: Online')" style="color: #cbd5e1; font-size: 0.78rem; cursor: pointer;">🌐 Edge Browser</span>
                                         </div>
-                                        <span style="color: #94a3b8; font-size: 0.75rem;">🔊 📶 20:49</span>
+                                        <span style="color: #94a3b8; font-size: 0.75rem;">🔊 📶 20:53</span>
                                     </div>
                                 </div>
                             </div>
@@ -707,6 +710,21 @@
             const targetPanel = document.getElementById('panel-' + tabId);
             if (targetMenu) targetMenu.classList.add('active');
             if (targetPanel) targetPanel.classList.add('active');
+        }
+
+        function toggleFullscreenDisplay() {
+            const elem = document.getElementById('win10-gui-screen') || document.getElementById('screen-canvas');
+            if (!document.fullscreenElement) {
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
         }
 
         function openCreateVmModal() {
