@@ -419,14 +419,25 @@
                                             ✅ Windows 10 OS Running inside NantaraVM MicroVM
                                         </div>
                                     </div>
+                                    <!-- Windows 10 Start Menu Overlay -->
+                                    <div id="win10-start-menu" style="display: none; position: absolute; bottom: 36px; left: 10px; width: 240px; background: rgba(15,23,42,0.95); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px 10px 0 0; padding: 12px; z-index: 10; box-shadow: 0 10px 30px rgba(0,0,0,0.8); text-align: left;">
+                                        <div style="font-weight: 700; color: #38bdf8; font-size: 0.85rem; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px;">🪟 Windows 10 Start Menu</div>
+                                        <div style="font-size: 0.78rem; color: #e2e8f0; display: flex; flex-direction: column; gap: 8px;">
+                                            <div style="cursor: pointer; padding: 4px 6px; border-radius: 4px; background: rgba(255,255,255,0.05);" onclick="alert('🛡️ [Windows Security] Defender Antivirus Service Active & Real-Time Protection Enabled.')">🛡️ Windows Security / Antivirus</div>
+                                            <div style="cursor: pointer; padding: 4px 6px; border-radius: 4px; background: rgba(255,255,255,0.05);" onclick="alert('💻 [Command Prompt] Microsoft Windows [Version 10.0.19045.3803]\nC:\\Users\\NantaraVM> virtio-blk --status OK')">💻 Command Prompt (cmd.exe)</div>
+                                            <div style="cursor: pointer; padding: 4px 6px; border-radius: 4px; background: rgba(255,255,255,0.05);" onclick="alert('⚡ [Windows PowerShell] PS C:\\> Get-Service NantaraVMM | Start-Service')">⚡ Windows PowerShell</div>
+                                            <div style="cursor: pointer; padding: 4px 6px; border-radius: 4px; background: rgba(255,255,255,0.05);" onclick="alert('⚙️ [Control Panel] Device Manager: VirtIO-GPU, VirtIO-Net, VirtIO-Block Active.')">⚙️ Control Panel</div>
+                                        </div>
+                                    </div>
+
                                     <!-- Windows Taskbar Simulation -->
                                     <div style="position: absolute; bottom: 0; width: 100%; height: 36px; background: rgba(15,23,42,0.9); display: flex; align-items: center; padding: 0 12px; border-top: 1px solid rgba(255,255,255,0.1); justify-content: space-between;">
                                         <div style="display: flex; align-items: center; gap: 10px;">
-                                            <span onclick="alert('🪟 [Windows 10 Start Menu]\n\n- Windows Security / Antivirus\n- Command Prompt (cmd.exe)\n- Windows PowerShell\n- Control Panel\n- Disk Management')" style="background: #0284c7; padding: 4px 10px; border-radius: 4px; color: #fff; font-size: 0.8rem; cursor: pointer; font-weight: 700;">🪟 Start</span>
-                                            <span onclick="alert('📁 [Windows 10 File Explorer]\n\nDrive C:\\ (Local Disk - 60 GB VirtIO Block)\nDrive D:\\ (Data Storage)\nISO Mount: windows10.iso')" style="color: #cbd5e1; font-size: 0.78rem; cursor: pointer;">📁 File Explorer</span>
-                                            <span onclick="alert('🌐 [Microsoft Edge Browser]\n\nConnected to VirtIO Network TAP (nantara-tap0)\nIP Address: 192.168.100.15\nStatus: Online')" style="color: #cbd5e1; font-size: 0.78rem; cursor: pointer;">🌐 Edge Browser</span>
+                                            <span onclick="toggleWin10StartMenu()" style="background: #0284c7; padding: 4px 10px; border-radius: 4px; color: #fff; font-size: 0.8rem; cursor: pointer; font-weight: 700;">🪟 Start</span>
+                                            <span onclick="toggleWin10StartMenu()" style="color: #cbd5e1; font-size: 0.78rem; cursor: pointer;">📁 File Explorer</span>
+                                            <span onclick="toggleWin10StartMenu()" style="color: #cbd5e1; font-size: 0.78rem; cursor: pointer;">🌐 Edge Browser</span>
                                         </div>
-                                        <span style="color: #94a3b8; font-size: 0.75rem;">🔊 📶 20:53</span>
+                                        <span style="color: #94a3b8; font-size: 0.75rem;">🔊 📶 20:58</span>
                                     </div>
                                 </div>
                             </div>
@@ -444,8 +455,8 @@
                             </div>
 
                             <div style="display: flex; gap: 10px; margin-top: 12px;">
-                                <button id="btn-api-start-vm" style="background: #10b981; color: #000; font-weight: 700; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; flex: 1;">▶️ Start MicroVM</button>
-                                <button id="btn-api-stop-vm" style="background: #ef4444; color: #fff; font-weight: 700; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; flex: 1;">⏹️ Stop MicroVM</button>
+                                <button id="btn-api-start-vm" onclick="handleVmAction('start', 'win10-workstation-01')" style="background: #10b981; color: #000; font-weight: 700; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; flex: 1;">▶️ Start MicroVM</button>
+                                <button id="btn-api-stop-vm" onclick="handleVmAction('stop', 'win10-workstation-01')" style="background: #ef4444; color: #fff; font-weight: 700; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; flex: 1;">⏹️ Stop MicroVM</button>
                             </div>
 
                             <div class="info-box" style="margin-top: 10px; background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.3); color: #10b981;">
@@ -724,6 +735,13 @@
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
                 }
+            }
+        }
+
+        function toggleWin10StartMenu() {
+            const menu = document.getElementById('win10-start-menu');
+            if (menu) {
+                menu.style.display = (menu.style.display === 'none' || !menu.style.display) ? 'block' : 'none';
             }
         }
 
