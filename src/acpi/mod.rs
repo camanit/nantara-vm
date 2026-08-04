@@ -24,6 +24,9 @@ pub struct AcpiTableHeader {
     pub creator_revision: u32,
 }
 
+#[cfg(target_os = "linux")]
+unsafe impl vm_memory::ByteValued for AcpiTableHeader {}
+
 pub struct AcpiManager;
 
 impl AcpiManager {

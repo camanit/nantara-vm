@@ -3,7 +3,7 @@ use std::path::Path;
 #[cfg(target_os = "linux")]
 use vm_memory::GuestMemoryMmap;
 #[cfg(target_os = "linux")]
-use linux_loader::loader::{KernelLoader, elf::Elf, bzimage::BzImage};
+use linux_loader::loader::{KernelLoader, elf::Elf};
 
 use super::zero_page::KERNEL_LOAD_ADDR;
 
@@ -12,6 +12,9 @@ pub struct LoadedKernel {
     pub entry_addr: u64,
     pub size: usize,
 }
+
+#[cfg(target_os = "linux")]
+use vm_memory::Address;
 
 pub struct Kernel;
 
@@ -25,18 +28,10 @@ impl Kernel {
 
         if let Ok(result) = Elf::load(guest_mem, None, &mut kernel_file, Some(vm_memory::GuestAddress(KERNEL_LOAD_ADDR))) {
             println!("[NantaraVM Boot] Successfully loaded ELF 64-bit kernel! Entry RIP: 0x{:x}", result.kernel_load.raw_value());
+            let size = (result.kernel_end - result.kernel_load.raw_value()) as usize;
             return Ok(LoadedKernel {
                 entry_addr: result.kernel_load.raw_value(),
-                size: result.size as usize,
-            });
-        }
-
-        kernel_file = std::fs::File::open(path).map_err(|e| e.to_string())?;
-        if let Ok(result) = BzImage::load(guest_mem, None, &mut kernel_file, Some(vm_memory::GuestAddress(KERNEL_LOAD_ADDR))) {
-            println!("[NantaraVM Boot] Successfully loaded bzImage kernel! Entry RIP: 0x{:x}", result.kernel_load.raw_value());
-            return Ok(LoadedKernel {
-                entry_addr: result.kernel_load.raw_value(),
-                size: result.size as usize,
+                size,
             });
         }
 

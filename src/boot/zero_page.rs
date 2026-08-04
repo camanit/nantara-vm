@@ -20,6 +20,9 @@ pub struct E820Entry {
     pub entry_type: u32,
 }
 
+#[cfg(target_os = "linux")]
+unsafe impl vm_memory::ByteValued for E820Entry {}
+
 pub struct ZeroPage;
 
 impl ZeroPage {

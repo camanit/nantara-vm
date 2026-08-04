@@ -1,5 +1,5 @@
 #[cfg(target_os = "linux")]
-use vm_memory::{Bytes, GuestAddress, GuestMemoryMmap, MmapRegion};
+use vm_memory::{Bytes, GuestAddress, GuestMemory, GuestMemoryMmap, MmapRegion};
 #[cfg(target_os = "linux")]
 use kvm_ioctls::{Kvm, VmFd};
 #[cfg(target_os = "linux")]
@@ -69,15 +69,8 @@ impl Vmm {
 
         #[cfg(target_os = "linux")]
         {
-            let region = MmapRegion::build(
-                None,
-                GUEST_RAM_SIZE,
-                libc::PROT_READ | libc::PROT_WRITE,
-                libc::MAP_ANONYMOUS | libc::MAP_PRIVATE,
-            ).map_err(|e| format!("MmapRegion error: {:?}", e))?;
-
             let guest_memory = Arc::new(
-                GuestMemoryMmap::from_regions(vec![(GuestAddress(0), region)])
+                GuestMemoryMmap::from_ranges(&[(GuestAddress(0), GUEST_RAM_SIZE)])
                     .map_err(|e| format!("GuestMemory error: {:?}", e))?
             );
 
@@ -85,13 +78,16 @@ impl Vmm {
             let kvm = Kvm::new().map_err(|e| format!("Failed to open /dev/kvm: {:?}", e))?;
             let vm_fd = kvm.create_vm().map_err(|e| format!("Failed to create KVM VM: {:?}", e))?;
 
+            let host_addr = guest_memory.get_host_address(GuestAddress(0))
+                .map_err(|e| format!("Failed to get host address: {:?}", e))? as u64;
+
             unsafe {
                 vm_fd.set_user_memory_region(kvm_bindings::kvm_userspace_memory_region {
                     slot: 0,
                     flags: 0,
                     guest_phys_addr: 0,
                     memory_size: GUEST_RAM_SIZE as u64,
-                    userspace_addr: guest_memory.to_region_addr(GuestAddress(0)).unwrap().raw_value() as u64,
+                    userspace_addr: host_addr,
                 }).map_err(|e| format!("Failed to set KVM memory region: {:?}", e))?;
             }
 

@@ -16,7 +16,7 @@ path = "tools/gen_license.rs"
 [target.'cfg(target_os = "linux")'.dependencies]
 kvm-ioctls = "0.19"
 kvm-bindings = "0.10"
-vm-memory = { version = "0.14", features = ["backend-mmap"] }
+vm-memory = { version = "0.15", features = ["backend-mmap"] }
 vmm-sys-util = "0.12"
 linux-loader = "0.12"
 virtio-queue = "0.12"
