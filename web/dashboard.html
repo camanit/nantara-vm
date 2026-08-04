@@ -948,28 +948,12 @@
                         const consoleLogs = document.getElementById('vmm-console-logs');
                         const termFrame = document.getElementById('live-terminal-frame');
                         const iframe = document.getElementById('terminal-iframe');
-                        const screenTitle = document.getElementById('win10-screen-arch-title');
-                        const screenDesc = document.getElementById('win10-screen-arch-desc');
 
-                        if (vmName.includes('microvm') || vmName.includes('ubuntu') || vmName.includes('kali') || osCellText.toLowerCase().includes('linux')) {
-                            if (winScreen) winScreen.style.display = 'none';
-                            if (consoleLogs) consoleLogs.style.display = 'none';
-                            if (termFrame) termFrame.style.display = 'block';
-                            if (iframe && (!iframe.src || iframe.src === 'about:blank' || iframe.src.includes('7681'))) {
-                                iframe.src = '/console/';
-                            }
-                        } else {
-                            if (termFrame) termFrame.style.display = 'none';
-                            if (winScreen) winScreen.style.display = 'block';
-                            if (consoleLogs) consoleLogs.style.display = 'none';
-
-                            if (vmName.toLowerCase().includes('32') || osCellText.includes('32')) {
-                                if (screenTitle) screenTitle.innerHTML = '🪟 Windows 10 Pro 32-bit (x86) Workstation';
-                                if (screenDesc) screenDesc.innerHTML = 'Hypervisor: Native KVM (x86 32-bit Protected Mode) · RAM: 2048 MB · VirtIO-GPU Active';
-                            } else {
-                                if (screenTitle) screenTitle.innerHTML = '🪟 Windows 10 Pro 64-bit Workstation';
-                                if (screenDesc) screenDesc.innerHTML = 'Hypervisor: Native KVM (x86_64 Long Mode) · RAM: 4096 MB · VirtIO-GPU Active';
-                            }
+                        if (winScreen) winScreen.style.display = 'none';
+                        if (consoleLogs) consoleLogs.style.display = 'none';
+                        if (termFrame) termFrame.style.display = 'block';
+                        if (iframe && (!iframe.src || iframe.src === 'about:blank' || iframe.src.includes('7681'))) {
+                            iframe.src = '/console/';
                         }
                     } else if (statusState === 'pause') {
                         statusTd.innerHTML = '<span style="background:rgba(245,158,11,0.2); color:#f59e0b; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">⏸️ PAUSED</span>';
@@ -985,7 +969,18 @@
                         const termFrame = document.getElementById('live-terminal-frame');
                         if (termFrame) termFrame.style.display = 'none';
                         if (winScreen) winScreen.style.display = 'none';
-                        if (consoleLogs) consoleLogs.style.display = 'block';
+                        if (consoleLogs) {
+                            consoleLogs.style.display = 'block';
+                            consoleLogs.innerHTML = `
+                                <div>====================================================</div>
+                                <div>🚀 NantaraVM NKRI 2026 - Cloud-Native MicroVM VMM</div>
+                                <div>====================================================</div>
+                                <div style="color: #ef4444;">[NantaraVM] Instance '${vmName}' has been SHUT DOWN / STOPPED.</div>
+                                <div style="color: #cbd5e1;">[NantaraVM] Allocated vCPU and RAM released back to host pool.</div>
+                                <div style="color: #10b981; font-weight: bold;">[NantaraVM] Select a VM and click '▶️ Boot' to start instance.</div>
+                                <div>====================================================</div>
+                            `;
+                        }
                     }
                 }
             });
