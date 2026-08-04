@@ -513,21 +513,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td><input type="radio" name="vm-select" value="windows-10-workstation"></td>
-                                    <td><strong>windows-10-workstation</strong><br><small style="color:#9ca3af;">(Windows 10 / 32-bit Workstation)</small></td>
-                                    <td><span style="background:rgba(156,163,175,0.2); color:#9ca3af; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">⏹️ STOPPED</span></td>
-                                    <td>2 vCPU</td>
-                                    <td>2048 MB</td>
-                                    <td>Windows 10 / 32-bit OS</td>
-                                    <td>VirtIO Block + GPU</td>
-                                    <td>
-                                        <div style="display:flex; gap:6px;">
-                                            <button onclick="handleVmAction('start', 'windows-10-workstation')" style="background:#3b82f6; color:#fff; border:none; padding:4px 10px; border-radius:4px; font-weight:700; cursor:pointer;">▶️ Boot</button>
-                                            <button onclick="handleVmAction('delete', 'windows-10-workstation')" style="background:rgba(239,68,68,0.2); color:#ef4444; border:1px solid rgba(239,68,68,0.4); padding:4px 8px; border-radius:4px; font-weight:600; cursor:pointer;">🗑️ Hapus</button>
-                                        </div>
-                                    </td>
-                                </tr>
+
                             </tbody>
                         </table>
                     </div>
@@ -1103,7 +1089,7 @@
             if (confirm('🔄 Apakah Anda yakin ingin mereset daftar VM kembali ke tampilan default murni?')) {
                 localStorage.removeItem('nantara_deleted_vms');
                 localStorage.removeItem('nantara_custom_vms');
-                const defaultNames = ['nantara-microvm-01', 'ubuntu-2404-server', 'kali-linux-sandbox', 'windows-10-workstation'];
+                const defaultNames = ['nantara-microvm-01', 'ubuntu-2404-server', 'kali-linux-sandbox'];
                 defaultNames.forEach(name => localStorage.removeItem('nantara_vm_status_' + name));
                 location.reload();
             }
@@ -1148,6 +1134,35 @@
             }
         }
 
+        function submitCreateVm(event) {
+            event.preventDefault();
+            const name = document.getElementById('new-vm-name').value;
+            const os = document.getElementById('new-vm-os').value;
+            const iso = document.getElementById('new-vm-iso').value;
+            const vcpu = document.getElementById('new-vm-vcpu').value;
+            const ram = document.getElementById('new-vm-ram').value;
+
+            // Send payload to local REST API if manual ISO is specified
+            if (iso && iso.trim() !== '') {
+                fetch('http://127.0.0.1:8080/api/v1/vm/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, iso, ram: parseInt(ram), vcpu: parseInt(vcpu) })
+                }).catch(err => console.log('Local API notification:', err));
+            }
+
+            let deleted = getDeletedVmsFromStorage();
+            deleted = deleted.filter(n => n !== name);
+            localStorage.setItem('nantara_deleted_vms', JSON.stringify(deleted));
+
+            const vmData = { name, os, vcpu, ram, iso };
+            renderVmRow(vmData);
+            saveCustomVmToStorage(vmData);
+
+            closeCreateVmModal();
+            alert(`✅ Mesin Virtual '${name}' (${os}) berhasil diciptakan di QEMU Lokal!`);
+        }
+
         function toggleScreenFullscreen() {
             const frame = document.getElementById('live-terminal-frame');
             if (!frame) return;
@@ -1160,5 +1175,60 @@
             }
         }
     </script>
+
+    <!-- MODAL CREATE VM LOKAL (MANUAL ISO INPUT) -->
+    <div id="modal-create-vm" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(8px); z-index: 9999; justify-content: center; align-items: center;">
+        <div style="background: #0f172a; border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 16px; padding: 28px; width: 90%; max-width: 520px; box-shadow: 0 20px 40px rgba(0,0,0,0.6);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px;">
+                <h3 style="margin: 0; font-size: 1.15rem; color: #10b981; display: flex; align-items: center; gap: 8px;">➕ Buat Mesin Virtual Lokal (Windows / Linux)</h3>
+                <span onclick="closeCreateVmModal()" style="cursor: pointer; color: #94a3b8; font-weight: bold; font-size: 1.4rem;">&times;</span>
+            </div>
+            <form onsubmit="submitCreateVm(event)">
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 6px; font-weight: 600;">Nama Mesin Virtual:</label>
+                    <input type="text" id="new-vm-name" placeholder="misal: Windows-10-Lokal" required style="width: 100%; padding: 10px 14px; background: #020617; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #fff; font-size: 0.9rem;">
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 6px; font-weight: 600;">Pilih Operating System (OS):</label>
+                    <select id="new-vm-os" style="width: 100%; padding: 10px 14px; background: #020617; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #fff; font-size: 0.9rem;">
+                        <option value="Windows 10 / 11 (64-bit)">🪟 Windows 10 / 11 Workstation (64-bit)</option>
+                        <option value="Windows 7 / XP (32-bit)">🪟 Windows 7 / XP (32-bit)</option>
+                        <option value="Kali Linux Security OS">💀 Kali Linux Security OS</option>
+                        <option value="Ubuntu 24.04 LTS">🐧 Ubuntu 24.04 LTS Workstation</option>
+                        <option value="Alpine Linux MicroVM">🏔️ Alpine Linux MicroVM</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 6px; font-weight: 600;">Path File ISO Manual (Untuk QEMU Lokal Laptop):</label>
+                    <input type="text" id="new-vm-iso" placeholder="contoh: C:/win10.iso atau D:/ISO/win7_32bit.iso" style="width: 100%; padding: 10px 14px; background: #020617; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; color: #10b981; font-size: 0.85rem; font-family: monospace;">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+                    <div>
+                        <label style="display: block; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 6px; font-weight: 600;">vCPU Cores:</label>
+                        <select id="new-vm-vcpu" style="width: 100%; padding: 10px 14px; background: #020617; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #fff; font-size: 0.9rem;">
+                            <option value="1">1 vCPU</option>
+                            <option value="2" selected>2 vCPU</option>
+                            <option value="4">4 vCPU</option>
+                            <option value="8">8 vCPU</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 6px; font-weight: 600;">RAM (MB):</label>
+                        <select id="new-vm-ram" style="width: 100%; padding: 10px 14px; background: #020617; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #fff; font-size: 0.9rem;">
+                            <option value="512">512 MB</option>
+                            <option value="1024">1024 MB (1 GB)</option>
+                            <option value="2048" selected>2048 MB (2 GB)</option>
+                            <option value="4096">4096 MB (4 GB)</option>
+                            <option value="8192">8192 MB (8 GB)</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" onclick="closeCreateVmModal()" style="background: rgba(255,255,255,0.1); color: #cbd5e1; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 600;">Batal</button>
+                    <button type="submit" style="background: #10b981; color: #000; border: none; padding: 10px 22px; border-radius: 8px; cursor: pointer; font-weight: 700;">🚀 Ciptakan & Boot VM Lokal</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
