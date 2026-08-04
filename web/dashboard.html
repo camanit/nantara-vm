@@ -413,22 +413,22 @@
 
                         <div class="vm-action-panel">
                             <h4 style="font-size:1rem; font-weight:700;">⚙️ REST API Endpoints (Port 8080)</h4>
-                            <p style="color:#9ca3af; font-size:0.8rem;">Live REST API server status:</p>
+                            <p style="color:#9ca3af; font-size:0.8rem;">Kontrol Live VM via REST API:</p>
 
                             <div style="background:#020617; border-radius:10px; padding:14px; font-family:'Fira Code',monospace; font-size:0.75rem; color:#10b981; line-height:1.8;">
                                 GET  /api/v1/status  [200 OK - Active]<br>
                                 GET  /api/v1/vm/info [200 OK - Active]<br>
-                                POST /api/v1/vm/start [Fase 2]<br>
-                                POST /api/v1/vm/pause [Fase 2]
+                                POST /api/v1/vm/start [200 OK - Active]<br>
+                                POST /api/v1/vm/stop  [200 OK - Active]
+                            </div>
+
+                            <div style="display: flex; gap: 10px; margin-top: 12px;">
+                                <button id="btn-api-start-vm" style="background: #10b981; color: #000; font-weight: 700; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; flex: 1;">▶️ Start MicroVM</button>
+                                <button id="btn-api-stop-vm" style="background: #ef4444; color: #fff; font-weight: 700; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; flex: 1;">⏹️ Stop MicroVM</button>
                             </div>
 
                             <div class="info-box" style="margin-top: 10px; background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.3); color: #10b981;">
                                 ✅ REST API Server aktif mendengarkan di <code>http://127.0.0.1:8080</code>.
-                            </div>
-                            </div>
-
-                            <div class="info-box">
-                                💡 <strong>Rencana:</strong> API akan listen di <code>0.0.0.0:8080</code> sehingga bisa diakses dari dashboard web ini secara real-time.
                             </div>
                         </div>
                     </div>

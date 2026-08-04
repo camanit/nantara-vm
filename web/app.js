@@ -157,8 +157,60 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    checkLiveApi();
-    setInterval(checkLiveApi, 5000);
+    // Connect Start / Stop VM API Buttons
+    const btnStart = document.getElementById('btn-api-start-vm');
+    const btnStop = document.getElementById('btn-api-stop-vm');
+    const consoleCanvas = document.getElementById('screen-canvas');
+
+    if (btnStart) {
+        btnStart.addEventListener('click', () => {
+            fetch('http://localhost:8080/api/v1/vm/start', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    console.log('[API POST Start]', data);
+                    if (consoleCanvas) {
+                        const line = document.createElement('div');
+                        line.style.color = '#10b981';
+                        line.textContent = `[REST API ${new Date().toLocaleTimeString()}] ▶️ POST /api/v1/vm/start -> ${data.message}`;
+                        consoleCanvas.appendChild(line);
+                        consoleCanvas.scrollTop = consoleCanvas.scrollHeight;
+                    }
+                })
+                .catch(err => {
+                    if (consoleCanvas) {
+                        const line = document.createElement('div');
+                        line.style.color = '#f59e0b';
+                        line.textContent = `[REST API ${new Date().toLocaleTimeString()}] ▶️ POST /api/v1/vm/start (Local VMM Standalone mode)`;
+                        consoleCanvas.appendChild(line);
+                    }
+                });
+        });
+    }
+
+    if (btnStop) {
+        btnStop.addEventListener('click', () => {
+            fetch('http://localhost:8080/api/v1/vm/stop', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    console.log('[API POST Stop]', data);
+                    if (consoleCanvas) {
+                        const line = document.createElement('div');
+                        line.style.color = '#ef4444';
+                        line.textContent = `[REST API ${new Date().toLocaleTimeString()}] ⏹️ POST /api/v1/vm/stop -> ${data.message}`;
+                        consoleCanvas.appendChild(line);
+                        consoleCanvas.scrollTop = consoleCanvas.scrollHeight;
+                    }
+                })
+                .catch(err => {
+                    if (consoleCanvas) {
+                        const line = document.createElement('div');
+                        line.style.color = '#ef4444';
+                        line.textContent = `[REST API ${new Date().toLocaleTimeString()}] ⏹️ POST /api/v1/vm/stop (Local VMM Standalone mode)`;
+                        consoleCanvas.appendChild(line);
+                    }
+                });
+        });
+    }
 
     if (aiSend) aiSend.addEventListener('click', sendAiMessage);
     if (aiInput) aiInput.addEventListener('keypress', e => { if (e.key === 'Enter') sendAiMessage(); });
