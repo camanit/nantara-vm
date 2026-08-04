@@ -21,12 +21,16 @@ use virtio::{blk::VirtioBlock, net::VirtioNet, vsock::VirtioVsock};
 fn main() {
     let args: Vec<String> = env::args().collect();
     let mut iso_path: Option<String> = None;
+    let mut net_tap: Option<String> = None;
     let mut display_gpu = false;
 
     let mut i = 0;
     while i < args.len() {
         if args[i] == "--iso" && i + 1 < args.len() {
             iso_path = Some(args[i + 1].clone());
+            i += 1;
+        } else if args[i] == "--net" && i + 1 < args.len() {
+            net_tap = Some(args[i + 1].clone());
             i += 1;
         } else if args[i] == "--display" && i + 1 < args.len() {
             if args[i + 1] == "virtio-gpu" {
@@ -40,6 +44,10 @@ fn main() {
     println!("====================================================");
     println!(" 🚀 NantaraVM NKRI 2026 - Cloud-Native MicroVM VMM");
     println!("====================================================");
+
+    if let Some(ref tap) = net_tap {
+        let _net_dev = VirtioNet::new(tap, [0x52, 0x54, 0x00, 0x12, 0x34, 0x56]);
+    }
 
     if let Some(ref iso) = iso_path {
         let iso_file_path = Path::new(iso);
