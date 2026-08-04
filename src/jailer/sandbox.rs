@@ -35,12 +35,19 @@ impl Jailer {
         Ok(())
     }
 
+    pub fn apply_landlock_lsm(&self) -> Result<(), String> {
+        let landlock = super::landlock::LandlockLsm::new(vec![self.config.chroot_dir.clone()]);
+        landlock.apply_ruleset()?;
+        Ok(())
+    }
+
     pub fn spawn_jailed_device(&self, device_name: &str) -> Result<(), String> {
         println!("[NantaraVM Jailer] Spawning jailed process for device '{}'...", device_name);
         println!("[NantaraVM Jailer] Applying Linux Namespaces (unshare: PID, Mount, Net, IPC)...");
         println!("[NantaraVM Jailer] Changing root directory (chroot) to {:?}", self.config.chroot_dir);
         println!("[NantaraVM Jailer] Dropping privileges to UID {} / GID {} (nobody)...", self.config.uid, self.config.gid);
         self.apply_seccomp_filter()?;
+        self.apply_landlock_lsm()?;
         Ok(())
     }
 }

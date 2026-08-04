@@ -59,6 +59,7 @@ fn main() {
     if enable_jail {
         let jailer = jailer::Jailer::new(jailer::JailerConfig::default());
         let _ = jailer.apply_seccomp_filter();
+        let _ = jailer.apply_landlock_lsm();
     }
 
     if let Some(ref drive) = drive_path {
