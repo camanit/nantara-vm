@@ -396,12 +396,14 @@
                                     <div>====================================================</div>
                                     <div>🚀 NantaraVM NKRI 2026 - Cloud-Native MicroVM VMM</div>
                                     <div>====================================================</div>
-                                    <div style="color: #cbd5e1;">[NantaraVM] Allocating 4096 MB Guest Physical RAM...</div>
-                                    <div style="color: #cbd5e1;">[NantaraVM UEFI] Loading OVMF.fd Firmware Bootloader...</div>
-                                    <div style="color: #cbd5e1;">[VirtIO-GPU] 1024x768 32-bit RGBA Framebuffer allocated at 0xd0000000</div>
-                                    <div style="color: #cbd5e1;">[NantaraVM VNC] WebSocket Streamer listening at ws://127.0.0.1:5900</div>
-                                    <div style="color: #10b981; font-weight: bold;">[NantaraVM] Windows 10 vCPU Execution Loop Active.</div>
+                                    <div style="color: #cbd5e1;">[NantaraVM] Host: Ubuntu 24.04 LTS (IP: 210.79.190.76)</div>
+                                    <div style="color: #cbd5e1;">[NantaraVM Docker Engine] Cloud Sandbox Container Active</div>
+                                    <div style="color: #cbd5e1;">[NantaraVM Web Console] Live WebSocket Terminal listening at port 7681</div>
+                                    <div style="color: #10b981; font-weight: bold;">[NantaraVM] Click '▶️ Boot' to open Live Interactive Terminal Console.</div>
                                     <div>====================================================</div>
+                                </div>
+                                <div id="live-terminal-frame" style="display: none; width: 100%; height: 320px; border-radius: 8px; border: 1px solid rgba(16,185,129,0.4); overflow: hidden;">
+                                    <iframe id="terminal-iframe" src="" style="width: 100%; height: 100%; border: none;"></iframe>
                                 </div>
                                 <div id="win10-gui-screen" style="display: none; width: 100%; height: 260px; background: linear-gradient(135deg, #0284c7, #0f172a); border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); position: relative; overflow: hidden; font-family: 'Outfit', sans-serif;">
                                     <div style="background: rgba(0,0,0,0.4); padding: 8px 14px; font-size: 0.75rem; color: #fff; display: flex; justify-content: space-between; align-items: center;">
@@ -945,18 +947,30 @@
 
                         const winScreen = document.getElementById('win10-gui-screen');
                         const consoleLogs = document.getElementById('vmm-console-logs');
+                        const termFrame = document.getElementById('live-terminal-frame');
+                        const iframe = document.getElementById('terminal-iframe');
                         const screenTitle = document.getElementById('win10-screen-arch-title');
                         const screenDesc = document.getElementById('win10-screen-arch-desc');
 
-                        if (winScreen) winScreen.style.display = 'block';
-                        if (consoleLogs) consoleLogs.style.display = 'none';
-
-                        if (vmName.toLowerCase().includes('32') || osCellText.includes('32')) {
-                            if (screenTitle) screenTitle.innerHTML = '🪟 Windows 10 Pro 32-bit (x86) Workstation';
-                            if (screenDesc) screenDesc.innerHTML = 'Hypervisor: Native KVM (x86 32-bit Protected Mode) · RAM: 2048 MB · VirtIO-GPU Active';
+                        if (vmName.includes('microvm') || vmName.includes('ubuntu') || vmName.includes('kali') || osCellText.toLowerCase().includes('linux')) {
+                            if (winScreen) winScreen.style.display = 'none';
+                            if (consoleLogs) consoleLogs.style.display = 'none';
+                            if (termFrame) termFrame.style.display = 'block';
+                            if (iframe && (!iframe.src || iframe.src === 'about:blank')) {
+                                iframe.src = 'http://210.79.190.76:7681';
+                            }
                         } else {
-                            if (screenTitle) screenTitle.innerHTML = '🪟 Windows 10 Pro 64-bit Workstation';
-                            if (screenDesc) screenDesc.innerHTML = 'Hypervisor: Native KVM (x86_64 Long Mode) · RAM: 4096 MB · VirtIO-GPU Active';
+                            if (termFrame) termFrame.style.display = 'none';
+                            if (winScreen) winScreen.style.display = 'block';
+                            if (consoleLogs) consoleLogs.style.display = 'none';
+
+                            if (vmName.toLowerCase().includes('32') || osCellText.includes('32')) {
+                                if (screenTitle) screenTitle.innerHTML = '🪟 Windows 10 Pro 32-bit (x86) Workstation';
+                                if (screenDesc) screenDesc.innerHTML = 'Hypervisor: Native KVM (x86 32-bit Protected Mode) · RAM: 2048 MB · VirtIO-GPU Active';
+                            } else {
+                                if (screenTitle) screenTitle.innerHTML = '🪟 Windows 10 Pro 64-bit Workstation';
+                                if (screenDesc) screenDesc.innerHTML = 'Hypervisor: Native KVM (x86_64 Long Mode) · RAM: 4096 MB · VirtIO-GPU Active';
+                            }
                         }
                     } else if (statusState === 'pause') {
                         statusTd.innerHTML = '<span style="background:rgba(245,158,11,0.2); color:#f59e0b; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">⏸️ PAUSED</span>';
@@ -969,6 +983,8 @@
 
                         const winScreen = document.getElementById('win10-gui-screen');
                         const consoleLogs = document.getElementById('vmm-console-logs');
+                        const termFrame = document.getElementById('live-terminal-frame');
+                        if (termFrame) termFrame.style.display = 'none';
                         if (winScreen) winScreen.style.display = 'none';
                         if (consoleLogs) consoleLogs.style.display = 'block';
                     }
