@@ -69,6 +69,9 @@ curl -fsSL https://raw.githubusercontent.com/camanit/nantara-vm/main/web/install
 | Snapshot & Lazy Restore Engine | ✅ Verified Real | Binary file I/O `NANTSNAP` format, page-by-page save/restore |
 | Workstation Manager GUI | ✅ Verified Real | Web Dashboard VMware / VirtualBox Style Wizard (`nantara.cloud/dashboard.html`) |
 | AMD SEV-SNP & Intel TDX | ⚙️ Kode Siap | Kode modul di `src/sev/snp.rs` (membutuhkan hardware CPU AMD EPYC/Intel TDX) |
+| macOS Support (`Hypervisor.framework`) | 🎯 Roadmap v2.0 | Native Apple Silicon (M1/M2/M3/M4) & Intel Mac virtualization backend |
+| Android Support (pKVM / AVF) | 🎯 Roadmap v2.0 | Android 13+ Protected KVM MicroVM enclaves di HP/Tablet Android |
+| Kubernetes Containerd Shim | 🎯 Roadmap v2.0 | Native v2 containerd shim untuk pod isolation di Kubernetes |
 
 ---
 
