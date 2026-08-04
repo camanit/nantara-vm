@@ -392,18 +392,18 @@
                                 <span style="color:#10b981;">✅ Verified Output</span>
                             </div>
                             <div class="screen-canvas" id="screen-canvas" style="background: #020617; text-align: left; padding: 20px; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #10b981; line-height: 1.6; display: block; overflow-y: auto; min-height: 280px; position: relative;">
-                                <div id="vmm-console-logs">
+                                <div id="vmm-console-logs" style="display: none;">
                                     <div>====================================================</div>
                                     <div>🚀 NantaraVM NKRI 2026 - Cloud-Native MicroVM VMM</div>
                                     <div>====================================================</div>
                                     <div style="color: #cbd5e1;">[NantaraVM] Host: Ubuntu 24.04 LTS (IP: 210.79.190.76)</div>
                                     <div style="color: #cbd5e1;">[NantaraVM Docker Engine] Cloud Sandbox Container Active</div>
                                     <div style="color: #cbd5e1;">[NantaraVM Web Console] Live WebSocket Terminal listening at port 7681</div>
-                                    <div style="color: #10b981; font-weight: bold;">[NantaraVM] Click '▶️ Boot' to open Live Interactive Terminal Console.</div>
+                                    <div style="color: #10b981; font-weight: bold;">[NantaraVM] Live Interactive Terminal Console Active.</div>
                                     <div>====================================================</div>
                                 </div>
-                                <div id="live-terminal-frame" style="display: none; width: 100%; height: 320px; border-radius: 8px; border: 1px solid rgba(16,185,129,0.4); overflow: hidden;">
-                                    <iframe id="terminal-iframe" src="" style="width: 100%; height: 100%; border: none;"></iframe>
+                                <div id="live-terminal-frame" style="display: block; width: 100%; height: 320px; border-radius: 8px; border: 1px solid rgba(16,185,129,0.4); overflow: hidden;">
+                                    <iframe id="terminal-iframe" src="/console/" style="width: 100%; height: 100%; border: none; background: #020617;"></iframe>
                                 </div>
                                 <div id="win10-gui-screen" style="display: none; width: 100%; height: 260px; background: linear-gradient(135deg, #0284c7, #0f172a); border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); position: relative; overflow: hidden; font-family: 'Outfit', sans-serif;">
                                     <div style="background: rgba(0,0,0,0.4); padding: 8px 14px; font-size: 0.75rem; color: #fff; display: flex; justify-content: space-between; align-items: center;">
