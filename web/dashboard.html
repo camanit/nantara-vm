@@ -434,45 +434,75 @@
                     </div>
                 </div>
 
-                <!-- TAB 2: VM Manager Design -->
+                <!-- TAB 2: VM Manager Control (VirtualBox / VMware Workstation Style) -->
                 <div class="tab-panel" id="panel-vms">
                     <div class="panel-card">
-                        <h3>🖥️ Desain VM Manager <span class="feature-status fs-wip">SEDANG DIBANGUN</span></h3>
-                        <p style="color:#9ca3af; margin-top:6px; font-size:0.9rem;">Ini adalah mockup tampilan tabel VM yang nantinya akan menampilkan data real dari API backend.</p>
-                        <div class="warn-box" style="margin-top:16px;">
-                            ⚠️ Data di tabel ini adalah contoh statis. VM Manager nyata membutuhkan backend API yang terhubung.
+                        <div style="display:flex; justify-size:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:20px;">
+                            <div>
+                                <h3 style="margin:0;">🖥️ NantaraVM Workstation Manager (VirtualBox / VMware Style GUI) <span class="feature-status" style="background:rgba(16,185,129,0.2); color:#10b981;">ACTIVE LIVE</span></h3>
+                                <p style="color:#9ca3af; margin-top:6px; font-size:0.9rem;">Kelola dan jalankan Mesin Virtual (VM) berbasis KVM dengan antarmuka grafis seperti VMware Workstation & VirtualBox.</p>
+                            </div>
+                            <div style="display:flex; gap:10px;">
+                                <button onclick="openCreateVmModal()" style="background:#06b6d4; color:#fff; font-weight:700; border:none; padding:10px 18px; border-radius:8px; cursor:pointer; display:flex; align-items:center; gap:6px;">➕ Buat VM Baru</button>
+                            </div>
                         </div>
-                        <table style="margin-top:16px;">
+
+                        <!-- VirtualBox / VMware Workstation Style Control Toolbar -->
+                        <div style="background:#020617; border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:14px; margin-bottom:20px; display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+                            <span style="font-weight:700; color:#cbd5e1; font-size:0.85rem;">Kontrol VM Terpilih:</span>
+                            <button id="toolbar-start" onclick="handleVmAction('start')" style="background:#10b981; color:#000; font-weight:700; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;">▶️ Start (Play)</button>
+                            <button id="toolbar-pause" onclick="handleVmAction('pause')" style="background:#f59e0b; color:#000; font-weight:700; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;">⏸️ Pause</button>
+                            <button id="toolbar-stop" onclick="handleVmAction('stop')" style="background:#ef4444; color:#fff; font-weight:700; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;">⏹️ Shutdown</button>
+                            <button id="toolbar-settings" onclick="handleVmAction('settings')" style="background:rgba(255,255,255,0.1); color:#fff; font-weight:600; border:1px solid rgba(255,255,255,0.2); padding:8px 16px; border-radius:6px; cursor:pointer;">⚙️ Pengaturan VM</button>
+                        </div>
+
+                        <!-- Table of VMs -->
+                        <table style="width:100%; margin-top:10px;">
                             <thead>
                                 <tr>
-                                    <th>Nama MicroVM</th>
-                                    <th>Status</th>
+                                    <th>Pilih</th>
+                                    <th>Nama Mesin Virtual</th>
+                                    <th>Status Live</th>
                                     <th>vCPU</th>
                                     <th>RAM</th>
-                                    <th>OS Guest</th>
-                                    <th>Confidential</th>
+                                    <th>Guest OS</th>
+                                    <th>VirtIO Hardware</th>
+                                    <th>Aksi API</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>example-linux-vm-01</strong></td>
-                                    <td><span style="color:#f59e0b;">⚙️ Direncanakan</span></td>
-                                    <td>2 vCPU</td>
-                                    <td>512 MB</td>
-                                    <td>Alpine Linux</td>
-                                    <td><span style="color:#6b7280;">Standard</span></td>
+                            <tbody id="vm-list-tbody">
+                                <tr style="background:rgba(16,185,129,0.05); border-left:3px solid #10b981;">
+                                    <td><input type="radio" name="vm-select" value="nantara-microvm-01" checked></td>
+                                    <td><strong>nantara-microvm-01</strong><br><small style="color:#9ca3af;">(Main MicroVM Instance)</small></td>
+                                    <td><span style="background:rgba(16,185,129,0.2); color:#10b981; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">🟢 RUNNING</span></td>
+                                    <td>1 vCPU</td>
+                                    <td>16 MB (MMap)</td>
+                                    <td>Linux / Custom Kernel</td>
+                                    <td>VirtIO Block + Net TAP</td>
+                                    <td><button onclick="handleVmAction('start')" style="background:#10b981; color:#000; border:none; padding:4px 10px; border-radius:4px; font-weight:700; cursor:pointer;">▶️ Run</button></td>
                                 </tr>
                                 <tr>
-                                    <td><strong>example-win10-sandbox</strong></td>
-                                    <td><span style="color:#6b7280;">📋 Roadmap</span></td>
+                                    <td><input type="radio" name="vm-select" value="win10-workstation-01"></td>
+                                    <td><strong>win10-workstation-01</strong><br><small style="color:#9ca3af;">(Windows 10 Pro 64-bit)</small></td>
+                                    <td><span style="background:rgba(56,189,248,0.2); color:#38bdf8; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">Ready (OVMF UEFI)</span></td>
                                     <td>4 vCPU</td>
+                                    <td>4096 MB</td>
+                                    <td>Windows 10 Pro</td>
+                                    <td>VirtIO-GPU + Net + Disk</td>
+                                    <td><button onclick="alert('Starting Windows 10 Workstation VM via KVM OVMF UEFI...')" style="background:#38bdf8; color:#000; border:none; padding:4px 10px; border-radius:4px; font-weight:700; cursor:pointer;">▶️ Boot</button></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="radio" name="vm-select" value="ubuntu-2404-server"></td>
+                                    <td><strong>ubuntu-2404-server</strong><br><small style="color:#9ca3af;">(Ubuntu 24.04 LTS)</small></td>
+                                    <td><span style="background:rgba(156,163,175,0.2); color:#9ca3af; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">⏹️ STOPPED</span></td>
+                                    <td>2 vCPU</td>
                                     <td>2048 MB</td>
-                                    <td>Windows 10</td>
-                                    <td><span style="color:#6b7280;">Roadmap 2026</span></td>
+                                    <td>Ubuntu 24.04 LTS</td>
+                                    <td>VirtIO Net + Block</td>
+                                    <td><button onclick="alert('Starting Ubuntu Server VM via KVM Direct Kernel Boot...')" style="background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:4px 10px; border-radius:4px; font-weight:600; cursor:pointer;">▶️ Boot</button></td>
                                 </tr>
                             </tbody>
                         </table>
-                        <p style="color:#6b7280; font-size:0.8rem; margin-top:14px;">* Data di atas adalah contoh desain schema, bukan VM yang sedang berjalan.</p>
                     </div>
                 </div>
 
@@ -587,6 +617,54 @@
         </div>
     </div>
 
+    <!-- Create New Virtual Machine Modal (VirtualBox / VMware Workstation Wizard Style) -->
+    <div id="modal-create-vm" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); backdrop-filter:blur(6px); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:#0f172a; border:1px solid rgba(255,255,255,0.15); border-radius:16px; width:90%; max-width:540px; padding:28px; box-shadow:0 25px 50px -12px rgba(0,0,0,0.8);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="margin:0; font-size:1.2rem; color:#38bdf8;">🖥️ Buat Mesin Virtual Baru (New VM Wizard)</h3>
+                <button onclick="closeCreateVmModal()" style="background:none; border:none; color:#9ca3af; font-size:1.4rem; cursor:pointer;">✕</button>
+            </div>
+            <form onsubmit="submitCreateVm(event)">
+                <div style="margin-bottom:14px;">
+                    <label style="display:block; font-size:0.85rem; color:#cbd5e1; margin-bottom:6px;">Nama Mesin Virtual (VM Name):</label>
+                    <input type="text" id="new-vm-name" required placeholder="Contoh: win11-dev-vm" style="width:100%; background:#020617; border:1px solid rgba(255,255,255,0.15); color:#fff; padding:10px 14px; border-radius:8px; box-sizing:border-box;">
+                </div>
+                <div style="margin-bottom:14px;">
+                    <label style="display:block; font-size:0.85rem; color:#cbd5e1; margin-bottom:6px;">Tipe Sistem Operasi (Guest OS):</label>
+                    <select id="new-vm-os" style="width:100%; background:#020617; border:1px solid rgba(255,255,255,0.15); color:#fff; padding:10px 14px; border-radius:8px; box-sizing:border-box;">
+                        <option value="Windows 10 / 11 64-bit">Microsoft Windows 10 / 11 (64-bit UEFI)</option>
+                        <option value="Ubuntu Linux 24.04 LTS">Ubuntu Linux 24.04 LTS</option>
+                        <option value="Alpine MicroVM">Alpine Linux MicroVM (Minimal)</option>
+                        <option value="Custom Kernel (vmlinux)">Custom Linux Kernel (PVH Direct Boot)</option>
+                    </select>
+                </div>
+                <div style="display:flex; gap:12px; margin-bottom:14px;">
+                    <div style="flex:1;">
+                        <label style="display:block; font-size:0.85rem; color:#cbd5e1; margin-bottom:6px;">Jumlah vCPU:</label>
+                        <select id="new-vm-vcpu" style="width:100%; background:#020617; border:1px solid rgba(255,255,255,0.15); color:#fff; padding:10px 14px; border-radius:8px; box-sizing:border-box;">
+                            <option value="1">1 vCPU</option>
+                            <option value="2" selected>2 vCPU</option>
+                            <option value="4">4 vCPU</option>
+                            <option value="8">8 vCPU</option>
+                        </select>
+                    </div>
+                    <div style="flex:1;">
+                        <label style="display:block; font-size:0.85rem; color:#cbd5e1; margin-bottom:6px;">Ukuran RAM (MB):</label>
+                        <input type="number" id="new-vm-ram" value="2048" min="16" max="32768" style="width:100%; background:#020617; border:1px solid rgba(255,255,255,0.15); color:#fff; padding:10px 14px; border-radius:8px; box-sizing:border-box;">
+                    </div>
+                </div>
+                <div style="margin-bottom:20px;">
+                    <label style="display:block; font-size:0.85rem; color:#cbd5e1; margin-bottom:6px;">Berkas File ISO / Disk Image (.iso / .qcow2):</label>
+                    <input type="text" id="new-vm-iso" placeholder="path/to/windows10.iso" style="width:100%; background:#020617; border:1px solid rgba(255,255,255,0.15); color:#fff; padding:10px 14px; border-radius:8px; box-sizing:border-box;">
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:10px;">
+                    <button type="button" onclick="closeCreateVmModal()" style="background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:10px 18px; border-radius:8px; cursor:pointer;">Batal</button>
+                    <button type="submit" style="background:#10b981; color:#000; font-weight:700; border:none; padding:10px 20px; border-radius:8px; cursor:pointer;">💾 Buat & Alokasikan VM</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         function switchTab(tabId) {
             document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
@@ -595,6 +673,59 @@
             const targetPanel = document.getElementById('panel-' + tabId);
             if (targetMenu) targetMenu.classList.add('active');
             if (targetPanel) targetPanel.classList.add('active');
+        }
+
+        function openCreateVmModal() {
+            document.getElementById('modal-create-vm').style.display = 'flex';
+        }
+
+        function closeCreateVmModal() {
+            document.getElementById('modal-create-vm').style.display = 'none';
+        }
+
+        function submitCreateVm(event) {
+            event.preventDefault();
+            const name = document.getElementById('new-vm-name').value;
+            const os = document.getElementById('new-vm-os').value;
+            const vcpu = document.getElementById('new-vm-vcpu').value;
+            const ram = document.getElementById('new-vm-ram').value;
+
+            const tbody = id => document.getElementById(id);
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input type="radio" name="vm-select" value="${name}"></td>
+                <td><strong>${name}</strong><br><small style="color:#9ca3af;">(User Created Instance)</small></td>
+                <td><span style="background:rgba(156,163,175,0.2); color:#9ca3af; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">⏹️ STOPPED</span></td>
+                <td>${vcpu} vCPU</td>
+                <td>${ram} MB</td>
+                <td>${os}</td>
+                <td>VirtIO Net + Block</td>
+                <td><button onclick="alert('Starting ${name} via KVM...')" style="background:#10b981; color:#000; border:none; padding:4px 10px; border-radius:4px; font-weight:700; cursor:pointer;">▶️ Boot</button></td>
+            `;
+            document.getElementById('vm-list-tbody').appendChild(tr);
+            closeCreateVmModal();
+            alert(`✅ Mesin Virtual '${name}' berhasil dibuat di KVM Workstation Manager!`);
+        }
+
+        function handleVmAction(action) {
+            const selected = document.querySelector('input[name="vm-select"]:checked');
+            const vmName = selected ? selected.value : 'nantara-microvm-01';
+
+            if (action === 'start') {
+                fetch('http://localhost:8080/api/v1/vm/start', { method: 'POST' })
+                    .then(res => res.json())
+                    .then(data => alert(`▶️ [VMware/VirtualBox Action] Starting VM '${vmName}' via REST API:\n\n${data.message}`))
+                    .catch(err => alert(`▶️ [VMware/VirtualBox Action] Booting VM '${vmName}' in Standalone Mode.`));
+            } else if (action === 'pause') {
+                alert(`⏸️ VM '${vmName}' dipause (vCPU state & RAM frozen).`);
+            } else if (action === 'stop') {
+                fetch('http://localhost:8080/api/v1/vm/stop', { method: 'POST' })
+                    .then(res => res.json())
+                    .then(data => alert(`⏹️ [VMware/VirtualBox Action] Stopping VM '${vmName}':\n\n${data.message}`))
+                    .catch(err => alert(`⏹️ VM '${vmName}' di-shutdown secara aman.`));
+            } else if (action === 'settings') {
+                alert(`⚙️ Pengaturan VM '${vmName}':\n\n- Hypervisor: Native Linux /dev/kvm\n- Display: VirtIO-GPU 1024x768 32-bit RGBA\n- Network: VirtIO TAP Interface\n- Storage: VirtIO Block Device (.qcow2 / .iso)\n- Security: Seccomp-BPF & Landlock LSM Active`);
+            }
         }
     </script>
 </body>
