@@ -13,14 +13,26 @@ If (!(Test-Path $InstallDir)) {
 }
 
 Write-Host "[1/3] Mendownload NantaraVM Workstation Engine untuk Windows..." -ForegroundColor Yellow
-$BinaryUrl = "https://raw.githubusercontent.com/camanit/nantara-vm/main/web/nantara-vm.exe"
+$BinaryUrl = "https://raw.githubusercontent.com/camanit/nantara-vm/main/web/downloads/nantara-vm.exe"
+$RunnerUrl = "https://raw.githubusercontent.com/camanit/nantara-vm/main/web/downloads/run-nantara-vm.bat"
 $TargetPath = "$InstallDir\nantara-vm.exe"
+$RunnerPath = "$InstallDir\run-nantara-vm.bat"
 
-try {
-    Invoke-WebRequest -Uri $BinaryUrl -OutFile $TargetPath -UseBasicParsing
+$LocalBinary = "$PSScriptRoot\downloads\nantara-vm.exe"
+$LocalRunner = "$PSScriptRoot\downloads\run-nantara-vm.bat"
+
+if (Test-Path $LocalBinary) {
+    Copy-Item $LocalBinary $TargetPath -Force
+    if (Test-Path $LocalRunner) { Copy-Item $LocalRunner $RunnerPath -Force }
     Write-Host "[2/3] Executable NantaraVM berhasil terpasang di $TargetPath" -ForegroundColor Green
-} catch {
-    Write-Host "[Info] Menyiapkan runner NantaraVM CLI & Web Control Plane..." -ForegroundColor Yellow
+} else {
+    try {
+        Invoke-WebRequest -Uri $BinaryUrl -OutFile $TargetPath -UseBasicParsing
+        Invoke-WebRequest -Uri $RunnerUrl -OutFile $RunnerPath -UseBasicParsing
+        Write-Host "[2/3] Executable NantaraVM berhasil terpasang di $TargetPath" -ForegroundColor Green
+    } catch {
+        Write-Host "[Info] Menyiapkan runner NantaraVM CLI & Web Control Plane..." -ForegroundColor Yellow
+    }
 }
 
 Write-Host "[3/3] Menambahkan NantaraVM ke System PATH & Membuat Desktop Shortcut..." -ForegroundColor Yellow
