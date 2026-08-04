@@ -25,6 +25,7 @@ fn main() {
     let mut bios_path: Option<String> = None;
     let mut drive_path: Option<String> = None;
     let mut display_gpu = false;
+    let mut enable_jail = false;
 
     let mut i = 0;
     while i < args.len() {
@@ -40,6 +41,8 @@ fn main() {
         } else if args[i] == "--drive" && i + 1 < args.len() {
             drive_path = Some(args[i + 1].clone());
             i += 1;
+        } else if args[i] == "--jail" {
+            enable_jail = true;
         } else if args[i] == "--display" && i + 1 < args.len() {
             if args[i + 1] == "virtio-gpu" {
                 display_gpu = true;
@@ -52,6 +55,11 @@ fn main() {
     println!("====================================================");
     println!(" 🚀 NantaraVM NKRI 2026 - Cloud-Native MicroVM VMM");
     println!("====================================================");
+
+    if enable_jail {
+        let jailer = jailer::Jailer::new(jailer::JailerConfig::default());
+        let _ = jailer.apply_seccomp_filter();
+    }
 
     if let Some(ref drive) = drive_path {
         let path = PathBuf::from(drive);
