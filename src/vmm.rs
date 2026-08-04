@@ -324,14 +324,14 @@ impl Vmm {
         #[cfg(target_os = "linux")]
         {
             let vcpu_fd = self.vm_fd.create_vcpu(0).map_err(|e| format!("Failed to create vCPU 0: {:?}", e))?;
-            let vcpu = Vcpu::new(0, vcpu_fd);
+            let mut vcpu = Vcpu::new(0, vcpu_fd);
             vcpu.setup_long_mode(&self.guest_memory)?;
             vcpu.run_loop(&self.guest_memory)?;
         }
 
         #[cfg(not(target_os = "linux"))]
         {
-            let vcpu = Vcpu::new(0);
+            let mut vcpu = Vcpu::new(0);
             vcpu.setup_long_mode(&self.guest_memory_stub)?;
             vcpu.run_loop(&self.guest_memory_stub)?;
         }

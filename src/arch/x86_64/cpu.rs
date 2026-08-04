@@ -83,7 +83,7 @@ impl Vcpu {
 
     /// Load payload and execute the vCPU loop
     #[cfg(target_os = "linux")]
-    pub fn run_loop(&self, _mem: &GuestMemoryMmap) -> Result<(), String> {
+    pub fn run_loop(&mut self, _mem: &GuestMemoryMmap) -> Result<(), String> {
         println!("[NantaraVM] Starting vCPU {} execution loop...", self.id);
         loop {
             match self.vcpu_fd.run().map_err(|e| e.to_string())? {
@@ -114,7 +114,7 @@ impl Vcpu {
     }
 
     #[cfg(not(target_os = "linux"))]
-    pub fn run_loop(&self, _mem: &[u8]) -> Result<(), String> {
+    pub fn run_loop(&mut self, _mem: &[u8]) -> Result<(), String> {
         println!("[NantaraVM] Simulating vCPU {} execution on non-Linux platform...", self.id);
         print!("[NantaraVM Serial COM1] NantaraVM NKRI 2026 Booted!\n");
         println!("[NantaraVM] vCPU {} halted cleanly.", self.id);
