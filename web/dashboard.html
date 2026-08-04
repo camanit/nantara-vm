@@ -466,8 +466,8 @@
                             </div>
 
                             <div style="display: flex; gap: 10px; margin-top: 12px;">
-                                <button id="btn-api-start-vm" onclick="handleVmAction('start', 'win10-workstation-01')" style="background: #10b981; color: #000; font-weight: 700; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; flex: 1;">▶️ Start MicroVM</button>
-                                <button id="btn-api-stop-vm" onclick="handleVmAction('stop', 'win10-workstation-01')" style="background: #ef4444; color: #fff; font-weight: 700; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; flex: 1;">⏹️ Stop MicroVM</button>
+                                <button id="btn-api-start-vm" onclick="handleVmAction('start')" style="background: #10b981; color: #000; font-weight: 700; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; flex: 1;">▶️ Start MicroVM</button>
+                                <button id="btn-api-stop-vm" onclick="handleVmAction('stop')" style="background: #ef4444; color: #fff; font-weight: 700; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; flex: 1;">⏹️ Stop MicroVM</button>
                             </div>
 
                             <div class="info-box" style="margin-top: 10px; background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.3); color: #10b981;">
@@ -852,6 +852,48 @@
             document.getElementById('modal-create-vm').style.display = 'none';
         }
 
+        function renderVmRow(vmData) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input type="radio" name="vm-select" value="${vmData.name}"></td>
+                <td><strong>${vmData.name}</strong><br><small style="color:#9ca3af;">(User Created Instance)</small></td>
+                <td><span style="background:rgba(156,163,175,0.2); color:#9ca3af; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">⏹️ STOPPED</span></td>
+                <td>${vmData.vcpu} vCPU</td>
+                <td>${vmData.ram} MB</td>
+                <td>${vmData.os}</td>
+                <td>VirtIO Net + Block</td>
+                <td>
+                    <div style="display:flex; gap:6px;">
+                        <button onclick="handleVmAction('start', '${vmData.name}')" style="background:#10b981; color:#000; border:none; padding:4px 10px; border-radius:4px; font-weight:700; cursor:pointer;">▶️ Boot</button>
+                        <button onclick="handleVmAction('delete', '${vmData.name}')" style="background:rgba(239,68,68,0.2); color:#ef4444; border:1px solid rgba(239,68,68,0.4); padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:700; cursor:pointer;">🗑️ Hapus</button>
+                    </div>
+                </td>
+            `;
+            document.getElementById('vm-list-tbody').appendChild(tr);
+        }
+
+        function getCustomVmsFromStorage() {
+            try {
+                return JSON.parse(localStorage.getItem('nantara_custom_vms') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveCustomVmToStorage(vmData) {
+            const vms = getCustomVmsFromStorage();
+            if (!vms.some(v => v.name === vmData.name)) {
+                vms.push(vmData);
+                localStorage.setItem('nantara_custom_vms', JSON.stringify(vms));
+            }
+        }
+
+        function removeCustomVmFromStorage(vmName) {
+            let vms = getCustomVmsFromStorage();
+            vms = vms.filter(v => v.name !== vmName);
+            localStorage.setItem('nantara_custom_vms', JSON.stringify(vms));
+        }
+
         function submitCreateVm(event) {
             event.preventDefault();
             const name = document.getElementById('new-vm-name').value;
@@ -859,26 +901,12 @@
             const vcpu = document.getElementById('new-vm-vcpu').value;
             const ram = document.getElementById('new-vm-ram').value;
 
-            const tbody = id => document.getElementById(id);
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><input type="radio" name="vm-select" value="${name}"></td>
-                <td><strong>${name}</strong><br><small style="color:#9ca3af;">(User Created Instance)</small></td>
-                <td><span style="background:rgba(156,163,175,0.2); color:#9ca3af; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">⏹️ STOPPED</span></td>
-                <td>${vcpu} vCPU</td>
-                <td>${ram} MB</td>
-                <td>${os}</td>
-                <td>VirtIO Net + Block</td>
-                <td>
-                    <div style="display:flex; gap:6px;">
-                        <button onclick="handleVmAction('start', '${name}')" style="background:#10b981; color:#000; border:none; padding:4px 10px; border-radius:4px; font-weight:700; cursor:pointer;">▶️ Boot</button>
-                        <button onclick="handleVmAction('delete', '${name}')" style="background:rgba(239,68,68,0.2); color:#ef4444; border:1px solid rgba(239,68,68,0.4); padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:700; cursor:pointer;">🗑️ Hapus</button>
-                    </div>
-                </td>
-            `;
-            document.getElementById('vm-list-tbody').appendChild(tr);
+            const vmData = { name, os, vcpu, ram };
+            renderVmRow(vmData);
+            saveCustomVmToStorage(vmData);
+
             closeCreateVmModal();
-            alert(`✅ Mesin Virtual '${name}' berhasil dibuat di KVM Workstation Manager!`);
+            alert(`✅ Mesin Virtual '${name}' berhasil dibuat dan disimpan permanen!`);
         }
 
         function applyVmStatusUI(vmName, statusState) {
@@ -894,7 +922,6 @@
                         tr.style.background = 'rgba(16,185,129,0.05)';
                         tr.style.borderLeft = '3px solid #10b981';
 
-                        // Show Windows GUI Display screen if any Windows VM is started
                         const winScreen = document.getElementById('win10-gui-screen');
                         const consoleLogs = document.getElementById('vmm-console-logs');
                         const screenTitle = document.getElementById('win10-screen-arch-title');
@@ -929,8 +956,20 @@
         }
 
         function restoreVmStatusesOnLoad() {
-            const vmNames = ['nantara-microvm-01', 'win10-workstation-01', 'ubuntu-2404-server'];
-            vmNames.forEach(name => {
+            // Restore custom VMs created by user
+            const customVms = getCustomVmsFromStorage();
+            customVms.forEach(vmData => {
+                const existingRadio = document.querySelector(`input[name="vm-select"][value="${vmData.name}"]`);
+                if (!existingRadio) {
+                    renderVmRow(vmData);
+                }
+            });
+
+            // Restore VM statuses
+            const defaultNames = ['nantara-microvm-01', 'win10-workstation-01', 'ubuntu-2404-server'];
+            const allVmNames = [...defaultNames, ...customVms.map(v => v.name)];
+
+            allVmNames.forEach(name => {
                 const savedState = localStorage.getItem('nantara_vm_status_' + name);
                 if (savedState) {
                     applyVmStatusUI(name, savedState);
@@ -967,6 +1006,7 @@
             } else if (action === 'delete') {
                 if (confirm(`🗑️ Apakah Anda yakin ingin menghapus Mesin Virtual '${vmName}'?\n\nAlokasi vCPU dan RAM akan dibebaskan kembali.`)) {
                     localStorage.removeItem('nantara_vm_status_' + vmName);
+                    removeCustomVmFromStorage(vmName);
                     const rows = document.querySelectorAll('#vm-list-tbody tr');
                     rows.forEach(tr => {
                         const radio = tr.querySelector('input[type="radio"]');
