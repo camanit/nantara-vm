@@ -381,7 +381,7 @@
                     <div class="vm-view-area">
                         <div class="novnc-screen">
                             <div class="screen-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-                                <span>📺 NantaraVM Live Workstation Display Output</span>
+                                <span id="screen-title-text">📺 NantaraVM Live Workstation Display Output</span>
                                 <div style="display:flex; gap:8px; align-items:center;">
                                     <button id="btn-mode-cli" onclick="switchDisplayMode('cli')" style="background:#10b981; color:#000; font-weight:700; border:none; padding:4px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer;">💻 Terminal Shell (CLI)</button>
                                     <button id="btn-mode-gui" onclick="switchDisplayMode('gui')" style="background:rgba(255,255,255,0.1); color:#cbd5e1; font-weight:600; border:1px solid rgba(255,255,255,0.2); padding:4px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer;">🖥️ Graphical Desktop (GUI)</button>
@@ -1041,6 +1041,17 @@
 
                 applyVmStatusUI(vmName, 'start');
                 localStorage.setItem('nantara_vm_status_' + vmName, 'start');
+
+                const screenTitle = document.getElementById('screen-title-text');
+                if (screenTitle) {
+                    if (vmName.toLowerCase().includes('kali')) {
+                        screenTitle.innerHTML = '📺 NantaraVM Live Display - <span style="color:#8b5cf6; font-weight:700;">[Kali Linux Security OS Active]</span>';
+                    } else if (vmName.toLowerCase().includes('ubuntu')) {
+                        screenTitle.innerHTML = '📺 NantaraVM Live Display - <span style="color:#06b6d4; font-weight:700;">[Ubuntu 24.04 LTS Workstation Active]</span>';
+                    } else {
+                        screenTitle.innerHTML = '📺 NantaraVM Live Display - <span style="color:#10b981; font-weight:700;">[' + vmName + ' Active]</span>';
+                    }
+                }
             } else if (action === 'pause') {
                 applyVmStatusUI(vmName, 'pause');
                 localStorage.setItem('nantara_vm_status_' + vmName, 'pause');
