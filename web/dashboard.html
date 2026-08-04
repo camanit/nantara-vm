@@ -894,12 +894,33 @@
             localStorage.setItem('nantara_custom_vms', JSON.stringify(vms));
         }
 
+        function getDeletedVmsFromStorage() {
+            try {
+                return JSON.parse(localStorage.getItem('nantara_deleted_vms') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveDeletedVmToStorage(vmName) {
+            const deleted = getDeletedVmsFromStorage();
+            if (!deleted.includes(vmName)) {
+                deleted.push(vmName);
+                localStorage.setItem('nantara_deleted_vms', JSON.stringify(deleted));
+            }
+        }
+
         function submitCreateVm(event) {
             event.preventDefault();
             const name = document.getElementById('new-vm-name').value;
             const os = document.getElementById('new-vm-os').value;
             const vcpu = document.getElementById('new-vm-vcpu').value;
             const ram = document.getElementById('new-vm-ram').value;
+
+            // Remove from deleted list if recreating same name
+            let deleted = getDeletedVmsFromStorage();
+            deleted = deleted.filter(n => n !== name);
+            localStorage.setItem('nantara_deleted_vms', JSON.stringify(deleted));
 
             const vmData = { name, os, vcpu, ram };
             renderVmRow(vmData);
@@ -956,12 +977,27 @@
         }
 
         function restoreVmStatusesOnLoad() {
-            // Restore custom VMs created by user
+            const deletedNames = getDeletedVmsFromStorage();
+
+            // Filter out deleted built-in or custom rows
+            deletedNames.forEach(deletedName => {
+                const rows = document.querySelectorAll('#vm-list-tbody tr');
+                rows.forEach(tr => {
+                    const radio = tr.querySelector('input[type="radio"]');
+                    if (radio && radio.value === deletedName) {
+                        tr.remove();
+                    }
+                });
+            });
+
+            // Restore custom VMs created by user (excluding deleted ones)
             const customVms = getCustomVmsFromStorage();
             customVms.forEach(vmData => {
-                const existingRadio = document.querySelector(`input[name="vm-select"][value="${vmData.name}"]`);
-                if (!existingRadio) {
-                    renderVmRow(vmData);
+                if (!deletedNames.includes(vmData.name)) {
+                    const existingRadio = document.querySelector(`input[name="vm-select"][value="${vmData.name}"]`);
+                    if (!existingRadio) {
+                        renderVmRow(vmData);
+                    }
                 }
             });
 
@@ -970,9 +1006,11 @@
             const allVmNames = [...defaultNames, ...customVms.map(v => v.name)];
 
             allVmNames.forEach(name => {
-                const savedState = localStorage.getItem('nantara_vm_status_' + name);
-                if (savedState) {
-                    applyVmStatusUI(name, savedState);
+                if (!deletedNames.includes(name)) {
+                    const savedState = localStorage.getItem('nantara_vm_status_' + name);
+                    if (savedState) {
+                        applyVmStatusUI(name, savedState);
+                    }
                 }
             });
         }
@@ -1007,12 +1045,13 @@
                 if (confirm(`🗑️ Apakah Anda yakin ingin menghapus Mesin Virtual '${vmName}'?\n\nAlokasi vCPU dan RAM akan dibebaskan kembali.`)) {
                     localStorage.removeItem('nantara_vm_status_' + vmName);
                     removeCustomVmFromStorage(vmName);
+                    saveDeletedVmToStorage(vmName);
                     const rows = document.querySelectorAll('#vm-list-tbody tr');
                     rows.forEach(tr => {
                         const radio = tr.querySelector('input[type="radio"]');
                         if (radio && radio.value === vmName) tr.remove();
                     });
-                    alert(`✅ Mesin Virtual '${vmName}' berhasil dihapus dari NantaraVM Workstation Manager!`);
+                    alert(`✅ Mesin Virtual '${vmName}' berhasil dihapus permanen dari NantaraVM Workstation Manager!`);
                 }
             }
         }
