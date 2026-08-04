@@ -513,6 +513,21 @@
                                         </div>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td><input type="radio" name="vm-select" value="windows-10-workstation"></td>
+                                    <td><strong>windows-10-workstation</strong><br><small style="color:#9ca3af;">(Windows 10 / 32-bit Workstation)</small></td>
+                                    <td><span style="background:rgba(156,163,175,0.2); color:#9ca3af; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">⏹️ STOPPED</span></td>
+                                    <td>2 vCPU</td>
+                                    <td>2048 MB</td>
+                                    <td>Windows 10 / 32-bit OS</td>
+                                    <td>VirtIO Block + GPU</td>
+                                    <td>
+                                        <div style="display:flex; gap:6px;">
+                                            <button onclick="handleVmAction('start', 'windows-10-workstation')" style="background:#3b82f6; color:#fff; border:none; padding:4px 10px; border-radius:4px; font-weight:700; cursor:pointer;">▶️ Boot</button>
+                                            <button onclick="handleVmAction('delete', 'windows-10-workstation')" style="background:rgba(239,68,68,0.2); color:#ef4444; border:1px solid rgba(239,68,68,0.4); padding:4px 8px; border-radius:4px; font-weight:600; cursor:pointer;">🗑️ Hapus</button>
+                                        </div>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -1052,7 +1067,9 @@
 
                 const screenTitle = document.getElementById('screen-title-text');
                 if (screenTitle) {
-                    if (vmName.toLowerCase().includes('kali')) {
+                    if (vmName.toLowerCase().includes('win')) {
+                        screenTitle.innerHTML = '📺 NantaraVM Live Display - <span style="color:#3b82f6; font-weight:700;">[Windows 10 / 32-bit Workstation Active]</span>';
+                    } else if (vmName.toLowerCase().includes('kali')) {
                         screenTitle.innerHTML = '📺 NantaraVM Live Display - <span style="color:#8b5cf6; font-weight:700;">[Kali Linux Security OS Active]</span>';
                     } else if (vmName.toLowerCase().includes('ubuntu')) {
                         screenTitle.innerHTML = '📺 NantaraVM Live Display - <span style="color:#06b6d4; font-weight:700;">[Ubuntu 24.04 LTS Workstation Active]</span>';
@@ -1086,7 +1103,7 @@
             if (confirm('🔄 Apakah Anda yakin ingin mereset daftar VM kembali ke tampilan default murni?')) {
                 localStorage.removeItem('nantara_deleted_vms');
                 localStorage.removeItem('nantara_custom_vms');
-                const defaultNames = ['nantara-microvm-01', 'ubuntu-2404-server', 'kali-linux-sandbox'];
+                const defaultNames = ['nantara-microvm-01', 'ubuntu-2404-server', 'kali-linux-sandbox', 'windows-10-workstation'];
                 defaultNames.forEach(name => localStorage.removeItem('nantara_vm_status_' + name));
                 location.reload();
             }
