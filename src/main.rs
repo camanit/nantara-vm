@@ -10,6 +10,7 @@ mod bench;
 mod virtio;
 mod userfaultfd;
 mod license;
+mod vnc;
 mod vmm;
 
 use std::env;

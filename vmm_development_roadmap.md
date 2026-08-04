@@ -88,8 +88,9 @@ graph TD
 
 ---
 
-### Phase 5: Multi-Platform Expansion (macOS & Android) — 🎯 FUTURE ROADMAP
-- [ ] **macOS Hypervisor Backend (`Hypervisor.framework / hvf`)**: Native Apple Silicon (M1/M2/M3/M4) & Intel Mac virtualization driver.
-- [ ] **Android pKVM Backend (Android Virtualization Framework - AVF)**: Support Android 13+ Protected KVM (`/dev/kvm` & `/dev/pvmfw`) for isolated MicroVM enclaves on mobile devices.
-- [ ] **Kubernetes Containerd Shim (v2 Shim)**: Native Kata-style containerd shim integration for Kubernetes pod isolation.
-- [ ] **Milestone 5**: Cross-Platform MicroVM Engine (Linux, Windows, macOS, Android) & Kubernetes Integration.
+### Phase 5: Multi-Platform Expansion & Kubernetes Integration — 🚀 ACTIVE PROGRESS (v2.0)
+- [x] **macOS Hypervisor Backend (`src/arch/aarch64/` & `Hypervisor.framework / hvf`)**: Native Apple Silicon (M1/M2/M3/M4) ARM64 virtualization driver architecture.
+- [x] **Android pKVM Backend (Android Virtualization Framework - AVF)**: Support Android 13+ Protected KVM (`/dev/kvm` & `/dev/pvmfw`) for isolated MicroVM enclaves on mobile devices.
+- [x] **Kubernetes Containerd Shim (`src/shim/v2.rs`)**: Native Kata-style containerd shim v2 integration for Kubernetes pod isolation.
+- [x] **VNC WebSocket Framebuffer Streamer (`src/vnc.rs`)**: Real-time 1024x768 32-bit RGBA VirtIO-GPU display output streaming on Port 5900/8081 for HTML5 web console.
+- [x] **Milestone 5**: Cross-Platform MicroVM Engine (Linux, Windows, macOS, Android) & Kubernetes Integration 100% Architecture & Code Implemented.

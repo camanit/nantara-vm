@@ -46,6 +46,7 @@ pub struct Vmm {
     pub shim: ContainerdShim,
     pub benchmark: PerformanceBenchmark,
     pub license_manager: LicenseManager,
+    pub vnc_server: crate::vnc::VncServer,
     pub confidential_enabled: bool,
 }
 
@@ -66,6 +67,7 @@ impl Vmm {
         let secret_agent = AttestationSecretAgent::new();
         let shim = ContainerdShim::new();
         let benchmark = PerformanceBenchmark::new();
+        let vnc_server = crate::vnc::VncServer::new(5900, 1024, 768);
 
         #[cfg(target_os = "linux")]
         {
@@ -110,6 +112,7 @@ impl Vmm {
                 shim,
                 benchmark,
                 license_manager,
+                vnc_server: vnc_server.clone_stub(),
                 confidential_enabled: false,
             })
         }
@@ -135,6 +138,7 @@ impl Vmm {
                 shim,
                 benchmark,
                 license_manager,
+                vnc_server,
                 confidential_enabled: false,
             })
         }
