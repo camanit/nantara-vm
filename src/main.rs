@@ -82,6 +82,7 @@ fn main() {
         }
     }
     if display_gpu {
+        let _gpu_dev = virtio::VirtioGpu::new(1024, 768);
         println!("[NantaraVM virtio-gpu] Outputting Framebuffer to Web Console (noVNC Active)...");
     }
 

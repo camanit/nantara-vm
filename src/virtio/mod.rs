@@ -3,12 +3,16 @@ pub mod queue;
 pub mod blk;
 pub mod net;
 pub mod vsock;
+pub mod gpu;
 
 pub const TYPE_NET: u32 = 1;
 pub const TYPE_BLOCK: u32 = 2;
 #[allow(dead_code)]
 pub const TYPE_CONSOLE: u32 = 3;
+pub const TYPE_GPU: u32 = 16;
 pub const TYPE_VSOCK: u32 = 19;
+
+pub use self::gpu::VirtioGpu;
 
 pub trait VirtioDevice: Send + Sync {
     fn device_type(&self) -> u32;
