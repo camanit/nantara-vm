@@ -393,8 +393,8 @@
                                     <div style="color: #10b981; font-weight: bold;">[NantaraVM] Live Interactive Terminal Console Active.</div>
                                     <div>====================================================</div>
                                 </div>
-                                <div id="live-terminal-frame" style="display: block; width: 100%; height: 320px; border-radius: 8px; border: 1px solid rgba(16,185,129,0.4); overflow: hidden;">
-                                    <iframe id="terminal-iframe" src="/console/" style="width: 100%; height: 100%; border: none; background: #020617;"></iframe>
+                                <div id="live-terminal-frame" style="display: block; width: 100%; height: 580px; border-radius: 8px; border: 1px solid rgba(16,185,129,0.4); overflow: hidden; background: #020617;">
+                                    <iframe id="terminal-iframe" src="/console/" style="width: 100%; height: 100%; min-height: 580px; border: none; background: #020617;"></iframe>
                                 </div>
 
                             </div>
@@ -1008,6 +1008,10 @@
         window.addEventListener('DOMContentLoaded', () => {
             restoreVmStatusesOnLoad();
             checkLiveApiHealth();
+            const savedMode = localStorage.getItem('nantara_display_mode');
+            if (savedMode === 'gui') {
+                switchDisplayMode('gui');
+            }
         });
 
         function handleVmAction(action, targetVmName) {
@@ -1068,8 +1072,10 @@
             const btnGui = document.getElementById('btn-mode-gui');
             if (!iframe) return;
 
+            localStorage.setItem('nantara_display_mode', mode);
+
             if (mode === 'gui') {
-                iframe.src = '/desktop/';
+                iframe.src = '/desktop/?resize=remote';
                 if (btnGui) {
                     btnGui.style.background = '#06b6d4';
                     btnGui.style.color = '#fff';
