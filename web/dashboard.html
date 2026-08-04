@@ -984,13 +984,8 @@
                     }
                 }
             });
-
-            // Default auto-start main MicroVM terminal if no VM is saved as running
-            if (!anyRunning && !deletedNames.includes('nantara-microvm-01')) {
-                applyVmStatusUI('nantara-microvm-01', 'start');
-                localStorage.setItem('nantara_vm_status_nantara-microvm-01', 'start');
-            }
         }
+
         function checkLiveApiHealth() {
             const badge = document.getElementById('real-api-status-badge');
             fetch('/api/v1/status')
@@ -1018,15 +1013,30 @@
             if (savedMode === 'gui') {
                 switchDisplayMode('gui');
             }
+            const savedSelected = localStorage.getItem('nantara_selected_vm') || 'kali-linux-sandbox';
+            const btnStart = document.getElementById('btn-api-start-vm');
+            const btnStop = document.getElementById('btn-api-stop-vm');
+            if (btnStart) btnStart.innerHTML = '▶️ Start ' + savedSelected;
+            if (btnStop) btnStop.innerHTML = '⏹️ Stop ' + savedSelected;
         });
 
         function handleVmAction(action, targetVmName) {
             const selected = document.querySelector('input[name="vm-select"]:checked');
-            const vmName = targetVmName || (selected ? selected.value : 'nantara-microvm-01');
+            const savedSelected = localStorage.getItem('nantara_selected_vm');
+            const vmName = targetVmName || (selected ? selected.value : (savedSelected || 'kali-linux-sandbox'));
+
+            // Remember selected VM
+            localStorage.setItem('nantara_selected_vm', vmName);
 
             // Automatically check radio button for target VM
             const targetRadio = document.querySelector(`input[name="vm-select"][value="${vmName}"]`);
             if (targetRadio) targetRadio.checked = true;
+
+            // Update Start/Stop button text
+            const btnStart = document.getElementById('btn-api-start-vm');
+            const btnStop = document.getElementById('btn-api-stop-vm');
+            if (btnStart) btnStart.innerHTML = '▶️ Start ' + vmName;
+            if (btnStop) btnStop.innerHTML = '⏹️ Stop ' + vmName;
 
             if (action === 'start') {
                 // Stop all other VMs first so only 1 VM is RUNNING at a time
