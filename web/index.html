@@ -253,8 +253,8 @@
                 <div class="card">
                     <div class="card-icon">🌐</div>
                     <h3>REST API Management</h3>
-                    <p>API server untuk kontrol lifecycle VM: start, pause, resume, snapshot. Akan mendukung koneksi TCP agar bisa diakses dari web dashboard.</p>
-                    <p style="color: #9ca3af; font-size: 0.85rem; margin-top: 8px;">Status: 📋 TCP binding direncanakan</p>
+                    <p>API server untuk kontrol lifecycle VM: status, start, pause. Mendukung koneksi TCP port 8080 agar diakses dari web dashboard live.</p>
+                    <p style="color: #10b981; font-size: 0.85rem; margin-top: 8px;">Status: ✅ Aktif di Port 8080 (TCP)</p>
                 </div>
                 <div class="card">
                     <div class="card-icon">🔒</div>
@@ -291,24 +291,24 @@
                         <li>✅ Publikasi open-source</li>
                     </ul>
                 </div>
-                <div class="roadmap-card inprogress">
-                    <span class="phase-badge badge-wip">🔨 SEDANG DIKERJAKAN</span>
-                    <h3 style="color:#f59e0b; font-size:1.1rem;">Fase 1: Boot Linux Dasar</h3>
+                <div class="roadmap-card done">
+                    <span class="phase-badge badge-done">✅ SELESAI (v0.1)</span>
+                    <h3 style="color:#10b981; font-size:1.1rem;">Fase 1: KVM Engine v0.1</h3>
                     <ul style="list-style:none; padding:0; color:#cbd5e1; font-size:0.9rem;">
-                        <li>⚙️ vCPU setup dan run loop nyata</li>
-                        <li>⚙️ Boot kernel Linux sederhana via KVM</li>
-                        <li>⚙️ Output serial console ke terminal</li>
-                        <li>⚙️ VirtIO block read dasar</li>
+                        <li>✅ vCPU setup & /dev/kvm run loop</li>
+                        <li>✅ Boot payload 64-bit Long Mode</li>
+                        <li>✅ Memory MMap Guest RAM</li>
+                        <li>✅ Reader File ISO (--iso)</li>
                     </ul>
                 </div>
-                <div class="roadmap-card planned">
-                    <span class="phase-badge badge-plan">📋 DIRENCANAKAN</span>
-                    <h3 style="color:#9ca3af; font-size:1.1rem;">Fase 2: Network & API</h3>
-                    <ul style="list-style:none; padding:0; color:#6b7280; font-size:0.9rem;">
-                        <li>📋 VirtIO network fungsional (TAP)</li>
-                        <li>📋 REST API via TCP port</li>
-                        <li>📋 Web dashboard terhubung ke backend nyata</li>
-                        <li>📋 Binary release Linux x86_64</li>
+                <div class="roadmap-card inprogress">
+                    <span class="phase-badge badge-wip">🔨 SEDANG DIKERJAKAN</span>
+                    <h3 style="color:#f59e0b; font-size:1.1rem;">Fase 2: Network & REST API</h3>
+                    <ul style="list-style:none; padding:0; color:#cbd5e1; font-size:0.9rem;">
+                        <li>✅ Binary release Linux x86_64</li>
+                        <li>✅ REST API via TCP port 8080</li>
+                        <li>✅ Web dashboard terhubung backend</li>
+                        <li>⚙️ VirtIO network TAP interface</li>
                     </ul>
                 </div>
                 <div class="roadmap-card planned">
