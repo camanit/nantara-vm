@@ -423,10 +423,21 @@
                                     <div id="win10-start-menu" style="display: none; position: absolute; bottom: 36px; left: 10px; width: 240px; background: rgba(15,23,42,0.95); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px 10px 0 0; padding: 12px; z-index: 10; box-shadow: 0 10px 30px rgba(0,0,0,0.8); text-align: left;">
                                         <div style="font-weight: 700; color: #38bdf8; font-size: 0.85rem; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px;">🪟 Windows 10 Start Menu</div>
                                         <div style="font-size: 0.78rem; color: #e2e8f0; display: flex; flex-direction: column; gap: 8px;">
-                                            <div style="cursor: pointer; padding: 4px 6px; border-radius: 4px; background: rgba(255,255,255,0.05);" onclick="alert('🛡️ [Windows Security] Defender Antivirus Service Active & Real-Time Protection Enabled.')">🛡️ Windows Security / Antivirus</div>
-                                            <div style="cursor: pointer; padding: 4px 6px; border-radius: 4px; background: rgba(255,255,255,0.05);" onclick="alert('💻 [Command Prompt] Microsoft Windows [Version 10.0.19045.3803]\nC:\\Users\\NantaraVM> virtio-blk --status OK')">💻 Command Prompt (cmd.exe)</div>
-                                            <div style="cursor: pointer; padding: 4px 6px; border-radius: 4px; background: rgba(255,255,255,0.05);" onclick="alert('⚡ [Windows PowerShell] PS C:\\> Get-Service NantaraVMM | Start-Service')">⚡ Windows PowerShell</div>
-                                            <div style="cursor: pointer; padding: 4px 6px; border-radius: 4px; background: rgba(255,255,255,0.05);" onclick="alert('⚙️ [Control Panel] Device Manager: VirtIO-GPU, VirtIO-Net, VirtIO-Block Active.')">⚙️ Control Panel</div>
+                                            <div style="cursor: pointer; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.08);" onclick="openWin10App('security')">🛡️ Windows Security / Antivirus</div>
+                                            <div style="cursor: pointer; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.08);" onclick="openWin10App('cmd')">💻 Command Prompt (cmd.exe)</div>
+                                            <div style="cursor: pointer; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.08);" onclick="openWin10App('powershell')">⚡ Windows PowerShell</div>
+                                            <div style="cursor: pointer; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.08);" onclick="openWin10App('control')">⚙️ Control Panel</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- In-Canvas Windows 10 App Window Overlay -->
+                                    <div id="win10-app-window" style="display: none; position: absolute; top: 40px; left: 50%; transform: translateX(-50%); width: 85%; max-width: 500px; background: rgba(15,23,42,0.95); border: 1px solid rgba(56,189,248,0.4); border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.9); z-index: 20; text-align: left; overflow: hidden; font-size: 0.8rem;">
+                                        <div style="background: rgba(30,41,59,0.9); padding: 8px 12px; color: #fff; font-weight: 700; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                            <span id="win10-app-title">⚙️ Control Panel - All Control Panel Items</span>
+                                            <button onclick="closeWin10App()" style="background: #ef4444; color: #fff; border: none; padding: 2px 8px; border-radius: 4px; cursor: pointer; font-weight: 700;">✕</button>
+                                        </div>
+                                        <div id="win10-app-body" style="padding: 16px; color: #e2e8f0; max-height: 180px; overflow-y: auto;">
+                                            <!-- Dynamic App Content -->
                                         </div>
                                     </div>
 
@@ -434,10 +445,10 @@
                                     <div style="position: absolute; bottom: 0; width: 100%; height: 36px; background: rgba(15,23,42,0.9); display: flex; align-items: center; padding: 0 12px; border-top: 1px solid rgba(255,255,255,0.1); justify-content: space-between;">
                                         <div style="display: flex; align-items: center; gap: 10px;">
                                             <span onclick="toggleWin10StartMenu()" style="background: #0284c7; padding: 4px 10px; border-radius: 4px; color: #fff; font-size: 0.8rem; cursor: pointer; font-weight: 700;">🪟 Start</span>
-                                            <span onclick="toggleWin10StartMenu()" style="color: #cbd5e1; font-size: 0.78rem; cursor: pointer;">📁 File Explorer</span>
-                                            <span onclick="toggleWin10StartMenu()" style="color: #cbd5e1; font-size: 0.78rem; cursor: pointer;">🌐 Edge Browser</span>
+                                            <span onclick="openWin10App('explorer')" style="color: #cbd5e1; font-size: 0.78rem; cursor: pointer;">📁 File Explorer</span>
+                                            <span onclick="openWin10App('edge')" style="color: #cbd5e1; font-size: 0.78rem; cursor: pointer;">🌐 Edge Browser</span>
                                         </div>
-                                        <span style="color: #94a3b8; font-size: 0.75rem;">🔊 📶 20:58</span>
+                                        <span style="color: #94a3b8; font-size: 0.75rem;">🔊 📶 21:03</span>
                                     </div>
                                 </div>
                             </div>
@@ -743,6 +754,91 @@
             if (menu) {
                 menu.style.display = (menu.style.display === 'none' || !menu.style.display) ? 'block' : 'none';
             }
+        }
+
+        function openWin10App(appName) {
+            const startMenu = document.getElementById('win10-start-menu');
+            if (startMenu) startMenu.style.display = 'none';
+
+            const win = document.getElementById('win10-app-window');
+            const title = document.getElementById('win10-app-title');
+            const body = document.getElementById('win10-app-body');
+
+            if (!win || !title || !body) return;
+
+            win.style.display = 'block';
+
+            if (appName === 'control') {
+                title.innerHTML = '⚙️ Control Panel - All Control Panel Items';
+                body.innerHTML = `
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div style="background:rgba(255,255,255,0.05); padding:8px; border-radius:6px;"><strong>🖥️ System & Hardware</strong><br><small style="color:#94a3b8;">VirtIO-GPU 1024x768 32-bit RGBA Display</small></div>
+                        <div style="background:rgba(255,255,255,0.05); padding:8px; border-radius:6px;"><strong>🌐 Network & Internet</strong><br><small style="color:#94a3b8;">VirtIO Network TAP (nantara-tap0)</small></div>
+                        <div style="background:rgba(255,255,255,0.05); padding:8px; border-radius:6px;"><strong>🛡️ Windows Security</strong><br><small style="color:#10b981;">Defender Antivirus Active</small></div>
+                        <div style="background:rgba(255,255,255,0.05); padding:8px; border-radius:6px;"><strong>💾 Storage & Disks</strong><br><small style="color:#94a3b8;">VirtIO Block Disk (win10.qcow2)</small></div>
+                    </div>
+                `;
+            } else if (appName === 'cmd') {
+                title.innerHTML = '💻 Command Prompt (cmd.exe)';
+                body.innerHTML = `
+                    <div style="font-family:'Fira Code',monospace; background:#000; padding:10px; border-radius:6px; color:#10b981; font-size:0.75rem;">
+                        Microsoft Windows [Version 10.0.19045.3803]<br>
+                        (c) Microsoft Corporation. All rights reserved.<br><br>
+                        C:\\Users\\NantaraVM&gt; systeminfo | findstr /B /C:"OS Name" /C:"Hypervisor"<br>
+                        OS Name:                   Microsoft Windows 10 Pro<br>
+                        Hypervisor Detected:       NantaraVM Native Linux KVM<br><br>
+                        C:\\Users\\NantaraVM&gt; _
+                    </div>
+                `;
+            } else if (appName === 'powershell') {
+                title.innerHTML = '⚡ Windows PowerShell';
+                body.innerHTML = `
+                    <div style="font-family:'Fira Code',monospace; background:#012456; padding:10px; border-radius:6px; color:#fff; font-size:0.75rem;">
+                        Windows PowerShell<br>
+                        Copyright (C) Microsoft Corporation. All rights reserved.<br><br>
+                        PS C:\\Users\\NantaraVM&gt; Get-Service NantaraVMM<br>
+                        Status   Name               DisplayName<br>
+                        ------   ----               -----------<br>
+                        Running  NantaraVMM         NantaraVM Cloud-Native Hypervisor Service<br><br>
+                        PS C:\\Users\\NantaraVM&gt; _
+                    </div>
+                `;
+            } else if (appName === 'security') {
+                title.innerHTML = '🛡️ Windows Security / Antivirus';
+                body.innerHTML = `
+                    <div style="background:rgba(16,185,129,0.1); border:1px solid #10b981; padding:12px; border-radius:6px; color:#10b981;">
+                        <strong>✅ Virus & threat protection: No threats found.</strong><br>
+                        <span style="color:#cbd5e1; font-size:0.75rem;">Real-time protection is ON. Defender Antivirus is active inside NantaraVM MicroVM.</span>
+                    </div>
+                `;
+            } else if (appName === 'explorer') {
+                title.innerHTML = '📁 File Explorer - This PC';
+                body.innerHTML = `
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <div style="background:rgba(255,255,255,0.05); padding:8px; border-radius:6px; display:flex; justify-content:space-between;">
+                            <span>💽 Local Disk (C:)</span>
+                            <span style="color:#94a3b8;">60 GB VirtIO Block Disk</span>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.05); padding:8px; border-radius:6px; display:flex; justify-content:space-between;">
+                            <span>💿 CD Drive (D:) windows10.iso</span>
+                            <span style="color:#94a3b8;">UEFI Bootable ISO</span>
+                        </div>
+                    </div>
+                `;
+            } else if (appName === 'edge') {
+                title.innerHTML = '🌐 Microsoft Edge Browser';
+                body.innerHTML = `
+                    <div style="background:#0f172a; padding:10px; border-radius:6px; text-align:center;">
+                        <span style="color:#38bdf8; font-weight:700;">🌐 Welcome to Microsoft Edge inside NantaraVM!</span><br>
+                        <span style="color:#94a3b8; font-size:0.75rem;">Connected to VirtIO Network TAP (nantara-tap0) · IP: 192.168.100.15</span>
+                    </div>
+                `;
+            }
+        }
+
+        function closeWin10App() {
+            const win = document.getElementById('win10-app-window');
+            if (win) win.style.display = 'none';
         }
 
         function openCreateVmModal() {
