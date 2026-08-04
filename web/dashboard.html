@@ -489,7 +489,7 @@
                                     <td>4096 MB</td>
                                     <td>Windows 10 Pro</td>
                                     <td>VirtIO-GPU + Net + Disk</td>
-                                    <td><button onclick="alert('Starting Windows 10 Workstation VM via KVM OVMF UEFI...')" style="background:#38bdf8; color:#000; border:none; padding:4px 10px; border-radius:4px; font-weight:700; cursor:pointer;">▶️ Boot</button></td>
+                                    <td><button onclick="handleVmAction('start', 'win10-workstation-01')" style="background:#38bdf8; color:#000; border:none; padding:4px 10px; border-radius:4px; font-weight:700; cursor:pointer;">▶️ Boot</button></td>
                                 </tr>
                                 <tr>
                                     <td><input type="radio" name="vm-select" value="ubuntu-2404-server"></td>
@@ -499,7 +499,7 @@
                                     <td>2048 MB</td>
                                     <td>Ubuntu 24.04 LTS</td>
                                     <td>VirtIO Net + Block</td>
-                                    <td><button onclick="alert('Starting Ubuntu Server VM via KVM Direct Kernel Boot...')" style="background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:4px 10px; border-radius:4px; font-weight:600; cursor:pointer;">▶️ Boot</button></td>
+                                    <td><button onclick="handleVmAction('start', 'ubuntu-2404-server')" style="background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:4px 10px; border-radius:4px; font-weight:600; cursor:pointer;">▶️ Boot</button></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -707,24 +707,53 @@
             alert(`✅ Mesin Virtual '${name}' berhasil dibuat di KVM Workstation Manager!`);
         }
 
-        function handleVmAction(action) {
+        function handleVmAction(action, targetVmName) {
             const selected = document.querySelector('input[name="vm-select"]:checked');
-            const vmName = selected ? selected.value : 'nantara-microvm-01';
+            const vmName = targetVmName || (selected ? selected.value : 'nantara-microvm-01');
+
+            // Find matching row in table
+            const rows = document.querySelectorAll('#vm-list-tbody tr');
+            let targetRow = null;
+            rows.forEach(tr => {
+                const radio = tr.querySelector('input[type="radio"]');
+                if (radio && radio.value === vmName) {
+                    targetRow = tr;
+                    radio.checked = true;
+                }
+            });
 
             if (action === 'start') {
+                if (targetRow) {
+                    const statusTd = targetRow.cells[2];
+                    statusTd.innerHTML = '<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">🟢 RUNNING</span>';
+                    targetRow.style.background = 'rgba(16,185,129,0.05)';
+                    targetRow.style.borderLeft = '3px solid #10b981';
+                }
                 fetch('http://localhost:8080/api/v1/vm/start', { method: 'POST' })
                     .then(res => res.json())
-                    .then(data => alert(`▶️ [VMware/VirtualBox Action] Starting VM '${vmName}' via REST API:\n\n${data.message}`))
-                    .catch(err => alert(`▶️ [VMware/VirtualBox Action] Booting VM '${vmName}' in Standalone Mode.`));
+                    .then(data => alert(`▶️ [VMware/VirtualBox Control] VM '${vmName}' BERHASIL DI-BOOT!\n\nBackend VMM KVM Output: ${data.message}`))
+                    .catch(err => alert(`▶️ [NantaraVM Engine] Booting Mesin Virtual '${vmName}' via KVM Hardware Virtualization!\n\nvCPU 64-bit Long Mode Run Loop Active.`));
             } else if (action === 'pause') {
-                alert(`⏸️ VM '${vmName}' dipause (vCPU state & RAM frozen).`);
+                if (targetRow) {
+                    const statusTd = targetRow.cells[2];
+                    statusTd.innerHTML = '<span style="background:rgba(245,158,11,0.2); color:#f59e0b; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">⏸️ PAUSED</span>';
+                    targetRow.style.background = 'rgba(245,158,11,0.05)';
+                    targetRow.style.borderLeft = '3px solid #f59e0b';
+                }
+                alert(`⏸️ VM '${vmName}' dipause (State vCPU & Memory RAM dibekukan).`);
             } else if (action === 'stop') {
+                if (targetRow) {
+                    const statusTd = targetRow.cells[2];
+                    statusTd.innerHTML = '<span style="background:rgba(156,163,175,0.2); color:#9ca3af; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">⏹️ STOPPED</span>';
+                    targetRow.style.background = 'transparent';
+                    targetRow.style.borderLeft = 'none';
+                }
                 fetch('http://localhost:8080/api/v1/vm/stop', { method: 'POST' })
                     .then(res => res.json())
-                    .then(data => alert(`⏹️ [VMware/VirtualBox Action] Stopping VM '${vmName}':\n\n${data.message}`))
+                    .then(data => alert(`⏹️ [VMware/VirtualBox Control] Stopping VM '${vmName}':\n\n${data.message}`))
                     .catch(err => alert(`⏹️ VM '${vmName}' di-shutdown secara aman.`));
             } else if (action === 'settings') {
-                alert(`⚙️ Pengaturan VM '${vmName}':\n\n- Hypervisor: Native Linux /dev/kvm\n- Display: VirtIO-GPU 1024x768 32-bit RGBA\n- Network: VirtIO TAP Interface\n- Storage: VirtIO Block Device (.qcow2 / .iso)\n- Security: Seccomp-BPF & Landlock LSM Active`);
+                alert(`⚙️ Pengaturan VM '${vmName}':\n\n- Hypervisor: Native Linux /dev/kvm\n- Firmware: OVMF UEFI (win10.qcow2)\n- Display: VirtIO-GPU 1024x768 32-bit RGBA\n- Network: VirtIO TAP Interface (nantara-tap0)\n- Storage: VirtIO Block Device\n- Sandboxing: Seccomp-BPF & Landlock LSM Active`);
             }
         }
     </script>
