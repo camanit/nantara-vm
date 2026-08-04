@@ -454,6 +454,7 @@
                             <button id="toolbar-pause" onclick="handleVmAction('pause')" style="background:#f59e0b; color:#000; font-weight:700; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;">⏸️ Pause</button>
                             <button id="toolbar-stop" onclick="handleVmAction('stop')" style="background:#ef4444; color:#fff; font-weight:700; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;">⏹️ Shutdown</button>
                             <button id="toolbar-settings" onclick="handleVmAction('settings')" style="background:rgba(255,255,255,0.1); color:#fff; font-weight:600; border:1px solid rgba(255,255,255,0.2); padding:8px 16px; border-radius:6px; cursor:pointer;">⚙️ Pengaturan VM</button>
+                            <button id="toolbar-delete" onclick="handleVmAction('delete')" style="background:rgba(239,68,68,0.15); color:#ef4444; font-weight:600; border:1px solid rgba(239,68,68,0.3); padding:8px 16px; border-radius:6px; cursor:pointer;">🗑️ Hapus VM</button>
                         </div>
 
                         <!-- Table of VMs -->
@@ -479,7 +480,12 @@
                                     <td>16 MB (MMap)</td>
                                     <td>Linux / Custom Kernel</td>
                                     <td>VirtIO Block + Net TAP</td>
-                                    <td><button onclick="handleVmAction('start')" style="background:#10b981; color:#000; border:none; padding:4px 10px; border-radius:4px; font-weight:700; cursor:pointer;">▶️ Run</button></td>
+                                    <td>
+                                        <div style="display:flex; gap:6px;">
+                                            <button onclick="handleVmAction('start', 'nantara-microvm-01')" style="background:#10b981; color:#000; border:none; padding:4px 10px; border-radius:4px; font-weight:700; cursor:pointer;">▶️ Run</button>
+                                            <button onclick="handleVmAction('delete', 'nantara-microvm-01')" style="background:rgba(239,68,68,0.2); color:#ef4444; border:1px solid rgba(239,68,68,0.4); padding:4px 8px; border-radius:4px; font-weight:600; cursor:pointer;">🗑️ Hapus</button>
+                                        </div>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><input type="radio" name="vm-select" value="win10-workstation-01"></td>
@@ -489,7 +495,12 @@
                                     <td>4096 MB</td>
                                     <td>Windows 10 Pro</td>
                                     <td>VirtIO-GPU + Net + Disk</td>
-                                    <td><button onclick="handleVmAction('start', 'win10-workstation-01')" style="background:#38bdf8; color:#000; border:none; padding:4px 10px; border-radius:4px; font-weight:700; cursor:pointer;">▶️ Boot</button></td>
+                                    <td>
+                                        <div style="display:flex; gap:6px;">
+                                            <button onclick="handleVmAction('start', 'win10-workstation-01')" style="background:#38bdf8; color:#000; border:none; padding:4px 10px; border-radius:4px; font-weight:700; cursor:pointer;">▶️ Boot</button>
+                                            <button onclick="handleVmAction('delete', 'win10-workstation-01')" style="background:rgba(239,68,68,0.2); color:#ef4444; border:1px solid rgba(239,68,68,0.4); padding:4px 8px; border-radius:4px; font-weight:600; cursor:pointer;">🗑️ Hapus</button>
+                                        </div>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><input type="radio" name="vm-select" value="ubuntu-2404-server"></td>
@@ -499,7 +510,12 @@
                                     <td>2048 MB</td>
                                     <td>Ubuntu 24.04 LTS</td>
                                     <td>VirtIO Net + Block</td>
-                                    <td><button onclick="handleVmAction('start', 'ubuntu-2404-server')" style="background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:4px 10px; border-radius:4px; font-weight:600; cursor:pointer;">▶️ Boot</button></td>
+                                    <td>
+                                        <div style="display:flex; gap:6px;">
+                                            <button onclick="handleVmAction('start', 'ubuntu-2404-server')" style="background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:4px 10px; border-radius:4px; font-weight:600; cursor:pointer;">▶️ Boot</button>
+                                            <button onclick="handleVmAction('delete', 'ubuntu-2404-server')" style="background:rgba(239,68,68,0.2); color:#ef4444; border:1px solid rgba(239,68,68,0.4); padding:4px 8px; border-radius:4px; font-weight:600; cursor:pointer;">🗑️ Hapus</button>
+                                        </div>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -754,6 +770,13 @@
                     .catch(err => alert(`⏹️ VM '${vmName}' di-shutdown secara aman.`));
             } else if (action === 'settings') {
                 alert(`⚙️ Pengaturan VM '${vmName}':\n\n- Hypervisor: Native Linux /dev/kvm\n- Firmware: OVMF UEFI (win10.qcow2)\n- Display: VirtIO-GPU 1024x768 32-bit RGBA\n- Network: VirtIO TAP Interface (nantara-tap0)\n- Storage: VirtIO Block Device\n- Sandboxing: Seccomp-BPF & Landlock LSM Active`);
+            } else if (action === 'delete') {
+                if (confirm(`🗑️ Apakah Anda yakin ingin menghapus Mesin Virtual '${vmName}'?\n\nAlokasi vCPU dan RAM akan dibebaskan kembali.`)) {
+                    if (targetRow) {
+                        targetRow.remove();
+                    }
+                    alert(`✅ Mesin Virtual '${vmName}' berhasil dihapus dari NantaraVM Workstation Manager!`);
+                }
             }
         }
     </script>
