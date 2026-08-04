@@ -1101,8 +1101,14 @@
 
             localStorage.setItem('nantara_display_mode', mode);
 
+            const selectedVm = localStorage.getItem('nantara_selected_vm') || 'kali-linux-sandbox';
+
             if (mode === 'gui') {
-                iframe.src = '/desktop/?resize=remote';
+                if (selectedVm.toLowerCase().includes('kali')) {
+                    iframe.src = '/desktop/?os=kali&resize=remote';
+                } else {
+                    iframe.src = '/desktop/?os=ubuntu&resize=remote';
+                }
                 if (btnGui) {
                     btnGui.style.background = '#06b6d4';
                     btnGui.style.color = '#fff';
