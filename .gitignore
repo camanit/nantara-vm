@@ -1,0 +1,17 @@
+# Rust build artifacts
+/target/
+Cargo.lock
+
+# Windows executables (binary files, exclude from source)
+*.exe
+*.pdb
+*.d
+
+# Download binaries
+/web/downloads/nantara-vm.exe
+/web/downloads/nantara-vm-windows.zip
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
