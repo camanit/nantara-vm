@@ -1024,18 +1024,26 @@
                 return;
             }
 
-            // Restore VM statuses
-            const defaultNames = ['nantara-microvm-01', 'win10-workstation-01', 'ubuntu-2404-server'];
+            // Restore VM statuses (Auto-boot nantara-microvm-01 by default on first load)
+            const defaultNames = ['nantara-microvm-01', 'ubuntu-2404-server', 'kali-linux-sandbox'];
             const allVmNames = [...defaultNames, ...customVms.map(v => v.name)];
 
+            let anyRunning = false;
             allVmNames.forEach(name => {
                 if (!deletedNames.includes(name)) {
                     const savedState = localStorage.getItem('nantara_vm_status_' + name);
                     if (savedState) {
                         applyVmStatusUI(name, savedState);
+                        if (savedState === 'start') anyRunning = true;
                     }
                 }
             });
+
+            // Default auto-start main MicroVM terminal if no VM is saved as running
+            if (!anyRunning && !deletedNames.includes('nantara-microvm-01')) {
+                applyVmStatusUI('nantara-microvm-01', 'start');
+                localStorage.setItem('nantara_vm_status_nantara-microvm-01', 'start');
+            }
         }
 
         window.addEventListener('DOMContentLoaded', restoreVmStatusesOnLoad);
