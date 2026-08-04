@@ -428,6 +428,7 @@
                                 <p style="color:#9ca3af; margin-top:6px; font-size:0.9rem;">Kelola dan jalankan Mesin Virtual (VM) berbasis KVM dengan antarmuka grafis seperti VMware Workstation & VirtualBox.</p>
                             </div>
                             <div style="display:flex; gap:10px;">
+                                <button onclick="resetVmListToDefault()" style="background:rgba(255,255,255,0.08); color:#cbd5e1; font-weight:600; border:1px solid rgba(255,255,255,0.15); padding:10px 14px; border-radius:8px; cursor:pointer;">🔄 Reset Daftar VM</button>
                                 <button onclick="openCreateVmModal()" style="background:#06b6d4; color:#fff; font-weight:700; border:none; padding:10px 18px; border-radius:8px; cursor:pointer; display:flex; align-items:center; gap:6px;">➕ Buat VM Baru</button>
                             </div>
                         </div>
@@ -1009,28 +1010,33 @@
             const selected = document.querySelector('input[name="vm-select"]:checked');
             const vmName = targetVmName || (selected ? selected.value : 'nantara-microvm-01');
 
+            // Automatically check radio button for target VM
+            const targetRadio = document.querySelector(`input[name="vm-select"][value="${vmName}"]`);
+            if (targetRadio) targetRadio.checked = true;
+
             if (action === 'start') {
+                // Stop all other VMs first so only 1 VM is RUNNING at a time
+                const allRadios = document.querySelectorAll('input[name="vm-select"]');
+                allRadios.forEach(radio => {
+                    const otherName = radio.value;
+                    if (otherName !== vmName) {
+                        applyVmStatusUI(otherName, 'stop');
+                        localStorage.setItem('nantara_vm_status_' + otherName, 'stop');
+                    }
+                });
+
                 applyVmStatusUI(vmName, 'start');
                 localStorage.setItem('nantara_vm_status_' + vmName, 'start');
-                fetch('http://localhost:8080/api/v1/vm/start', { method: 'POST' })
-                    .then(res => res.json())
-                    .then(data => alert(`▶️ [VMware/VirtualBox Control] VM '${vmName}' BERHASIL DI-BOOT!\n\nBackend VMM KVM Output: ${data.message}\n📺 Layar Live Console dapat dilihat di menu 'Dashboard & Status VM' (Sidebar Kiri)!`))
-                    .catch(err => alert(`▶️ [NantaraVM Engine] Booting Mesin Virtual '${vmName}' via KVM Hardware Virtualization!\n\nvCPU 64-bit Long Mode Active.\n\n📺 Layar Live Console Output dapat Anda lihat di menu 'Dashboard & Status VM' di sidebar kiri!`));
             } else if (action === 'pause') {
                 applyVmStatusUI(vmName, 'pause');
                 localStorage.setItem('nantara_vm_status_' + vmName, 'pause');
-                alert(`⏸️ VM '${vmName}' dipause (State vCPU & Memory RAM dibekukan).`);
             } else if (action === 'stop') {
                 applyVmStatusUI(vmName, 'stop');
                 localStorage.setItem('nantara_vm_status_' + vmName, 'stop');
-                fetch('http://localhost:8080/api/v1/vm/stop', { method: 'POST' })
-                    .then(res => res.json())
-                    .then(data => alert(`⏹️ [VMware/VirtualBox Control] Stopping VM '${vmName}':\n\n${data.message}`))
-                    .catch(err => alert(`⏹️ VM '${vmName}' di-shutdown secara aman.`));
             } else if (action === 'settings') {
-                alert(`⚙️ Pengaturan VM '${vmName}':\n\n- Hypervisor: Native Linux /dev/kvm\n- Firmware: OVMF UEFI (win10.qcow2)\n- Display: VirtIO-GPU 1024x768 32-bit RGBA\n- Network: VirtIO TAP Interface (nantara-tap0)\n- Storage: VirtIO Block Device\n- Sandboxing: Seccomp-BPF & Landlock LSM Active`);
+                alert(`⚙️ Pengaturan VM '${vmName}':\n\n- Host: Ubuntu 24.04 LTS (IP: 210.79.190.76)\n- Engine: NantaraVM MicroVM Container Engine\n- Network: VirtIO TAP Interface\n- Storage: VirtIO Block Device\n- Security: Docker Seccomp-BPF Active`);
             } else if (action === 'delete') {
-                if (confirm(`🗑️ Apakah Anda yakin ingin menghapus Mesin Virtual '${vmName}'?\n\nAlokasi vCPU dan RAM akan dibebaskan kembali.`)) {
+                if (confirm(`🗑️ Apakah Anda yakin ingin menghapus Mesin Virtual '${vmName}'?`)) {
                     localStorage.removeItem('nantara_vm_status_' + vmName);
                     removeCustomVmFromStorage(vmName);
                     saveDeletedVmToStorage(vmName);
@@ -1039,8 +1045,17 @@
                         const radio = tr.querySelector('input[type="radio"]');
                         if (radio && radio.value === vmName) tr.remove();
                     });
-                    alert(`✅ Mesin Virtual '${vmName}' berhasil dihapus permanen dari NantaraVM Workstation Manager!`);
                 }
+            }
+        }
+
+        function resetVmListToDefault() {
+            if (confirm('🔄 Apakah Anda yakin ingin mereset daftar VM kembali ke tampilan default murni?')) {
+                localStorage.removeItem('nantara_deleted_vms');
+                localStorage.removeItem('nantara_custom_vms');
+                const defaultNames = ['nantara-microvm-01', 'ubuntu-2404-server', 'kali-linux-sandbox'];
+                defaultNames.forEach(name => localStorage.removeItem('nantara_vm_status_' + name));
+                location.reload();
             }
         }
     </script>
