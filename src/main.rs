@@ -23,6 +23,7 @@ fn main() {
     let mut iso_path: Option<String> = None;
     let mut net_tap: Option<String> = None;
     let mut bios_path: Option<String> = None;
+    let mut drive_path: Option<String> = None;
     let mut display_gpu = false;
 
     let mut i = 0;
@@ -36,6 +37,9 @@ fn main() {
         } else if args[i] == "--bios" && i + 1 < args.len() {
             bios_path = Some(args[i + 1].clone());
             i += 1;
+        } else if args[i] == "--drive" && i + 1 < args.len() {
+            drive_path = Some(args[i + 1].clone());
+            i += 1;
         } else if args[i] == "--display" && i + 1 < args.len() {
             if args[i + 1] == "virtio-gpu" {
                 display_gpu = true;
@@ -48,6 +52,12 @@ fn main() {
     println!("====================================================");
     println!(" 🚀 NantaraVM NKRI 2026 - Cloud-Native MicroVM VMM");
     println!("====================================================");
+
+    if let Some(ref drive) = drive_path {
+        let path = PathBuf::from(drive);
+        let size = std::fs::metadata(&path).map(|m| m.len()).unwrap_or(20 * 1024 * 1024 * 1024);
+        let _blk_dev = VirtioBlock::new(path, size);
+    }
 
     if let Some(ref bios) = bios_path {
         let mut uefi = boot::UefiBootloader::new();
