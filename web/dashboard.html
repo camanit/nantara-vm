@@ -1009,10 +1009,8 @@
         window.addEventListener('DOMContentLoaded', () => {
             restoreVmStatusesOnLoad();
             checkLiveApiHealth();
-            const savedMode = localStorage.getItem('nantara_display_mode');
-            if (savedMode === 'gui') {
-                switchDisplayMode('gui');
-            }
+            const savedMode = localStorage.getItem('nantara_display_mode') || 'cli';
+            switchDisplayMode(savedMode);
             const savedSelected = localStorage.getItem('nantara_selected_vm') || 'kali-linux-sandbox';
             const btnStart = document.getElementById('btn-api-start-vm');
             const btnStop = document.getElementById('btn-api-stop-vm');
@@ -1102,12 +1100,13 @@
             localStorage.setItem('nantara_display_mode', mode);
 
             const selectedVm = localStorage.getItem('nantara_selected_vm') || 'kali-linux-sandbox';
+            const domainPrefix = (window.location.protocol === 'file:') ? 'http://210.79.190.76' : '';
 
             if (mode === 'gui') {
                 if (selectedVm.toLowerCase().includes('kali')) {
-                    iframe.src = '/desktop/?os=kali&resize=remote';
+                    iframe.src = domainPrefix + '/desktop/?os=kali&resize=remote';
                 } else {
-                    iframe.src = '/desktop/?os=ubuntu&resize=remote';
+                    iframe.src = domainPrefix + '/desktop/?os=ubuntu&resize=remote';
                 }
                 if (btnGui) {
                     btnGui.style.background = '#06b6d4';
@@ -1118,7 +1117,7 @@
                     btnCli.style.color = '#cbd5e1';
                 }
             } else {
-                iframe.src = '/console/';
+                iframe.src = domainPrefix + '/console/';
                 if (btnCli) {
                     btnCli.style.background = '#10b981';
                     btnCli.style.color = '#000';

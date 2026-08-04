@@ -117,7 +117,11 @@ impl ApiServer {
         };
 
         // Route requests
-        if first_line.contains("GET /api/v1/status") {
+        if first_line.contains("GET / HTTP") || first_line.starts_with("GET / ") {
+            let body = "{\"status\":\"ok\",\"name\":\"NantaraVM Local Engine v0.2\",\"message\":\"NantaraVM Engine Berjalan di Port 8080\",\"status_endpoint\":\"http://127.0.0.1:8080/api/v1/status\",\"dashboard\":\"Buka file web/dashboard.html di browser Anda\"}";
+            json_response(stream, "200 OK", body);
+
+        } else if first_line.contains("GET /api/v1/status") {
             let qemu_ok = engine.is_qemu_available();
             let body = format!(
                 "{{\"status\":\"ok\",\"engine\":\"NantaraVM v0.2 QEMU Backend\",\"qemu_available\":{},\"port\":8080}}",
