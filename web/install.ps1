@@ -7,7 +7,7 @@ Write-Host "====================================================" -ForegroundCol
 Write-Host " 🚀 NantaraVM NKRI 2026 - Windows Workstation Installer" -ForegroundColor Green
 Write-Host "====================================================" -ForegroundColor Cyan
 
-$InstallDir = "$env:ProgramFiles\NantaraVM"
+$InstallDir = "$env:LOCALAPPDATA\NantaraVM"
 If (!(Test-Path $InstallDir)) {
     New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
 }
@@ -31,16 +31,18 @@ If ($UserPath -notlike "*$InstallDir*") {
 
 # Create Desktop Shortcut for NantaraVM Workstation
 $DesktopPath = [Environment]::GetFolderPath("Desktop")
-$ShortcutPath = "$DesktopPath\NantaraVM Workstation.url"
-@"[InternetShortcut]
-URL=https://nantara.cloud/dashboard.html
-IconIndex=0
-IconFile=$InstallDir\nantara-vm.exe
-"@ | Out-File -FilePath $ShortcutPath -Encoding ascii
+$ShortcutPath = Join-Path $DesktopPath "NantaraVM Workstation.url"
+$ShortcutLines = @(
+    "[InternetShortcut]",
+    "URL=https://nantara.cloud/dashboard.html",
+    "IconIndex=0",
+    "IconFile=$TargetPath"
+)
+$ShortcutLines | Out-File -FilePath $ShortcutPath -Encoding ascii -Force
 
-Write-Host "✅ Shortcut 'NantaraVM Workstation' berhasil dibuat di Desktop Anda!" -ForegroundColor Green
+Write-Host "[OK] Shortcut NantaraVM Workstation berhasil dibuat di Desktop Anda!" -ForegroundColor Green
 
 Write-Host "`n====================================================" -ForegroundColor Cyan
-Write-Host " 🎉 NantaraVM Windows Installation Completed!" -ForegroundColor Green
-Write-Host " Double-click shortcut 'NantaraVM Workstation' di Desktop Anda!" -ForegroundColor White
+Write-Host " NantaraVM Windows Installation Completed!" -ForegroundColor Green
+Write-Host " Double-click shortcut NantaraVM Workstation di Desktop Anda!" -ForegroundColor White
 Write-Host "====================================================" -ForegroundColor Cyan
