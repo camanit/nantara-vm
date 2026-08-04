@@ -405,54 +405,7 @@
                                 <div id="live-terminal-frame" style="display: block; width: 100%; height: 320px; border-radius: 8px; border: 1px solid rgba(16,185,129,0.4); overflow: hidden;">
                                     <iframe id="terminal-iframe" src="/console/" style="width: 100%; height: 100%; border: none; background: #020617;"></iframe>
                                 </div>
-                                <div id="win10-gui-screen" style="display: none; width: 100%; height: 260px; background: linear-gradient(135deg, #0284c7, #0f172a); border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); position: relative; overflow: hidden; font-family: 'Outfit', sans-serif;">
-                                    <div style="background: rgba(0,0,0,0.4); padding: 8px 14px; font-size: 0.75rem; color: #fff; display: flex; justify-content: space-between; align-items: center;">
-                                        <span>🪟 Windows 10 Pro (VirtIO-GPU 1024x768 Display Output)</span>
-                                        <div style="display:flex; gap:8px; align-items:center;">
-                                            <button onclick="toggleFullscreenDisplay()" style="background:rgba(255,255,255,0.2); color:#fff; border:1px solid rgba(255,255,255,0.4); padding:3px 10px; border-radius:6px; font-size:0.75rem; cursor:pointer; font-weight:600;">⛶ Fullscreen</button>
-                                            <span style="background: #10b981; color: #000; font-weight: 700; padding: 3px 8px; border-radius: 6px;">🟢 LIVE 60 FPS</span>
-                                        </div>
-                                    </div>
-                                    <div style="padding: 30px 20px; text-align: center; color: #fff;">
-                                        <div style="font-size: 3rem; margin-bottom: 10px;">🪟</div>
-                                        <h3 id="win10-screen-arch-title" style="font-size: 1.2rem; margin: 0; color: #fff;">Windows 10 Pro 64-bit Workstation</h3>
-                                        <p id="win10-screen-arch-desc" style="color: #cbd5e1; font-size: 0.85rem; margin-top: 6px;">Hypervisor: Native KVM · RAM: 4096 MB · VirtIO-GPU Active</p>
-                                        <div style="background: rgba(16,185,129,0.2); border: 1px solid #10b981; color: #10b981; padding: 8px 16px; border-radius: 8px; display: inline-block; font-size: 0.8rem; font-weight: 700; margin-top: 10px;">
-                                            ✅ Windows 10 OS Running inside NantaraVM MicroVM
-                                        </div>
-                                    </div>
-                                    <!-- Windows 10 Start Menu Overlay -->
-                                    <div id="win10-start-menu" style="display: none; position: absolute; bottom: 36px; left: 10px; width: 240px; background: rgba(15,23,42,0.95); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px 10px 0 0; padding: 12px; z-index: 10; box-shadow: 0 10px 30px rgba(0,0,0,0.8); text-align: left;">
-                                        <div style="font-weight: 700; color: #38bdf8; font-size: 0.85rem; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px;">🪟 Windows 10 Start Menu</div>
-                                        <div style="font-size: 0.78rem; color: #e2e8f0; display: flex; flex-direction: column; gap: 8px;">
-                                            <div style="cursor: pointer; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.08);" onclick="openWin10App('security')">🛡️ Windows Security / Antivirus</div>
-                                            <div style="cursor: pointer; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.08);" onclick="openWin10App('cmd')">💻 Command Prompt (cmd.exe)</div>
-                                            <div style="cursor: pointer; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.08);" onclick="openWin10App('powershell')">⚡ Windows PowerShell</div>
-                                            <div style="cursor: pointer; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.08);" onclick="openWin10App('control')">⚙️ Control Panel</div>
-                                        </div>
-                                    </div>
 
-                                    <!-- In-Canvas Windows 10 App Window Overlay -->
-                                    <div id="win10-app-window" style="display: none; position: absolute; top: 40px; left: 50%; transform: translateX(-50%); width: 85%; max-width: 500px; background: rgba(15,23,42,0.95); border: 1px solid rgba(56,189,248,0.4); border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.9); z-index: 20; text-align: left; overflow: hidden; font-size: 0.8rem;">
-                                        <div style="background: rgba(30,41,59,0.9); padding: 8px 12px; color: #fff; font-weight: 700; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                            <span id="win10-app-title">⚙️ Control Panel - All Control Panel Items</span>
-                                            <button onclick="closeWin10App()" style="background: #ef4444; color: #fff; border: none; padding: 2px 8px; border-radius: 4px; cursor: pointer; font-weight: 700;">✕</button>
-                                        </div>
-                                        <div id="win10-app-body" style="padding: 16px; color: #e2e8f0; max-height: 180px; overflow-y: auto;">
-                                            <!-- Dynamic App Content -->
-                                        </div>
-                                    </div>
-
-                                    <!-- Windows Taskbar Simulation -->
-                                    <div style="position: absolute; bottom: 0; width: 100%; height: 36px; background: rgba(15,23,42,0.9); display: flex; align-items: center; padding: 0 12px; border-top: 1px solid rgba(255,255,255,0.1); justify-content: space-between;">
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <span onclick="toggleWin10StartMenu()" style="background: #0284c7; padding: 4px 10px; border-radius: 4px; color: #fff; font-size: 0.8rem; cursor: pointer; font-weight: 700;">🪟 Start</span>
-                                            <span onclick="openWin10App('explorer')" style="color: #cbd5e1; font-size: 0.78rem; cursor: pointer;">📁 File Explorer</span>
-                                            <span onclick="openWin10App('edge')" style="color: #cbd5e1; font-size: 0.78rem; cursor: pointer;">🌐 Edge Browser</span>
-                                        </div>
-                                        <span style="color: #94a3b8; font-size: 0.75rem;">🔊 📶 21:03</span>
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
