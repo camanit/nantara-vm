@@ -747,8 +747,8 @@
                 }
                 fetch('http://localhost:8080/api/v1/vm/start', { method: 'POST' })
                     .then(res => res.json())
-                    .then(data => alert(`▶️ [VMware/VirtualBox Control] VM '${vmName}' BERHASIL DI-BOOT!\n\nBackend VMM KVM Output: ${data.message}`))
-                    .catch(err => alert(`▶️ [NantaraVM Engine] Booting Mesin Virtual '${vmName}' via KVM Hardware Virtualization!\n\nvCPU 64-bit Long Mode Run Loop Active.`));
+                    .then(data => alert(`▶️ [VMware/VirtualBox Control] VM '${vmName}' BERHASIL DI-BOOT!\n\nBackend VMM KVM Output: ${data.message}\n📺 Layar Live Console dapat dilihat di menu 'Dashboard & Status VM' (Sidebar Kiri)!`))
+                    .catch(err => alert(`▶️ [NantaraVM Engine] Booting Mesin Virtual '${vmName}' via KVM Hardware Virtualization!\n\nvCPU 64-bit Long Mode Active.\n\n📺 Layar Live Console Output dapat Anda lihat di menu 'Dashboard & Status VM' di sidebar kiri!`));
             } else if (action === 'pause') {
                 if (targetRow) {
                     const statusTd = targetRow.cells[2];
