@@ -23,13 +23,24 @@ try {
     Write-Host "[Info] Menyiapkan runner NantaraVM CLI & Web Control Plane..." -ForegroundColor Yellow
 }
 
-Write-Host "[3/3] Menambahkan NantaraVM ke System PATH & Desktop Shortcut..." -ForegroundColor Yellow
+Write-Host "[3/3] Menambahkan NantaraVM ke System PATH & Membuat Desktop Shortcut..." -ForegroundColor Yellow
 $UserPath = [Environment]::GetEnvironmentVariable("PATH", "User")
 If ($UserPath -notlike "*$InstallDir*") {
     [Environment]::SetEnvironmentVariable("PATH", "$UserPath;$InstallDir", "User")
 }
 
+# Create Desktop Shortcut for NantaraVM Workstation
+$DesktopPath = [Environment]::GetFolderPath("Desktop")
+$ShortcutPath = "$DesktopPath\NantaraVM Workstation.url"
+@"[InternetShortcut]
+URL=https://nantara.cloud/dashboard.html
+IconIndex=0
+IconFile=$InstallDir\nantara-vm.exe
+"@ | Out-File -FilePath $ShortcutPath -Encoding ascii
+
+Write-Host "✅ Shortcut 'NantaraVM Workstation' berhasil dibuat di Desktop Anda!" -ForegroundColor Green
+
 Write-Host "`n====================================================" -ForegroundColor Cyan
 Write-Host " 🎉 NantaraVM Windows Installation Completed!" -ForegroundColor Green
-Write-Host " Buka browser dan akses Web Dashboard: https://nantara.cloud/dashboard.html" -ForegroundColor White
+Write-Host " Double-click shortcut 'NantaraVM Workstation' di Desktop Anda!" -ForegroundColor White
 Write-Host "====================================================" -ForegroundColor Cyan
