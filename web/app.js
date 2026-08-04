@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { text: '', type: 'info' },
             { text: '====================================================', type: 'info' },
             { text: ' ✅ Demo selesai. Implementasi nyata sedang dikerjakan!', type: 'success' },
-            { text: '    GitHub: github.com/nantara-vm/nantara-vm', type: 'success' },
+            { text: '    GitHub: github.com/camanit/nantara-vm', type: 'success' },
             { text: '====================================================', type: 'info' },
         ];
 
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnTogglePro) {
         btnTogglePro.textContent = '🔗 Lihat GitHub';
         btnTogglePro.addEventListener('click', () => {
-            window.open('https://github.com/nantara-vm/nantara-vm', '_blank');
+            window.open('https://github.com/camanit/nantara-vm', '_blank');
         });
     }
 
