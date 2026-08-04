@@ -9,7 +9,6 @@ Cargo.lock
 
 # Download binaries
 /web/downloads/nantara-vm.exe
-/web/downloads/nantara-vm-windows.zip
 
 # OS files
 .DS_Store
