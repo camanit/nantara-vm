@@ -90,7 +90,6 @@
                     <li><a href="#status">Status Engine</a></li>
                     <li><a href="#edisi">Edisi & Lisensi</a></li>
                     <li><a href="#arsitektur">Arsitektur</a></li>
-                    <li><a href="#roadmap">Roadmap</a></li>
                     <li><a href="docs.html" target="_blank">📖 Dokumentasi</a></li>
                 </ul>
                 <div>
@@ -273,68 +272,7 @@
         </div>
     </section>
 
-    <!-- Roadmap Section -->
-    <section style="padding: 90px 0; background: rgba(15,23,42,0.6); border-top: 1px solid var(--border-color);" id="roadmap">
-        <div class="container">
-            <div class="section-title">
-                <h2>🗺️ Roadmap Pengembangan 2025–2026</h2>
-                <p>Rencana pengembangan yang realistis dan terukur, dikerjakan secara terbuka.</p>
-            </div>
-            <div class="roadmap-grid">
-                <div class="roadmap-card done">
-                    <span class="phase-badge badge-done">✅ SELESAI</span>
-                    <h3 style="color:#10b981; font-size:1.1rem;">Fase 0: Fondasi Proyek</h3>
-                    <ul style="list-style:none; padding:0; color:#cbd5e1; font-size:0.9rem;">
-                        <li>✅ Setup proyek Rust & Cargo workspace</li>
-                        <li>✅ Struktur modul arsitektur</li>
-                        <li>✅ Integrasi library KVM</li>
-                        <li>✅ Website & dokumentasi awal</li>
-                        <li>✅ Publikasi open-source</li>
-                    </ul>
-                </div>
-                <div class="roadmap-card done">
-                    <span class="phase-badge badge-done">✅ SELESAI (v0.1)</span>
-                    <h3 style="color:#10b981; font-size:1.1rem;">Fase 1: KVM Engine v0.1</h3>
-                    <ul style="list-style:none; padding:0; color:#cbd5e1; font-size:0.9rem;">
-                        <li>✅ vCPU setup & /dev/kvm run loop</li>
-                        <li>✅ Boot payload 64-bit Long Mode</li>
-                        <li>✅ Memory MMap Guest RAM</li>
-                        <li>✅ Reader File ISO (--iso)</li>
-                    </ul>
-                </div>
-                <div class="roadmap-card done">
-                    <span class="phase-badge badge-done">✅ SELESAI (v0.1.2)</span>
-                    <h3 style="color:#10b981; font-size:1.1rem;">Fase 2: Network, Block & REST API</h3>
-                    <ul style="list-style:none; padding:0; color:#cbd5e1; font-size:0.9rem;">
-                        <li>✅ REST API Server via TCP port 8080</li>
-                        <li>✅ Web Dashboard terhubung Backend Live</li>
-                        <li>✅ VirtIO Block Device (--drive)</li>
-                        <li>✅ VirtIO Network TAP Interface (--net)</li>
-                    </ul>
-                </div>
-                <div class="roadmap-card inprogress">
-                    <span class="phase-badge badge-wip">🔨 SEDANG DIKERJAKAN</span>
-                    <h3 style="color:#f59e0b; font-size:1.1rem;">Fase 3: UEFI & Full OS Booting</h3>
-                    <ul style="list-style:none; padding:0; color:#cbd5e1; font-size:0.9rem;">
-                        <li>✅ Loader Firmware BIOS UEFI OVMF (--bios)</li>
-                        <li>✅ VirtIO GPU 1024x768 Framebuffer Engine</li>
-                        <li>🎯 noVNC Web Screen Streamer</li>
-                        <li>🎯 Boot Full OS Windows 10/11 GUI</li>
-                    </ul>
-                </div>
-                <div class="roadmap-card planned">
-                    <span class="phase-badge badge-plan">🎯 FASE 4: ENTERPRISE</span>
-                    <h3 style="color:#9ca3af; font-size:1.1rem;">Fase 4: Sandboxing & Confidential</h3>
-                    <ul style="list-style:none; padding:0; color:#9ca3af; font-size:0.9rem;">
-                        <li>🎯 Seccomp BPF Syscall Filtering</li>
-                        <li>🎯 Landlock LSM File Access Isolation</li>
-                        <li>🎯 AMD SEV-SNP & Intel TDX Attestation</li>
-                        <li>🎯 Multi-Tenant Enterprise Orchestrator</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
+
 
     <!-- Contribution Section -->
     <section style="padding: 90px 0; background: rgba(8,12,20,0.9); border-top: 1px solid var(--border-color);" id="kontribusi">
