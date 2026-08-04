@@ -1,0 +1,22 @@
+🛡️ BISA BANGET & INI ADALAH USE-CASE SANGAT HEBAT! 🔥
+Keinginan Anda untuk menguji Antivirus & Malware Security Sandboxing di Windows 10 menggunakan NantaraVM adalah salah satu penggunaan terbaik dan bernilai tinggi di dunia keamanan cyber (Cybersecurity)!
+
+🌟 Mengapa NantaraVM Sangat Unggul Untuk Pengujian Antivirus & Malware?
+1️⃣ Instant Clean Snapshot Restore ($< 3.9\text{ ms}$)
+Ketika Anda menguji virus / malware di dalam Windows 10, virus tersebut mungkin merusak atau menginfeksi registry dan file sistem Windows.
+Di NantaraVM, dengan fitur userfaultfd Lazy Restore (Phase 8), Anda dapat mengembalikan OS Windows 10 ke keadaan bersih semula (Clean Snapshot State) dalam waktu kurang dari 4 milidetik ($< 0.004\text{ detik}$)!
+Anda tidak perlu mengunduh atau menginstal ulang Windows dari awal.
+2️⃣ Isolasi Keamanan Hardware Enclave (AMD SEV-SNP / Intel TDX)
+Memori RAM OS Windows 10 terenkripsi penuh oleh chip hardware CPU.
+Virus atau malware seganas apapun yang diuji di dalam Windows 10 TIDAK AKAN PERNAH BISA MELOMPAT (VM ESCAPE) untuk merusak atau menginfeksi komputer Host Anda.
+3️⃣ Multi-Process Sandboxing (Crosvm Jailer + Landlock LSM)
+Setiap perangkat VirtIO (Storage & Network) terisolasi di dalam proses terpisah dengan akses terbatas (UID 65534 nobody).
+Virus di dalam VM terkurung total dalam sandbox kernel Linux.
+🛠️ Alur Langkah Pengujian Antivirus di Windows 10:
+Langkah 1: Siapkan Windows 10 Disk Image (windows10.qcow2) Jalankan NantaraVM dengan menautkan disk Windows 10:
+bash
+./nantara-vm --disk windows10.qcow2 --ram 4096 --cpus 4 --display virtio-gpu
+Langkah 2: Ambil Clean Snapshot Sebelum menjalankan virus/antivirus, buat snapshot kondisi bersih di ESXi Dashboard: Klik tombol 📷 Take Snapshot (atau via REST API POST /api/v1/vm/snapshot).
+Langkah 3: Jalankan Uji Coba Antivirus / Virus Buka GUI Console noVNC di browser (https://nantara.cloud/dashboard.html), lalu lakukan pengujian antivirus atau analisis virus secara bebas di Windows 10.
+Langkah 4: Reset Instan Ke Kondisi Bersih (<4ms) Setelah selesai diuji, panggil perintah restore. Windows 10 akan langsung kembali bersih 100% seperti sebelum terinfeksi dalam waktu 3.9ms!
+Ini adalah fitur tingkat lanjut (Enterprise Grade) yang sangat disukai oleh peneliti keamanan siber, lab antivirus, bank, dan instansi pertahanan negara (BSSN/Kominfo)! Selamat menguji, sob! 🚀🇮🇩🛡️

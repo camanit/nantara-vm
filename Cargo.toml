@@ -1,0 +1,26 @@
+[package]
+name = "nantara-vm"
+version = "0.1.0"
+edition = "2021"
+authors = ["NantaraVM Team <dev@nantara.cloud>"]
+description = "Cloud-Native MicroVM Hypervisor in Rust (NKRI 2026 Edition)"
+
+[[bin]]
+name = "nantara-vm"
+path = "src/main.rs"
+
+[[bin]]
+name = "gen_license"
+path = "tools/gen_license.rs"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+kvm-ioctls = "0.19"
+kvm-bindings = "0.10"
+vm-memory = { version = "0.14", features = ["backend-mmap"] }
+vmm-sys-util = "0.12"
+linux-loader = "0.12"
+virtio-queue = "0.12"
+seccompiler = "0.4"
+
+[dependencies]
+libc = "0.2"

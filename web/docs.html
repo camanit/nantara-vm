@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NantaraVM — Dokumentasi Teknis & Arsitektur</title>
+    <meta name="description" content="Dokumentasi teknis NantaraVM: arsitektur, roadmap, cara berkontribusi, dan status pengembangan proyek open-source hypervisor Indonesia.">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: #080c14;
+            color: #f8fafc;
+            font-family: 'Outfit', sans-serif;
+            line-height: 1.8;
+        }
+
+        .dev-banner {
+            background: linear-gradient(135deg, #92400e, #b45309);
+            color: #fef3c7;
+            text-align: center;
+            padding: 10px 24px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .docs-container {
+            max-width: 960px;
+            margin: 32px auto;
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 22px;
+            padding: 48px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        h1, h2, h3 { color: #fff; margin-top: 32px; margin-bottom: 12px; }
+        h1 { font-size: 2.2rem; border-bottom: 2px solid var(--accent-cyan); padding-bottom: 16px; }
+        h2 { font-size: 1.5rem; color: var(--accent-cyan); }
+        h3 { font-size: 1.15rem; color: #e2e8f0; }
+
+        p { color: #cbd5e1; margin-bottom: 12px; }
+        ul, ol { color: #cbd5e1; padding-left: 20px; margin-bottom: 16px; }
+        li { padding: 4px 0; }
+
+        code {
+            background: #020617;
+            color: var(--accent-cyan);
+            font-family: 'Fira Code', monospace;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.88rem;
+        }
+
+        pre {
+            background: #020617;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 18px 20px;
+            border-radius: 12px;
+            font-family: 'Fira Code', monospace;
+            overflow-x: auto;
+            color: #10b981;
+            margin: 16px 0;
+            font-size: 0.88rem;
+        }
+
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px 16px; border: 1px solid rgba(255,255,255,0.08); text-align: left; font-size: 0.9rem; }
+        th { background: #1e293b; color: #f59e0b; }
+        td { color: #cbd5e1; }
+
+        .status-done    { color: #10b981; font-weight: 700; }
+        .status-wip     { color: #f59e0b; font-weight: 700; }
+        .status-planned { color: #6b7280; }
+
+        .warn-box {
+            background: rgba(245,158,11,0.08);
+            border: 1px solid rgba(245,158,11,0.3);
+            border-left: 4px solid #f59e0b;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 20px 0;
+            color: #fbbf24;
+            font-size: 0.9rem;
+        }
+
+        .info-box {
+            background: rgba(6,182,212,0.07);
+            border: 1px solid rgba(6,182,212,0.25);
+            border-left: 4px solid #06b6d4;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 20px 0;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .success-box {
+            background: rgba(16,185,129,0.07);
+            border: 1px solid rgba(16,185,129,0.25);
+            border-left: 4px solid #10b981;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 20px 0;
+            color: #a7f3d0;
+            font-size: 0.9rem;
+        }
+
+        hr { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 36px 0; }
+    </style>
+</head>
+<body>
+
+    <div class="dev-banner">
+        🚧 NantaraVM sedang dalam pengembangan aktif (Early Alpha). Dokumentasi ini mencerminkan arsitektur yang direncanakan dan status terkini.
+    </div>
+
+    <div class="container">
+        <div style="margin-top: 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <a href="index.html" class="btn btn-secondary">⬅️ Kembali ke Beranda</a>
+            <button class="btn btn-pro" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
+        </div>
+
+        <div class="docs-container">
+
+            <h1>📚 NantaraVM — Dokumentasi Teknis & Arsitektur</h1>
+            <p style="color: #94a3b8; font-size: 1rem;">
+                Dokumen ini menjelaskan arsitektur teknis, status implementasi, panduan build, dan roadmap NantaraVM secara jujur dan transparan.
+            </p>
+
+            <div class="warn-box">
+                ⚠️ <strong>Penting Dibaca Sebelum Mulai:</strong> NantaraVM saat ini adalah proyek <strong>Early Alpha</strong>. Banyak fitur yang digambarkan di sini adalah <em>desain dan rencana implementasi</em>, bukan fitur yang sudah berjalan. Bagian status di setiap bab akan menjelaskan kondisi terkini secara jujur.
+            </div>
+
+            <hr>
+
+            <h2>Bab 1: Pengenalan & Visi Proyek</h2>
+            <p>
+                NantaraVM adalah proyek <strong>open-source</strong> untuk membangun MicroVM Hypervisor berbasis bahasa Rust yang aman, cepat, dan sovereign. Proyek ini terinspirasi oleh:
+            </p>
+            <ul>
+                <li><strong>Firecracker (AWS)</strong> — Arsitektur MicroVM minimalis dengan cold boot sangat cepat</li>
+                <li><strong>crosvm (Google)</strong> — Multi-proses sandboxing dan isolasi keamanan</li>
+                <li><strong>Cloud Hypervisor (Intel)</strong> — Fitur enterprise seperti SEV-SNP dan ACPI modern</li>
+            </ul>
+            <p>
+                Bedanya: NantaraVM dibangun oleh engineer Indonesia, untuk kebutuhan cloud sovereign NKRI, dengan kode sumber terbuka sepenuhnya.
+            </p>
+
+            <div class="success-box">
+                ✅ <strong>Status Fase 0 (Fondasi):</strong> Selesai. Arsitektur modul, Cargo workspace, integrasi library KVM, dan website sudah tersedia.
+            </div>
+
+            <hr>
+
+            <h2>Bab 2: Arsitektur Teknis</h2>
+            <p>NantaraVM terdiri dari beberapa komponen modular yang dikembangkan secara terpisah:</p>
+
+            <table>
+                <thead>
+                    <tr><th>Komponen</th><th>Path</th><th>Status</th><th>Keterangan</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>vmm.rs</code></td><td>src/vmm.rs</td><td class="status-wip">🔨 Aktif</td><td>Orchestrator utama, KVM VM creation</td></tr>
+                    <tr><td><code>arch/x86_64</code></td><td>src/arch/</td><td class="status-wip">🔨 Aktif</td><td>vCPU setup Long Mode, register state</td></tr>
+                    <tr><td><code>virtio/</code></td><td>src/virtio/</td><td class="status-wip">🔨 Desain selesai</td><td>VirtIO MMIO bus, blk, net, vsock trait</td></tr>
+                    <tr><td><code>boot/</code></td><td>src/boot/</td><td class="status-wip">🔨 Aktif</td><td>Zero page setup, PVH kernel loading</td></tr>
+                    <tr><td><code>api/</code></td><td>src/api/</td><td class="status-planned">📋 Direncanakan</td><td>REST API server via TCP (belum fungsional)</td></tr>
+                    <tr><td><code>net/ebpf.rs</code></td><td>src/net/</td><td class="status-planned">📋 Placeholder</td><td>Hanya println!, belum ada eBPF nyata</td></tr>
+                    <tr><td><code>sev/snp.rs</code></td><td>src/sev/</td><td class="status-planned">📋 Placeholder</td><td>Hanya println!, butuh hardware AMD</td></tr>
+                    <tr><td><code>jailer/</code></td><td>src/jailer/</td><td class="status-planned">📋 Desain</td><td>Namespace isolation, seccomp BPF</td></tr>
+                    <tr><td><code>userfaultfd.rs</code></td><td>src/</td><td class="status-planned">📋 Stub</td><td>Lazy restore engine belum diimplementasi</td></tr>
+                </tbody>
+            </table>
+
+            <hr>
+
+            <h2>Bab 3: Cara Build dari Source</h2>
+
+            <div class="warn-box">
+                ⚠️ NantaraVM saat ini <strong>hanya bisa dikompilasi di Linux</strong>. Dependensi KVM (kvm-ioctls, vm-memory) membutuhkan kernel Linux. Di Windows, hanya stub mode yang aktif.
+            </div>
+
+            <h3>A. Build di Linux (Ubuntu/Debian)</h3>
+            <pre># 1. Install Rust toolchain
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source ~/.cargo/env
+
+# 2. Install dependency sistem
+sudo apt-get install -y build-essential git
+
+# 3. Clone repository
+git clone https://github.com/nantara-vm/nantara-vm.git
+cd nantara-vm
+
+# 4. Build
+cargo build
+
+# 5. Jalankan (demo/stub mode jika tanpa vmlinux)
+cargo run</pre>
+
+            <h3>B. Build di Windows (WSL2)</h3>
+            <p>
+                Instal WSL2 dengan Ubuntu, lalu ikuti langkah Linux di atas di dalam terminal WSL2.
+                KVM di WSL2 membutuhkan Windows 11 atau Windows 10 Build 19041+ dengan Hyper-V.
+            </p>
+            <pre># Cek apakah KVM tersedia di WSL2 Anda
+ls /dev/kvm
+# Jika ada → KVM bisa digunakan
+# Jika tidak ada → hanya stub/demo mode</pre>
+
+            <div class="info-box">
+                💡 <strong>Catatan WSL2:</strong> Tidak semua konfigurasi WSL2 mengekspos <code>/dev/kvm</code>. Tergantung versi Windows dan apakah Hyper-V nested virtualization aktif.
+            </div>
+
+            <hr>
+
+            <h2>Bab 4: Menjalankan Linux Guest (Target Fase 1)</h2>
+
+            <div class="warn-box">
+                ⚠️ Fitur ini <strong>belum sepenuhnya berjalan</strong>. Ini adalah target implementasi Fase 1 yang sedang dikerjakan.
+            </div>
+
+            <p>Setelah implementasi vCPU dan VirtIO block selesai, rencana penggunaan adalah:</p>
+            <pre># Jalankan dengan kernel Linux sederhana (target Fase 1)
+./nantara-vm --kernel vmlinux --rootfs rootfs.ext4
+
+# vmlinux = kernel Linux compiled (bukan disertakan di repo)
+# rootfs.ext4 = disk image root filesystem guest</pre>
+
+            <h3>Cara Mendapatkan vmlinux untuk Testing</h3>
+            <pre># Download kernel minimal untuk testing
+# (panduan lengkap akan ditambahkan setelah Fase 1 selesai)
+wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.6.tar.gz</pre>
+
+            <hr>
+
+            <h2>Bab 5: Menjalankan Windows 10 (Roadmap Jangka Panjang)</h2>
+
+            <div class="warn-box">
+                ⚠️ <strong>Boot Windows 10 BELUM diimplementasi</strong> dan membutuhkan banyak komponen yang belum ada: UEFI/OVMF firmware emulation, VirtIO driver untuk Windows, virtio-gpu display output, dan ACPI table yang kompatibel Windows.
+            </div>
+
+            <p>Ini adalah target jangka panjang (2026+). Komponen yang dibutuhkan:</p>
+            <ul>
+                <li>UEFI/OVMF firmware emulation (BIOS virtual)</li>
+                <li>VirtIO Windows driver (VirtIO-win ISO dari Fedora)</li>
+                <li>virtio-gpu atau VGA emulation untuk display</li>
+                <li>ACPI tables yang kompatibel dengan Windows</li>
+                <li>noVNC WebSocket untuk akses display dari browser</li>
+            </ul>
+
+            <p>Untuk kebutuhan menjalankan Windows 10 sekarang, rekomendasi kami adalah menggunakan:</p>
+            <ul>
+                <li><strong>Hyper-V</strong> (gratis, sudah ada di Windows 10/11)</li>
+                <li><strong>QEMU/KVM</strong> di Linux (mature, battle-tested)</li>
+                <li><strong>VirtualBox</strong> (cross-platform, GUI friendly)</li>
+            </ul>
+
+            <hr>
+
+            <h2>Bab 6: Berkontribusi ke Proyek</h2>
+            <p>NantaraVM adalah proyek komunitas. Semua kontribusi disambut dengan hangat!</p>
+
+            <h3>Area yang Paling Dibutuhkan Sekarang:</h3>
+            <ul>
+                <li>🔨 <strong>Implementasi vCPU run loop</strong> yang bisa boot kernel Linux sederhana</li>
+                <li>🔨 <strong>VirtIO queue logic</strong> untuk block dan network device</li>
+                <li>🔨 <strong>REST API via TCP</strong> agar dashboard web bisa terhubung</li>
+                <li>📝 <strong>Dokumentasi & tutorial</strong> tentang cara berkontribusi</li>
+                <li>🧪 <strong>Testing di berbagai distro Linux</strong> dan laporan bug</li>
+            </ul>
+
+            <pre># Fork, clone, dan mulai berkontribusi:
+git clone https://github.com/nantara-vm/nantara-vm.git
+cd nantara-vm
+git checkout -b feature/nama-fitur-anda
+# ... buat perubahan ...
+git push origin feature/nama-fitur-anda
+# Buka Pull Request di GitHub</pre>
+
+            <hr>
+
+            <h2>Bab 7: Kontak & Komunitas</h2>
+            <p>
+                Untuk diskusi teknis, pertanyaan, atau kolaborasi:
+            </p>
+            <ul>
+                <li>🔗 <strong>GitHub:</strong> <a href="https://github.com/nantara-vm/nantara-vm" target="_blank" style="color:#06b6d4;">github.com/nantara-vm/nantara-vm</a></li>
+                <li>💬 <strong>WhatsApp:</strong> <a href="https://wa.me/6281260006666" target="_blank" style="color:#25d366;">+62 812-6000-6666</a></li>
+            </ul>
+
+            <div class="success-box">
+                🇮🇩 <strong>Semangat!</strong> Membangun hypervisor dari nol adalah perjalanan panjang, tapi itulah yang membuat proyek ini bermakna. Bersama komunitas developer Indonesia, ini bisa terwujud!
+            </div>
+
+            <div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); text-align: center; color: #6b7280; font-size: 0.85rem;">
+                © 2025–2026 NantaraVM — Proyek Open-Source Indonesia 🇮🇩<br>
+                Dokumentasi ini diperbarui seiring perkembangan proyek.
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

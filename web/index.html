@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NantaraVM — MicroVM Hypervisor Karya Indonesia (Open Source)</title>
+    <meta name="description" content="NantaraVM adalah proyek open-source hypervisor MicroVM berbasis Rust yang sedang aktif dikembangkan. Visi: membangun fondasi cloud sovereign NKRI.">
+    <link rel="icon" type="image/png" href="assets/icon.png">
+    <link rel="stylesheet" href="styles.css?v=2.0.0">
+    <style>
+        .dev-banner {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #000;
+            text-align: center;
+            padding: 12px 24px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .status-pill {
+            display: inline-block;
+            background: rgba(0,0,0,0.15);
+            border-radius: 20px;
+            padding: 2px 12px;
+            font-size: 0.8rem;
+        }
+        .roadmap-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-top: 32px;
+        }
+        .roadmap-card {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 24px;
+        }
+        .roadmap-card.done { border-left: 4px solid #10b981; }
+        .roadmap-card.inprogress { border-left: 4px solid #f59e0b; }
+        .roadmap-card.planned { border-left: 4px solid #6b7280; }
+        .phase-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        .badge-done { background: rgba(16,185,129,0.2); color: #10b981; }
+        .badge-wip  { background: rgba(245,158,11,0.2); color: #f59e0b; }
+        .badge-plan { background: rgba(107,114,128,0.2); color: #9ca3af; }
+        .honest-box {
+            background: rgba(6,182,212,0.08);
+            border: 1px solid rgba(6,182,212,0.3);
+            border-radius: 20px;
+            padding: 32px;
+            margin-top: 20px;
+        }
+        .honest-box h3 { color: #06b6d4; font-size: 1.3rem; margin-bottom: 12px; }
+        .honest-box ul { list-style: none; padding: 0; }
+        .honest-box ul li { padding: 6px 0; color: #cbd5e1; font-size: 0.95rem; }
+    </style>
+</head>
+<body>
+
+    <!-- DEVELOPMENT NOTICE BANNER -->
+    <div class="dev-banner">
+        🚧 <span>Proyek ini sedang dalam tahap aktif pengembangan (Early Alpha)</span>
+        <span class="status-pill">Bukan production-ready</span>
+        <span> — Kontribusi & feedback sangat disambut!</span>
+    </div>
+
+    <!-- Header / Navigation -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <img src="assets/icon.png" alt="NantaraVM Icon" style="height: 38px; width: 38px; border-radius: 8px;">
+                    NantaraVM <span class="logo-badge">NKRI Open Source</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#vision">Visi & Misi</a></li>
+                    <li><a href="#status">Status Pengembangan</a></li>
+                    <li><a href="#arsitektur">Arsitektur</a></li>
+                    <li><a href="#roadmap">Roadmap</a></li>
+                    <li><a href="#kontribusi">Kontribusi</a></li>
+                    <li><a href="docs.html" target="_blank">📖 Dokumentasi</a></li>
+                </ul>
+                <div>
+                    <a href="https://github.com/nantara-vm/nantara-vm" target="_blank" class="btn btn-primary">⭐ GitHub</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div style="margin-bottom: 24px;">
+                <img src="assets/logo.png" alt="NantaraVM Logo" style="max-width: 200px; filter: drop-shadow(0 10px 30px rgba(239, 68, 68, 0.4)); border-radius: 20px;">
+            </div>
+            <div class="hero-tag">
+                🇮🇩 Open-Source MicroVM Hypervisor — Karya Anak Bangsa Indonesia
+            </div>
+            <h1>Membangun Hypervisor MicroVM <br><span class="hero-highlight">Pertama Karya Indonesia</span></h1>
+            <p>
+                NantaraVM adalah proyek <strong>open-source</strong> ambisius untuk membangun MicroVM Hypervisor berbasis <strong>Rust</strong> yang aman, cepat, dan berdaulat. Terinspirasi dari Firecracker (AWS) dan Cloud Hypervisor (Intel), namun dikembangkan sepenuhnya oleh engineer Indonesia.
+            </p>
+            <div class="hero-actions">
+                <a href="https://github.com/nantara-vm/nantara-vm" target="_blank" class="btn btn-primary">🔗 Lihat Kode Sumber di GitHub</a>
+                <a href="#status" class="btn btn-pro">📊 Status Pengembangan</a>
+            </div>
+
+            <!-- Honest Status Box -->
+            <div class="honest-box" id="status">
+                <h3>📋 Status Jujur Proyek Saat Ini</h3>
+                <p style="color:#9ca3af; margin-bottom: 16px;">Kami berkomitmen untuk transparan dengan komunitas tentang apa yang sudah dan belum bisa dilakukan.</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <p style="color: #10b981; font-weight: 700; margin-bottom: 8px;">✅ Yang Sudah Ada:</p>
+                        <ul>
+                            <li>✅ Arsitektur kode Rust modular & terstruktur</li>
+                            <li>✅ Integrasi library KVM (kvm-ioctls, vm-memory)</li>
+                            <li>✅ Struktur modul: VMM, VirtIO, Jailer, SEV, API</li>
+                            <li>✅ vCPU run loop dasar (x86_64 Long Mode)</li>
+                            <li>✅ Desain MMIO bus & VirtIO device skeleton</li>
+                            <li>✅ Website & dokumentasi awal</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p style="color: #f59e0b; font-weight: 700; margin-bottom: 8px;">🚧 Yang Sedang Dikerjakan:</p>
+                        <ul>
+                            <li>⚙️ Implementasi KVM vCPU yang bisa boot nyata</li>
+                            <li>⚙️ VirtIO Block & Net device yang fungsional</li>
+                            <li>⚙️ API Server via TCP (bukan Unix socket)</li>
+                            <li>⚙️ Boot Linux kernel sederhana end-to-end</li>
+                            <li>❌ Boot Windows (belum dimulai)</li>
+                            <li>❌ AMD SEV-SNP nyata (butuh hardware khusus)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture Section -->
+    <section style="padding: 90px 0; background: rgba(8,12,20,0.9); border-top: 1px solid var(--border-color);" id="arsitektur">
+        <div class="container">
+            <div class="section-title">
+                <h2>🏗️ Arsitektur yang Dibangun</h2>
+                <p>Desain modular berbasis Rust yang mengikuti pola hypervisor production seperti Firecracker & Cloud Hypervisor.</p>
+            </div>
+            <div class="grid-3" style="margin-top: 40px;">
+                <div class="card">
+                    <div class="card-icon">⚙️</div>
+                    <h3>KVM VMM Core</h3>
+                    <p>Wrapper Rust untuk Linux KVM ioctl. Alokasi guest RAM via mmap, create VM FD, dan vCPU management menggunakan library <code>kvm-ioctls</code>.</p>
+                    <p style="color: #f59e0b; font-size: 0.85rem; margin-top: 8px;">Status: 🔨 Implementasi aktif</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">💾</div>
+                    <h3>VirtIO Device Bus</h3>
+                    <p>Abstraksi perangkat VirtIO via MMIO transport. Termasuk VirtioBlock, VirtioNet, dan VirtioVsock dengan trait interface yang bersih.</p>
+                    <p style="color: #f59e0b; font-size: 0.85rem; margin-top: 8px;">Status: 🔨 Desain selesai, implementasi queue aktif</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🛡️</div>
+                    <h3>Process Jailer</h3>
+                    <p>Isolasi proses dengan Linux namespaces dan seccomp BPF. Rancangan mengikuti pola Firecracker Jailer untuk keamanan multi-layer.</p>
+                    <p style="color: #9ca3af; font-size: 0.85rem; margin-top: 8px;">Status: 📋 Desain, implementasi penuh direncanakan</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🌐</div>
+                    <h3>REST API Management</h3>
+                    <p>API server untuk kontrol lifecycle VM: start, pause, resume, snapshot. Akan mendukung koneksi TCP agar bisa diakses dari web dashboard.</p>
+                    <p style="color: #9ca3af; font-size: 0.85rem; margin-top: 8px;">Status: 📋 TCP binding direncanakan</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🔒</div>
+                    <h3>Confidential Computing</h3>
+                    <p>Dukungan AMD SEV-SNP dan Intel TDX untuk enkripsi memori hardware. Fitur ini membutuhkan server fisik dengan CPU yang mendukung.</p>
+                    <p style="color: #6b7280; font-size: 0.85rem; margin-top: 8px;">Status: 🎯 Roadmap jangka panjang</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">📦</div>
+                    <h3>Container Runtime Shim</h3>
+                    <p>Antarmuka containerd-shim-v2 untuk integrasi Kubernetes. Memungkinkan container berjalan di dalam MicroVM yang terisolasi.</p>
+                    <p style="color: #6b7280; font-size: 0.85rem; margin-top: 8px;">Status: 🎯 Roadmap jangka menengah</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap Section -->
+    <section style="padding: 90px 0; background: rgba(15,23,42,0.6); border-top: 1px solid var(--border-color);" id="roadmap">
+        <div class="container">
+            <div class="section-title">
+                <h2>🗺️ Roadmap Pengembangan 2025–2026</h2>
+                <p>Rencana pengembangan yang realistis dan terukur, dikerjakan secara terbuka.</p>
+            </div>
+            <div class="roadmap-grid">
+                <div class="roadmap-card done">
+                    <span class="phase-badge badge-done">✅ SELESAI</span>
+                    <h3 style="color:#10b981; font-size:1.1rem;">Fase 0: Fondasi Proyek</h3>
+                    <ul style="list-style:none; padding:0; color:#cbd5e1; font-size:0.9rem;">
+                        <li>✅ Setup proyek Rust & Cargo workspace</li>
+                        <li>✅ Struktur modul arsitektur</li>
+                        <li>✅ Integrasi library KVM</li>
+                        <li>✅ Website & dokumentasi awal</li>
+                        <li>✅ Publikasi open-source</li>
+                    </ul>
+                </div>
+                <div class="roadmap-card inprogress">
+                    <span class="phase-badge badge-wip">🔨 SEDANG DIKERJAKAN</span>
+                    <h3 style="color:#f59e0b; font-size:1.1rem;">Fase 1: Boot Linux Dasar</h3>
+                    <ul style="list-style:none; padding:0; color:#cbd5e1; font-size:0.9rem;">
+                        <li>⚙️ vCPU setup dan run loop nyata</li>
+                        <li>⚙️ Boot kernel Linux sederhana via KVM</li>
+                        <li>⚙️ Output serial console ke terminal</li>
+                        <li>⚙️ VirtIO block read dasar</li>
+                    </ul>
+                </div>
+                <div class="roadmap-card planned">
+                    <span class="phase-badge badge-plan">📋 DIRENCANAKAN</span>
+                    <h3 style="color:#9ca3af; font-size:1.1rem;">Fase 2: Network & API</h3>
+                    <ul style="list-style:none; padding:0; color:#6b7280; font-size:0.9rem;">
+                        <li>📋 VirtIO network fungsional (TAP)</li>
+                        <li>📋 REST API via TCP port</li>
+                        <li>📋 Web dashboard terhubung ke backend nyata</li>
+                        <li>📋 Binary release Linux x86_64</li>
+                    </ul>
+                </div>
+                <div class="roadmap-card planned">
+                    <span class="phase-badge badge-plan">🎯 ROADMAP JANGKA PANJANG</span>
+                    <h3 style="color:#9ca3af; font-size:1.1rem;">Fase 3+: Fitur Lanjutan</h3>
+                    <ul style="list-style:none; padding:0; color:#6b7280; font-size:0.9rem;">
+                        <li>🎯 Support boot Windows 10 (via UEFI/OVMF)</li>
+                        <li>🎯 AMD SEV-SNP nyata</li>
+                        <li>🎯 Containerd shim v2</li>
+                        <li>🎯 noVNC display output</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contribution Section -->
+    <section style="padding: 90px 0; background: rgba(8,12,20,0.9); border-top: 1px solid var(--border-color);" id="kontribusi">
+        <div class="container">
+            <div class="section-title">
+                <h2>🤝 Bergabung Membangun NantaraVM</h2>
+                <p>Proyek ini membutuhkan kontributor dari seluruh Indonesia. Tidak perlu ahli dulu untuk mulai berkontribusi!</p>
+            </div>
+            <div class="grid-3" style="margin-top: 40px;">
+                <div class="card">
+                    <div class="card-icon">💻</div>
+                    <h3>Rust Developer</h3>
+                    <p>Bantu implementasikan fitur KVM, VirtIO device, dan networking. Pengalaman sistem/kernel Linux sangat dibutuhkan.</p>
+                    <a href="https://github.com/nantara-vm/nantara-vm/issues" target="_blank" class="btn btn-secondary" style="margin-top:12px; font-size:0.85rem; padding: 8px 16px;">Lihat Open Issues</a>
+                </div>
+                <div class="card">
+                    <div class="card-icon">📝</div>
+                    <h3>Technical Writer</h3>
+                    <p>Tulis dokumentasi, tutorial, dan panduan instalasi yang mudah dipahami oleh developer Indonesia.</p>
+                    <a href="https://github.com/nantara-vm/nantara-vm" target="_blank" class="btn btn-secondary" style="margin-top:12px; font-size:0.85rem; padding: 8px 16px;">Lihat Repo</a>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🧪</div>
+                    <h3>Tester & Feedback</h3>
+                    <p>Coba build dari source, laporkan bug, dan berikan masukan tentang arah pengembangan yang paling bermanfaat.</p>
+                    <a href="https://github.com/nantara-vm/nantara-vm/issues/new" target="_blank" class="btn btn-secondary" style="margin-top:12px; font-size:0.85rem; padding: 8px 16px;">Buka Issue Baru</a>
+                </div>
+            </div>
+
+            <!-- Build from source -->
+            <div style="background: #0f172a; border: 1px solid var(--border-color); border-radius: 20px; padding: 32px; margin-top: 40px;">
+                <h3 style="font-size: 1.3rem; font-weight: 700; color: white; margin-bottom: 16px;">🔨 Build dari Source Code</h3>
+                <p style="color: #9ca3af; margin-bottom: 20px;">Untuk developer yang ingin mencoba & berkontribusi. Membutuhkan Linux + Rust toolchain.</p>
+                <div class="code-cmd">
+                    <code># Clone repository
+git clone https://github.com/nantara-vm/nantara-vm.git
+cd nantara-vm
+
+# Build (membutuhkan Linux, Rust 1.75+)
+cargo build
+
+# Jalankan (stub/demo mode di non-Linux)
+cargo run</code>
+                </div>
+                <p style="color: #f59e0b; font-size: 0.85rem; margin-top: 12px;">⚠️ Catatan: Fitur KVM penuh hanya berjalan di Linux dengan /dev/kvm tersedia.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>© 2025–2026 NantaraVM — Proyek Open-Source Karya Indonesia 🇮🇩</p>
+            <p style="margin-top: 8px; font-size: 0.85rem; color: #6b7280;">
+                Proyek ini masih dalam tahap pengembangan awal. Ikuti perkembangan kami di
+                <a href="https://github.com/nantara-vm/nantara-vm" target="_blank" style="color: #06b6d4; text-decoration: none;">GitHub</a>
+                atau hubungi kami via WhatsApp:
+                <a href="https://wa.me/6281260006666" target="_blank" style="color: #25d366; text-decoration: none; font-weight: 600;">+62 812-6000-6666</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/6281260006666?text=Halo%20Tim%20NantaraVM%2C%20saya%20ingin%20tahu%20lebih%20lanjut%20tentang%20proyek%20ini!" class="wa-float" target="_blank" title="Chat WhatsApp NantaraVM">
+        💬
+    </a>
+
+    <script src="app.js?v=2.0.0"></script>
+</body>
+</html>

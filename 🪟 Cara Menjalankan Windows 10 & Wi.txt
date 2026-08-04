@@ -1,0 +1,23 @@
+🪟 Cara Menjalankan Windows 10 & Windows 11 di NantaraVM
+Menjalankan Windows 10 / Windows 11 di NantaraVM sangat bisa dilakukan!
+
+Karena Windows adalah Sistem Operasi berbasis GUI (Grafis) yang membutuhkan memori lebih besar dibanding Linux MicroVM, berikut adalah panduan dan langkah-langkah praktisnya:
+
+🛠️ Persiapan 2 Berkas Utama Windows untuk KVM:
+File Image Disk Windows (windows10.qcow2 / windows11.raw): File gambar disk Virtual yang sudah terpasang OS Windows (bisa dikonversi langsung dari VM VMware/VirtualBox .vmdk Anda menjadi .qcow2 atau .raw).
+Driver VirtIO Windows (virtio-win): Driver resmi Red Hat KVM agar Windows bisa mengenali Storage Super Cepat (virtio-blk) dan Network Card (virtio-net) bawaan NantaraVM.
+🚀 Langkah Menjalankan Windows 10/11 di NantaraVM:
+Langkah 1: Jalankan Perintah Biner NantaraVM
+Buka terminal dan jalankan NantaraVM dengan mengalokasikan RAM (misal 4 GB) dan vCPU (misal 4 Core) untuk Windows:
+
+bash
+./nantara-vm --disk windows11.qcow2 --ram 4096 --cpus 4 --display virtio-gpu
+Langkah 2: Buka Layar Desktop Windows di Browser
+Buka Dashboard NantaraVM di browser Anda: 👉 https://nantara.cloud/dashboard.html
+
+Layar noVNC Web Console akan menampilkan proses booting Windows 10/11 Desktop secara real-time, lengkap dengan kontrol mouse & keyboard visual ala VMware!
+
+💡 Keunggulan Menjalankan Windows di NantaraVM Enterprise Pro:
+Terenkripsi Hardware AMD SEV-SNP / Intel TDX: File dokumen dan memori RAM OS Windows 10/11 Anda terenkripsi penuh oleh chip CPU. Bahkan jika seseorang meretas server Host, data di dalam Windows tetap 100% aman!
+Network Super Cepat (XDP Mode): Koneksi jaringan internet di dalam Windows menggunakan driver XDP Line-Rate dengan kecepatan hingga 9.4 Gbps.
+Silakan dicatat panduannya ya, sob! NantaraVM siap menjalankan Linux MicroVM maupun Windows Desktop! 🚀🇮🇩

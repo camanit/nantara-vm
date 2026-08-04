@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NantaraVM — Architecture Preview Dashboard</title>
+    <link rel="icon" type="image/png" href="assets/icon.png">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: #030712;
+            color: #f3f4f6;
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Dev Notice Top Banner */
+        .dev-notice {
+            background: linear-gradient(90deg, #92400e, #b45309);
+            color: #fef3c7;
+            text-align: center;
+            padding: 9px 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            letter-spacing: 0.01em;
+        }
+        .dev-notice a {
+            color: #fde68a;
+            text-decoration: underline;
+            margin-left: 4px;
+        }
+
+        .app-shell {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #0f172a;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 14px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo {
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.72rem;
+            color: #f59e0b;
+            font-weight: 600;
+            background: rgba(245,158,11,0.1);
+            border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 8px;
+            padding: 4px 10px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .menu-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .menu-item button {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 14px;
+            color: #9ca3af;
+            background: none;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-family: inherit;
+            font-size: 0.88rem;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+        }
+
+        .menu-item.active button,
+        .menu-item button:hover {
+            background: rgba(6, 182, 212, 0.12);
+            color: #06b6d4;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 14px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            font-size: 0.75rem;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .top-bar {
+            height: 62px;
+            background: #0b1329;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            flex-shrink: 0;
+        }
+
+        .dashboard-body {
+            padding: 24px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        /* Panels */
+        .tab-panel { display: none; flex-direction: column; gap: 20px; }
+        .tab-panel.active { display: flex; }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .stat-card {
+            background: #0f172a;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 18px;
+            position: relative;
+        }
+
+        .stat-demo-badge {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            font-size: 0.62rem;
+            background: rgba(245,158,11,0.15);
+            color: #f59e0b;
+            border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 6px;
+            padding: 2px 6px;
+            font-weight: 700;
+        }
+
+        .stat-title { color: #9ca3af; font-size: 0.8rem; margin-bottom: 8px; }
+        .stat-val { font-size: 1.7rem; font-weight: 800; }
+        .progress-bar { background: #1e293b; height: 5px; border-radius: 3px; margin-top: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 3px; }
+
+        /* VM View */
+        .vm-view-area {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+        }
+
+        .novnc-screen {
+            background: #000;
+            border: 1px solid rgba(6,182,212,0.4);
+            border-radius: 18px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen-header {
+            background: #1e293b;
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.78rem;
+        }
+
+        .screen-canvas {
+            flex-grow: 1;
+            min-height: 320px;
+            background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 28px;
+            position: relative;
+        }
+
+        /* Watermark overlay */
+        .screen-canvas::before {
+            content: "ARCHITECTURE PREVIEW";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: rgba(245,158,11,0.07);
+            letter-spacing: 0.12em;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .vm-action-panel {
+            background: #0f172a;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 18px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Info box */
+        .info-box {
+            background: rgba(6,182,212,0.07);
+            border: 1px solid rgba(6,182,212,0.2);
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        .warn-box {
+            background: rgba(245,158,11,0.07);
+            border: 1px solid rgba(245,158,11,0.25);
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 0.8rem;
+            color: #fbbf24;
+            line-height: 1.6;
+        }
+
+        /* Table */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        th { background: #1e293b; color: #9ca3af; font-size: 0.8rem; }
+
+        /* Panel card wrapper */
+        .panel-card {
+            background: #0f172a;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 18px;
+            padding: 22px;
+        }
+
+        .panel-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .feature-status {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+        .fs-planned { background: rgba(107,114,128,0.2); color: #9ca3af; }
+        .fs-wip     { background: rgba(245,158,11,0.15); color: #f59e0b; }
+        .fs-partial { background: rgba(6,182,212,0.15); color: #06b6d4; }
+    </style>
+</head>
+<body>
+
+    <!-- Dev Notice Banner -->
+    <div class="dev-notice">
+        🚧 &nbsp;Ini adalah <strong>Architecture Preview Dashboard</strong> — bukan dashboard live yang terhubung ke hypervisor nyata.
+        Data di sini bersifat ilustratif untuk memvisualisasikan desain sistem.
+        <a href="index.html">← Kembali ke Beranda</a>
+    </div>
+
+    <div class="app-shell">
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                <img src="assets/icon.png" alt="NantaraVM" style="height:32px; width:32px; border-radius:7px;">
+                NantaraVM
+            </div>
+            <div class="sidebar-subtitle">🚧 PREVIEW — Bukan Live System</div>
+            <ul class="menu-list">
+                <li class="menu-item active" id="menu-dash"><button onclick="switchTab('dash')">📊 Ringkasan Arsitektur</button></li>
+                <li class="menu-item" id="menu-vms"><button onclick="switchTab('vms')">🖥️ Desain VM Manager</button></li>
+                <li class="menu-item" id="menu-sev"><button onclick="switchTab('sev')">🔒 Rencana SEV-SNP</button></li>
+                <li class="menu-item" id="menu-xdp"><button onclick="switchTab('xdp')">⚡ Rencana XDP Network</button></li>
+                <li class="menu-item" id="menu-snap"><button onclick="switchTab('snap')">⏱️ Rencana Snapshot Engine</button></li>
+                <li class="menu-item" id="menu-roadmap"><button onclick="switchTab('roadmap')">🗺️ Roadmap & Progress</button></li>
+            </ul>
+            <div class="sidebar-footer">
+                <strong style="color:#9ca3af;">NantaraVM Open Source</strong><br>
+                Early Alpha · Aktif Dikembangkan<br>
+                <a href="https://github.com/nantara-vm/nantara-vm" target="_blank" style="color:#06b6d4;">GitHub Repository →</a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="top-bar">
+                <div style="font-weight:700; font-size:1rem;">🏗️ NantaraVM Architecture Preview Dashboard</div>
+                <div style="display:flex; gap:12px; align-items:center;">
+                    <span style="font-size:0.8rem; color:#f59e0b; font-weight:600; background:rgba(245,158,11,0.1); padding:4px 12px; border-radius:8px; border:1px solid rgba(245,158,11,0.3);">⚠️ Data Ilustratif</span>
+                    <a href="index.html" class="btn btn-secondary" style="font-size:0.82rem; padding:6px 14px;">⬅️ Beranda</a>
+                </div>
+            </div>
+
+            <div class="dashboard-body">
+
+                <!-- TAB 1: Overview Dashboard -->
+                <div class="tab-panel active" id="panel-dash">
+
+                    <div class="warn-box">
+                        ⚠️ <strong>Catatan Penting:</strong> Semua angka dan status di dashboard ini adalah <strong>ilustrasi desain target</strong> (bukan data real-time dari sistem yang berjalan). Dashboard live yang terhubung ke backend akan tersedia setelah implementasi API Server selesai.
+                    </div>
+
+                    <!-- Target Specs -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-demo-badge">TARGET</div>
+                            <div class="stat-title">⚡ Target Cold Boot</div>
+                            <div class="stat-val" style="color:#06b6d4;">&lt; 15 ms</div>
+                            <div class="progress-bar"><div class="progress-fill" style="background:#06b6d4; width:75%;"></div></div>
+                            <div style="font-size:0.72rem; color:#6b7280; margin-top:6px;">Benchmarked: belum diukur</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-demo-badge">TARGET</div>
+                            <div class="stat-title">🧠 Target RAM Footprint</div>
+                            <div class="stat-val" style="color:#10b981;">&lt; 10 MB</div>
+                            <div class="progress-bar"><div class="progress-fill" style="background:#10b981; width:50%;"></div></div>
+                            <div style="font-size:0.72rem; color:#6b7280; margin-top:6px;">Diukur setelah implementasi KVM</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-demo-badge">RENCANA</div>
+                            <div class="stat-title">🌐 Target Net Throughput</div>
+                            <div class="stat-val" style="color:#f59e0b;">Multi-Gbps</div>
+                            <div class="progress-bar"><div class="progress-fill" style="background:#f59e0b; width:20%;"></div></div>
+                            <div style="font-size:0.72rem; color:#6b7280; margin-top:6px;">VirtIO-net belum diimplementasi</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-demo-badge">RENCANA</div>
+                            <div class="stat-title">🔒 Confidential Computing</div>
+                            <div class="stat-val" style="color:#8b5cf6; font-size:1.1rem;">AMD SEV-SNP</div>
+                            <div class="progress-bar"><div class="progress-fill" style="background:#8b5cf6; width:5%;"></div></div>
+                            <div style="font-size:0.72rem; color:#6b7280; margin-top:6px;">Butuh hardware fisik, roadmap 2026</div>
+                        </div>
+                    </div>
+
+                    <!-- Architecture Diagram (Console Preview) -->
+                    <div class="vm-view-area">
+                        <div class="novnc-screen">
+                            <div class="screen-header">
+                                <span>📺 Target: noVNC WebSocket Console (Belum Diimplementasi)</span>
+                                <span style="color:#f59e0b;">⚠️ Tampilan Desain</span>
+                            </div>
+                            <div class="screen-canvas" id="screen-canvas">
+                                <div style="font-size:3.5rem; margin-bottom:12px;">🏗️</div>
+                                <h3 style="font-size:1.3rem; font-weight:800; color:white;">Tampilan Konsol Guest OS</h3>
+                                <p style="color:#9ca3af; font-size:0.9rem; margin-top:10px; max-width:480px; line-height:1.7;">
+                                    Di sini nantinya akan muncul output serial/VNC dari Guest OS (Linux/Windows) yang berjalan di dalam NantaraVM.
+                                    Fitur ini membutuhkan implementasi <code>virtio-console</code> dan WebSocket server yang belum selesai.
+                                </p>
+                                <div style="margin-top:20px; padding:12px 20px; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); border-radius:10px; font-size:0.82rem; color:#fbbf24;">
+                                    🔨 Target Fase 2 — Sedang direncanakan
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="vm-action-panel">
+                            <h4 style="font-size:1rem; font-weight:700;">⚙️ Desain Control Panel API</h4>
+                            <p style="color:#9ca3af; font-size:0.8rem;">Endpoint REST API yang direncanakan:</p>
+
+                            <div style="background:#020617; border-radius:10px; padding:14px; font-family:'Fira Code',monospace; font-size:0.75rem; color:#10b981; line-height:1.8;">
+                                POST /api/v1/vm/start<br>
+                                POST /api/v1/vm/pause<br>
+                                POST /api/v1/vm/resume<br>
+                                POST /api/v1/vm/snapshot<br>
+                                GET  /api/v1/vm/info
+                            </div>
+
+                            <div class="warn-box">
+                                🚧 API server belum diimplementasi via TCP. Saat ini baru ada struktur Unix socket yang belum fungsional.
+                            </div>
+
+                            <div class="info-box">
+                                💡 <strong>Rencana:</strong> API akan listen di <code>0.0.0.0:8080</code> sehingga bisa diakses dari dashboard web ini secara real-time.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: VM Manager Design -->
+                <div class="tab-panel" id="panel-vms">
+                    <div class="panel-card">
+                        <h3>🖥️ Desain VM Manager <span class="feature-status fs-wip">SEDANG DIBANGUN</span></h3>
+                        <p style="color:#9ca3af; margin-top:6px; font-size:0.9rem;">Ini adalah mockup tampilan tabel VM yang nantinya akan menampilkan data real dari API backend.</p>
+                        <div class="warn-box" style="margin-top:16px;">
+                            ⚠️ Data di tabel ini adalah contoh statis. VM Manager nyata membutuhkan backend API yang terhubung.
+                        </div>
+                        <table style="margin-top:16px;">
+                            <thead>
+                                <tr>
+                                    <th>Nama MicroVM</th>
+                                    <th>Status</th>
+                                    <th>vCPU</th>
+                                    <th>RAM</th>
+                                    <th>OS Guest</th>
+                                    <th>Confidential</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>example-linux-vm-01</strong></td>
+                                    <td><span style="color:#f59e0b;">⚙️ Direncanakan</span></td>
+                                    <td>2 vCPU</td>
+                                    <td>512 MB</td>
+                                    <td>Alpine Linux</td>
+                                    <td><span style="color:#6b7280;">Standard</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>example-win10-sandbox</strong></td>
+                                    <td><span style="color:#6b7280;">📋 Roadmap</span></td>
+                                    <td>4 vCPU</td>
+                                    <td>2048 MB</td>
+                                    <td>Windows 10</td>
+                                    <td><span style="color:#6b7280;">Roadmap 2026</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="color:#6b7280; font-size:0.8rem; margin-top:14px;">* Data di atas adalah contoh desain schema, bukan VM yang sedang berjalan.</p>
+                    </div>
+                </div>
+
+                <!-- TAB 3: SEV-SNP Plan -->
+                <div class="tab-panel" id="panel-sev">
+                    <div class="panel-card">
+                        <h3 style="color:#8b5cf6;">🔒 Rencana AMD SEV-SNP / Intel TDX <span class="feature-status fs-planned">ROADMAP 2026</span></h3>
+                        <p style="color:#9ca3af; margin-top:8px; font-size:0.9rem;">
+                            Confidential Computing adalah salah satu fitur jangka panjang NantaraVM. Membutuhkan hardware server fisik dengan CPU AMD EPYC (Milan/Genoa) atau Intel Xeon Sapphire Rapids yang mendukung SEV-SNP/TDX.
+                        </p>
+                        <div class="warn-box" style="margin-top:16px;">
+                            ⚠️ Fitur ini <strong>belum diimplementasi sama sekali</strong>. Kode saat ini hanya memiliki struktur placeholder. Implementasi nyata membutuhkan akses ke hardware khusus dan driver kernel Linux terbaru.
+                        </div>
+                        <div style="margin-top:20px; background:#020617; padding:20px; border-radius:14px; font-size:0.88rem; color:#94a3b8; line-height:1.8;">
+                            <strong style="color:#8b5cf6;">Langkah Implementasi yang Direncanakan:</strong><br><br>
+                            1. ✅ Definisi struktur data SevSnpManager (selesai)<br>
+                            2. 🔨 KVM_SEV_SNP_LAUNCH_START ioctl (belum)<br>
+                            3. 📋 Guest memory encryption via PSP (belum)<br>
+                            4. 📋 Attestation report dari AMD PSP (belum)<br>
+                            5. 📋 KMS secret injection via vsock (belum)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 4: XDP Networking Plan -->
+                <div class="tab-panel" id="panel-xdp">
+                    <div class="panel-card">
+                        <h3 style="color:#f59e0b;">⚡ Rencana XDP / eBPF Networking <span class="feature-status fs-planned">ROADMAP</span></h3>
+                        <p style="color:#9ca3af; margin-top:8px; font-size:0.9rem;">
+                            XDP (eXpress Data Path) dan eBPF sockmap adalah teknik jaringan kernel Linux untuk throughput dan latensi ultra-rendah. Ini adalah fitur enterprise jangka menengah NantaraVM.
+                        </p>
+                        <div class="warn-box" style="margin-top:16px;">
+                            ⚠️ eBPF dan XDP saat ini hanya berupa <code>println!()</code> placeholder. Belum ada program eBPF yang dimuat ke kernel.
+                        </div>
+                        <div style="margin-top:20px; background:#020617; padding:20px; border-radius:14px; font-size:0.88rem; color:#94a3b8; line-height:1.8;">
+                            <strong style="color:#f59e0b;">Stack yang Direncanakan:</strong><br><br>
+                            📋 Library: <code>aya-rs</code> atau <code>libbpf-rs</code> untuk load program eBPF<br>
+                            📋 TAP interface untuk VirtIO network<br>
+                            📋 XDP hook di NIC driver untuk DDoS mitigation<br>
+                            📋 BPF_MAP_TYPE_SOCKMAP untuk zero-copy VM-to-VM forwarding
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 5: Snapshot Engine Plan -->
+                <div class="tab-panel" id="panel-snap">
+                    <div class="panel-card">
+                        <h3 style="color:#06b6d4;">⏱️ Rencana Snapshot & Restore Engine <span class="feature-status fs-planned">ROADMAP</span></h3>
+                        <p style="color:#9ca3af; margin-top:8px; font-size:0.9rem;">
+                            Snapshot dan lazy restore via <code>userfaultfd</code> adalah fitur penting untuk efisiensi spawning banyak VM. Teknisnya: halaman memori hanya dimuat ketika diakses (copy-on-write).
+                        </p>
+                        <div class="warn-box" style="margin-top:16px;">
+                            ⚠️ <code>LazyRestoreEngine</code> saat ini hanya berupa stub. Belum ada snapshot yang bisa disimpan atau di-restore.
+                        </div>
+                        <div style="margin-top:20px; background:#020617; padding:20px; border-radius:14px; font-size:0.88rem; color:#94a3b8; line-height:1.8;">
+                            <strong style="color:#06b6d4;">Rencana Implementasi:</strong><br><br>
+                            1. 📋 Serialisasi state vCPU (register, VMCS)<br>
+                            2. 📋 Dump dirty pages via KVM_GET_DIRTY_LOG<br>
+                            3. 📋 Simpan snapshot ke file disk<br>
+                            4. 📋 userfaultfd handler untuk lazy page load saat restore<br>
+                            5. 📋 Target restore latency: &lt; 50ms (realistis awal)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 6: Roadmap -->
+                <div class="tab-panel" id="panel-roadmap">
+                    <div class="panel-card">
+                        <h3>🗺️ Roadmap & Status Pengembangan Nyata</h3>
+                        <p style="color:#9ca3af; margin-top:6px; font-size:0.9rem;">Progress jujur per komponen.</p>
+                        <table style="margin-top:16px;">
+                            <thead>
+                                <tr>
+                                    <th>Komponen</th>
+                                    <th>Status</th>
+                                    <th>Keterangan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Struktur proyek Rust</td><td><span style="color:#10b981;">✅ Selesai</span></td><td>Cargo workspace, modul, traits</td></tr>
+                                <tr><td>Integrasi library KVM</td><td><span style="color:#10b981;">✅ Selesai</span></td><td>kvm-ioctls, vm-memory tersambung</td></tr>
+                                <tr><td>vCPU boot nyata via KVM</td><td><span style="color:#f59e0b;">🔨 Sedang dikerjakan</span></td><td>Butuh Linux + /dev/kvm</td></tr>
+                                <tr><td>VirtIO Block Device</td><td><span style="color:#f59e0b;">🔨 Desain selesai</span></td><td>Queue logic belum fungsional</td></tr>
+                                <tr><td>VirtIO Network Device</td><td><span style="color:#6b7280;">📋 Direncanakan</span></td><td>TAP interface belum</td></tr>
+                                <tr><td>REST API (TCP)</td><td><span style="color:#6b7280;">📋 Direncanakan</span></td><td>Saat ini hanya Unix socket stub</td></tr>
+                                <tr><td>Boot Linux kernel</td><td><span style="color:#f59e0b;">🔨 Target Fase 1</span></td><td>Butuh vmlinux + rootfs nyata</td></tr>
+                                <tr><td>Boot Windows 10</td><td><span style="color:#6b7280;">🎯 Roadmap Jangka Panjang</span></td><td>Butuh UEFI/OVMF, banyak komponen</td></tr>
+                                <tr><td>AMD SEV-SNP</td><td><span style="color:#6b7280;">🎯 Roadmap 2026</span></td><td>Butuh hardware fisik khusus</td></tr>
+                                <tr><td>eBPF / XDP</td><td><span style="color:#6b7280;">🎯 Roadmap 2026</span></td><td>Saat ini hanya println! placeholder</td></tr>
+                                <tr><td>noVNC Display</td><td><span style="color:#6b7280;">🎯 Roadmap Jangka Panjang</span></td><td>Butuh virtio-gpu + WebSocket</td></tr>
+                                <tr><td>Containerd Shim v2</td><td><span style="color:#6b7280;">🎯 Roadmap Jangka Panjang</span></td><td>Butuh komponen VM dasar dulu</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="info-box" style="font-size:0.88rem;">
+                        💡 <strong>Ingin Berkontribusi?</strong> Proyek ini open-source dan membutuhkan developer Rust.
+                        Cek <a href="https://github.com/nantara-vm/nantara-vm/issues" target="_blank" style="color:#06b6d4;">GitHub Issues</a> untuk task yang tersedia.
+                        Bersama kita bisa wujudkan hypervisor karya Indonesia! 🇮🇩
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
+            const targetMenu = document.getElementById('menu-' + tabId);
+            const targetPanel = document.getElementById('panel-' + tabId);
+            if (targetMenu) targetMenu.classList.add('active');
+            if (targetPanel) targetPanel.classList.add('active');
+        }
+    </script>
+</body>
+</html>

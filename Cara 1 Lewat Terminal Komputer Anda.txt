@@ -1,0 +1,59 @@
+Cara 1: Lewat Terminal Komputer Anda (Paling Praktis)
+Saya telah membuatkan tool otomatis 
+
+tools/gen_license.rs
+.
+
+Cukup buka Terminal / PowerShell di folder proyek NantaraVM, lalu ketik:
+
+bash
+cargo run --bin gen_license
+Sistem akan meminta nama klien (misal: PT Bank Mandiri), lalu otomatis mencetak License Key + Teks Siap-Copy untuk WhatsApp:
+
+text
+====================================================
+ 🔑 NantaraVM Enterprise License Generator Utility
+====================================================
+Masukkan Nama Organisasi / Klien: PT Bank Mandiri
+✅ License Key Enterprise Pro Berhasil Diterbitkan!
+----------------------------------------------------
+ Klien       : PT Bank Mandiri
+ License Key : NANTARA-PRO-2026-PT-BANK-MANDIRI-ABF828BC
+ Masa Aktif  : 1 Tahun (365 Hari)
+----------------------------------------------------
+📧 Teks Surat / WA untuk dikirimkan ke Klien:
+----------------------------------------------------
+Yth. Tim IT PT Bank Mandiri,
+Terima kasih telah berlangganan NantaraVM Enterprise Pro.
+Berikut adalah License Key resmi Anda:
+  LICENSE KEY : NANTARA-PRO-2026-PT-BANK-MANDIRI-ABF828BC
+Instruksi Aktivasi di Server Linux:
+  export NANTARA_PRO_LICENSE="NANTARA-PRO-2026-PT-BANK-MANDIRI-ABF828BC"
+  ./nantara-vm
+Hubungi SLA Support 24/7 via WA: +62 812-6000-6666
+====================================================
+🎯 Cara 2: Lewat Portal Online di Website Anda (nantara.cloud)
+Buka browser dan buka halaman website Anda: 👉 https://nantara.cloud#license-portal
+
+Masukkan Nama Organisasi (contoh: Kementerian Kominfo).
+Masukkan Email Penanggung Jawab (contoh: admin@kominfo.go.id).
+Klik tombol ⚡ Terbitkan & Aktifkan Pro License Key.
+Salin kode NANTARA_PRO_LICENSE="..." yang muncul di kotak hijau, lalu paste ke chat WhatsApp Klien!
+💬 Contoh Chat WhatsApp Yang Anda Kirimkan ke Klien:
+Yth. Tim IT PT Bank Mandiri,
+
+Terima kasih telah memilih NantaraVM Enterprise Pro untuk infrastruktur Sovereign Cloud Anda.
+
+Berikut adalah Kunci Lisensi resmi Anda: 🔑 LICENSE KEY: NANTARA-PRO-2026-PT-BANK-MANDIRI-ABF828BC
+
+Cara Mengaktifkan di Server Linux:
+
+bash
+export NANTARA_PRO_LICENSE="NANTARA-PRO-2026-PT-BANK-MANDIRI-ABF828BC"
+./nantara-vm
+Saat dijalankan, NantaraVM akan otomatis mengaktifkan enkripsi hardware AMD SEV-SNP, XDP Line-Rate Driver, dan Landlock LSM.
+
+Salam hangat,
+Tim Nantara Cloud Platform (nantara.cloud)
+
+Sangat mudah dan praktis kan, sob? Kapan pun ada order via WA, Anda tinggal jalankan cargo run --bin gen_license atau buat lewat web nantara.cloud! 🚀🇮🇩
