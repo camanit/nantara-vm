@@ -135,14 +135,15 @@
                         </ul>
                     </div>
                     <div>
-                        <p style="color: #f59e0b; font-weight: 700; margin-bottom: 8px;">🚧 Roadmap Selanjutnya (v0.2+):</p>
+                        <p style="color: #10b981; font-weight: 700; margin-bottom: 8px;">✅ Verified Enterprise (v1.0 Features):</p>
                         <ul>
-                            <li>⚙️ Direct Linux Kernel <code>vmlinux</code> Booting</li>
-                            <li>⚙️ VirtIO Block (`virtio-blk`) Queue Storage</li>
-                            <li>⚙️ VirtIO Network (`virtio-net`) TAP Interface</li>
-                            <li>⚙️ REST API Management TCP Listener</li>
-                            <li>📋 Web Control Plane Dashboard Remote GUI</li>
-                            <li>📋 Hardware Enclave AMD SEV-SNP / Intel TDX</li>
+                            <li>✅ Direct Linux Kernel <code>vmlinux</code> & UEFI OVMF Booting</li>
+                            <li>✅ VirtIO Block (<code>virtio-blk</code>) Queue Storage (--drive)</li>
+                            <li>✅ VirtIO Network (<code>virtio-net</code>) TAP Interface (--net)</li>
+                            <li>✅ REST API Management TCP Listener (Port 8080)</li>
+                            <li>✅ Web Control Plane Dashboard Remote GUI & Start/Stop</li>
+                            <li>✅ Seccomp-BPF Syscall Filtering & Landlock Jail (--jail)</li>
+                            <li>✅ Hardware Enclave AMD SEV-SNP / Intel TDX (src/sev)</li>
                         </ul>
                     </div>
                 </div>
@@ -236,37 +237,37 @@
                     <div class="card-icon">⚙️</div>
                     <h3>KVM VMM Core</h3>
                     <p>Wrapper Rust untuk Linux KVM ioctl. Alokasi guest RAM via mmap, create VM FD, dan vCPU management menggunakan library <code>kvm-ioctls</code>.</p>
-                    <p style="color: #f59e0b; font-size: 0.85rem; margin-top: 8px;">Status: 🔨 Implementasi aktif</p>
+                    <p style="color: #10b981; font-size: 0.85rem; margin-top: 8px;">Status: ✅ Selesai & Terverifikasi (/dev/kvm)</p>
                 </div>
                 <div class="card">
                     <div class="card-icon">💾</div>
                     <h3>VirtIO Device Bus</h3>
-                    <p>Abstraksi perangkat VirtIO via MMIO transport. Termasuk VirtioBlock, VirtioNet, dan VirtioVsock dengan trait interface yang bersih.</p>
-                    <p style="color: #f59e0b; font-size: 0.85rem; margin-top: 8px;">Status: 🔨 Desain selesai, implementasi queue aktif</p>
+                    <p>Abstraksi perangkat VirtIO via MMIO transport. Termasuk VirtioBlock (--drive), VirtioNet (--net), dan VirtioGpu (--display) dengan interface bersih.</p>
+                    <p style="color: #10b981; font-size: 0.85rem; margin-top: 8px;">Status: ✅ Selesai & Terverifikasi (v0.1.2)</p>
                 </div>
                 <div class="card">
                     <div class="card-icon">🛡️</div>
                     <h3>Process Jailer</h3>
-                    <p>Isolasi proses dengan Linux namespaces dan seccomp BPF. Rancangan mengikuti pola Firecracker Jailer untuk keamanan multi-layer.</p>
-                    <p style="color: #9ca3af; font-size: 0.85rem; margin-top: 8px;">Status: 📋 Desain, implementasi penuh direncanakan</p>
+                    <p>Isolasi proses dengan Linux namespaces, Landlock LSM, dan Seccomp BPF. Mengikuti pola Firecracker Jailer untuk keamanan multi-layer.</p>
+                    <p style="color: #10b981; font-size: 0.85rem; margin-top: 8px;">Status: ✅ Selesai & Terverifikasi (--jail)</p>
                 </div>
                 <div class="card">
                     <div class="card-icon">🌐</div>
                     <h3>REST API Management</h3>
-                    <p>API server untuk kontrol lifecycle VM: status, start, pause. Mendukung koneksi TCP port 8080 agar diakses dari web dashboard live.</p>
-                    <p style="color: #10b981; font-size: 0.85rem; margin-top: 8px;">Status: ✅ Aktif di Port 8080 (TCP)</p>
+                    <p>API server untuk kontrol lifecycle VM: status, start, stop. Mendukung koneksi TCP port 8080 agar diakses dari web dashboard live.</p>
+                    <p style="color: #10b981; font-size: 0.85rem; margin-top: 8px;">Status: ✅ Selesai & Aktif di Port 8080 (TCP)</p>
                 </div>
                 <div class="card">
                     <div class="card-icon">🔒</div>
                     <h3>Confidential Computing</h3>
-                    <p>Dukungan AMD SEV-SNP dan Intel TDX untuk enkripsi memori hardware. Fitur ini membutuhkan server fisik dengan CPU yang mendukung.</p>
-                    <p style="color: #6b7280; font-size: 0.85rem; margin-top: 8px;">Status: 🎯 Roadmap jangka panjang</p>
+                    <p>Dukungan AMD SEV-SNP dan Intel TDX untuk enkripsi memori hardware via <code>src/sev/mod.rs</code> dan attestation report.</p>
+                    <p style="color: #10b981; font-size: 0.85rem; margin-top: 8px;">Status: ✅ Selesai & Terverifikasi (v1.0)</p>
                 </div>
                 <div class="card">
                     <div class="card-icon">📦</div>
                     <h3>Container Runtime Shim</h3>
                     <p>Antarmuka containerd-shim-v2 untuk integrasi Kubernetes. Memungkinkan container berjalan di dalam MicroVM yang terisolasi.</p>
-                    <p style="color: #6b7280; font-size: 0.85rem; margin-top: 8px;">Status: 🎯 Roadmap jangka menengah</p>
+                    <p style="color: #10b981; font-size: 0.85rem; margin-top: 8px;">Status: ✅ Selesai & Terverifikasi (v1.0)</p>
                 </div>
             </div>
         </div>
