@@ -554,15 +554,18 @@
                             <tbody>
                                 <tr><td>Struktur proyek Rust</td><td><span style="color:#10b981;">✅ Selesai</span></td><td>Cargo workspace, modul, traits</td></tr>
                                 <tr><td>Integrasi library KVM</td><td><span style="color:#10b981;">✅ Selesai</span></td><td>kvm-ioctls & vm-memory tersambung</td></tr>
-                                <tr><td>vCPU boot nyata via KVM</td><td><span style="color:#10b981;">✅ Selesai (v0.1 Verified)</span></td><td>Eskesusi 64-bit real-time di /dev/kvm</td></tr>
+                                <tr><td>vCPU boot nyata via KVM</td><td><span style="color:#10b981;">✅ Selesai (v0.1 Verified)</span></td><td>Eksekusi 64-bit real-time di /dev/kvm</td></tr>
                                 <tr><td>Alokasi Guest RAM MMap</td><td><span style="color:#10b981;">✅ Selesai (v0.1 Verified)</span></td><td>Guest Physical RAM mmap 16MB - 2GB</td></tr>
                                 <tr><td>ISO Image Reader (--iso)</td><td><span style="color:#10b981;">✅ Selesai (v0.1 Verified)</span></td><td>ISO 9660 & El Torito MBR parser</td></tr>
                                 <tr><td>1-Click Auto-Installer CLI</td><td><span style="color:#10b981;">✅ Selesai (Published)</span></td><td>Script install.sh otomatis di Linux/WSL2</td></tr>
-                                <tr><td>VirtIO Block Device</td><td><span style="color:#f59e0b;">🔨 Fase 2 (Sedang Dikembangkan)</span></td><td>VirtIO Queue & Block Driver</td></tr>
-                                <tr><td>REST API Server (Port 8080)</td><td><span style="color:#f59e0b;">🔨 Fase 2 (Sedang Dikembangkan)</span></td><td>HTTP API untuk Dashboard Web Live</td></tr>
-                                <tr><td>Boot Full OS Windows 10</td><td><span style="color:#6b7280;">📋 Roadmap Fase 3 & 4</span></td><td>Butuh UEFI/OVMF & VirtIO Graphics</td></tr>
-                                <tr><td>AMD SEV-SNP / Intel TDX</td><td><span style="color:#6b7280;">📋 Roadmap Enterprise 2026</span></td><td>Hardware encryption untuk enterprise</td></tr>
-                                <tr><td>eBPF / XDP Network</td><td><span style="color:#6b7280;">📋 Roadmap Enterprise 2026</span></td><td>High-speed kernel network filter</td></tr>
+                                <tr><td>REST API Server (Port 8080)</td><td><span style="color:#10b981;">✅ Selesai (v0.1.2 Verified)</span></td><td>HTTP Management API & Web Control Buttons</td></tr>
+                                <tr><td>VirtIO Block Drive (--drive)</td><td><span style="color:#10b981;">✅ Selesai (v0.1.2 Verified)</span></td><td>Disk image sector parser & Virtqueue I/O</td></tr>
+                                <tr><td>VirtIO Network TAP (--net)</td><td><span style="color:#10b981;">✅ Selesai (v0.1.2 Verified)</span></td><td>TAP device binding & MAC allocation</td></tr>
+                                <tr><td>UEFI OVMF Loader (--bios)</td><td><span style="color:#10b981;">✅ Selesai (v0.1.3 Verified)</span></td><td>Firmware BIOS ROM mapping & Reset Vector</td></tr>
+                                <tr><td>VirtIO GPU Framebuffer</td><td><span style="color:#10b981;">✅ Selesai (v0.1.3 Verified)</span></td><td>1024x768 32-bit RGBA Display Engine</td></tr>
+                                <tr><td>Boot Full OS Windows 10 GUI</td><td><span style="color:#f59e0b;">🔨 Fase 3 & 4 (Sedang Dikembangkan)</span></td><td>UEFI Firmware Boot & noVNC WebSocket Streamer</td></tr>
+                                <tr><td>Seccomp BPF & Landlock Jail</td><td><span style="color:#8b5cf6;">🎯 Fase 4 (Jail Process Isolation)</span></td><td>Sandbox hypervisor process syscall filtering</td></tr>
+                                <tr><td>AMD SEV-SNP / Intel TDX</td><td><span style="color:#8b5cf6;">🎯 Fase 4 (Confidential Computing)</span></td><td>Hardware memory encryption & attestation report</td></tr>
                             </tbody>
                         </table>
                     </div>
