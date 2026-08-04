@@ -519,37 +519,22 @@
                             <tbody id="vm-list-tbody">
                                 <tr style="border-left:3px solid transparent;">
                                     <td><input type="radio" name="vm-select" value="nantara-microvm-01" checked></td>
-                                    <td><strong>nantara-microvm-01</strong><br><small style="color:#9ca3af;">(Main MicroVM Instance)</small></td>
+                                    <td><strong>nantara-microvm-01</strong><br><small style="color:#9ca3af;">(Main Linux MicroVM Core)</small></td>
                                     <td><span style="background:rgba(156,163,175,0.2); color:#9ca3af; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">⏹️ STOPPED</span></td>
                                     <td>1 vCPU</td>
-                                    <td>16 MB (MMap)</td>
-                                    <td>Linux / Custom Kernel</td>
+                                    <td>512 MB</td>
+                                    <td>Alpine Linux MicroVM</td>
                                     <td>VirtIO Block + Net TAP</td>
                                     <td>
                                         <div style="display:flex; gap:6px;">
-                                            <button onclick="handleVmAction('start', 'nantara-microvm-01')" style="background:#10b981; color:#000; border:none; padding:4px 10px; border-radius:4px; font-weight:700; cursor:pointer;">▶️ Run</button>
+                                            <button onclick="handleVmAction('start', 'nantara-microvm-01')" style="background:#10b981; color:#000; border:none; padding:4px 10px; border-radius:4px; font-weight:700; cursor:pointer;">▶️ Boot</button>
                                             <button onclick="handleVmAction('delete', 'nantara-microvm-01')" style="background:rgba(239,68,68,0.2); color:#ef4444; border:1px solid rgba(239,68,68,0.4); padding:4px 8px; border-radius:4px; font-weight:600; cursor:pointer;">🗑️ Hapus</button>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><input type="radio" name="vm-select" value="win10-workstation-01"></td>
-                                    <td><strong>win10-workstation-01</strong><br><small style="color:#9ca3af;">(Windows 10 Pro 64-bit)</small></td>
-                                    <td><span style="background:rgba(56,189,248,0.2); color:#38bdf8; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">Ready (OVMF UEFI)</span></td>
-                                    <td>4 vCPU</td>
-                                    <td>4096 MB</td>
-                                    <td>Windows 10 Pro</td>
-                                    <td>VirtIO-GPU + Net + Disk</td>
-                                    <td>
-                                        <div style="display:flex; gap:6px;">
-                                            <button onclick="handleVmAction('start', 'win10-workstation-01')" style="background:#38bdf8; color:#000; border:none; padding:4px 10px; border-radius:4px; font-weight:700; cursor:pointer;">▶️ Boot</button>
-                                            <button onclick="handleVmAction('delete', 'win10-workstation-01')" style="background:rgba(239,68,68,0.2); color:#ef4444; border:1px solid rgba(239,68,68,0.4); padding:4px 8px; border-radius:4px; font-weight:600; cursor:pointer;">🗑️ Hapus</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
                                     <td><input type="radio" name="vm-select" value="ubuntu-2404-server"></td>
-                                    <td><strong>ubuntu-2404-server</strong><br><small style="color:#9ca3af;">(Ubuntu 24.04 LTS)</small></td>
+                                    <td><strong>ubuntu-2404-server</strong><br><small style="color:#9ca3af;">(Ubuntu 24.04 LTS Workstation)</small></td>
                                     <td><span style="background:rgba(156,163,175,0.2); color:#9ca3af; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">⏹️ STOPPED</span></td>
                                     <td>2 vCPU</td>
                                     <td>2048 MB</td>
@@ -557,8 +542,23 @@
                                     <td>VirtIO Net + Block</td>
                                     <td>
                                         <div style="display:flex; gap:6px;">
-                                            <button onclick="handleVmAction('start', 'ubuntu-2404-server')" style="background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:4px 10px; border-radius:4px; font-weight:600; cursor:pointer;">▶️ Boot</button>
+                                            <button onclick="handleVmAction('start', 'ubuntu-2404-server')" style="background:#06b6d4; color:#000; border:none; padding:4px 10px; border-radius:4px; font-weight:700; cursor:pointer;">▶️ Boot</button>
                                             <button onclick="handleVmAction('delete', 'ubuntu-2404-server')" style="background:rgba(239,68,68,0.2); color:#ef4444; border:1px solid rgba(239,68,68,0.4); padding:4px 8px; border-radius:4px; font-weight:600; cursor:pointer;">🗑️ Hapus</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="radio" name="vm-select" value="kali-linux-sandbox"></td>
+                                    <td><strong>kali-linux-sandbox</strong><br><small style="color:#9ca3af;">(Kali Linux Security Sandbox)</small></td>
+                                    <td><span style="background:rgba(156,163,175,0.2); color:#9ca3af; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">⏹️ STOPPED</span></td>
+                                    <td>2 vCPU</td>
+                                    <td>2048 MB</td>
+                                    <td>Kali Linux Security OS</td>
+                                    <td>VirtIO Net + Block</td>
+                                    <td>
+                                        <div style="display:flex; gap:6px;">
+                                            <button onclick="handleVmAction('start', 'kali-linux-sandbox')" style="background:#8b5cf6; color:#fff; border:none; padding:4px 10px; border-radius:4px; font-weight:700; cursor:pointer;">▶️ Boot</button>
+                                            <button onclick="handleVmAction('delete', 'kali-linux-sandbox')" style="background:rgba(239,68,68,0.2); color:#ef4444; border:1px solid rgba(239,68,68,0.4); padding:4px 8px; border-radius:4px; font-weight:600; cursor:pointer;">🗑️ Hapus</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -693,11 +693,10 @@
                 <div style="margin-bottom:14px;">
                     <label style="display:block; font-size:0.85rem; color:#cbd5e1; margin-bottom:6px;">Tipe Sistem Operasi (Guest OS):</label>
                     <select id="new-vm-os" style="width:100%; background:#020617; border:1px solid rgba(255,255,255,0.15); color:#fff; padding:10px 14px; border-radius:8px; box-sizing:border-box;">
-                        <option value="Windows 10 / 11 64-bit">Microsoft Windows 10 / 11 (64-bit UEFI)</option>
-                        <option value="Windows 10 / 7 (32-bit x86)">Microsoft Windows 10 / 7 / XP (32-bit x86 ISO)</option>
-                        <option value="Kali Linux 2024">Kali Linux Security OS (Penetration Testing)</option>
-                        <option value="Ubuntu Linux 24.04 LTS">Ubuntu Linux 24.04 LTS</option>
-                        <option value="Alpine MicroVM">Alpine Linux MicroVM (Minimal)</option>
+                        <option value="Ubuntu Linux 24.04 LTS" selected>Ubuntu Linux 24.04 LTS (Cloud Workstation)</option>
+                        <option value="Kali Linux Security OS">Kali Linux Security OS (Penetration Testing Sandbox)</option>
+                        <option value="Alpine MicroVM">Alpine Linux MicroVM (Fast Execution Core)</option>
+                        <option value="Debian 12 Server">Debian 12 Server (Lightweight Server)</option>
                         <option value="Custom Kernel (vmlinux)">Custom Linux Kernel (PVH Direct Boot)</option>
                     </select>
                 </div>
@@ -1016,6 +1015,14 @@
                     }
                 }
             });
+
+            // If table is completely empty, restore default VMs and clear deleted storage
+            const currentRows = document.querySelectorAll('#vm-list-tbody tr');
+            if (currentRows.length === 0) {
+                localStorage.removeItem('nantara_deleted_vms');
+                location.reload();
+                return;
+            }
 
             // Restore VM statuses
             const defaultNames = ['nantara-microvm-01', 'win10-workstation-01', 'ubuntu-2404-server'];
