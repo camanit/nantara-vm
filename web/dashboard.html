@@ -1120,7 +1120,9 @@
             const domainPrefix = (window.location.protocol === 'file:') ? 'http://210.79.190.76' : '';
 
             if (mode === 'gui') {
-                if (selectedVm.toLowerCase().includes('kali')) {
+                if (selectedVm.toLowerCase().includes('win')) {
+                    iframe.src = domainPrefix + '/desktop/?os=windows&resize=remote';
+                } else if (selectedVm.toLowerCase().includes('kali')) {
                     iframe.src = domainPrefix + '/desktop/?os=kali&resize=remote';
                 } else {
                     iframe.src = domainPrefix + '/desktop/?os=ubuntu&resize=remote';
