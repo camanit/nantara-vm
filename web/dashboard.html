@@ -413,8 +413,8 @@
                                     </div>
                                     <div style="padding: 30px 20px; text-align: center; color: #fff;">
                                         <div style="font-size: 3rem; margin-bottom: 10px;">🪟</div>
-                                        <h3 style="font-size: 1.2rem; margin: 0; color: #fff;">Windows 10 Pro 64-bit Workstation</h3>
-                                        <p style="color: #cbd5e1; font-size: 0.85rem; margin-top: 6px;">Hypervisor: Native KVM · RAM: 4096 MB · VirtIO-GPU Active</p>
+                                        <h3 id="win10-screen-arch-title" style="font-size: 1.2rem; margin: 0; color: #fff;">Windows 10 Pro 64-bit Workstation</h3>
+                                        <p id="win10-screen-arch-desc" style="color: #cbd5e1; font-size: 0.85rem; margin-top: 6px;">Hypervisor: Native KVM · RAM: 4096 MB · VirtIO-GPU Active</p>
                                         <div style="background: rgba(16,185,129,0.2); border: 1px solid #10b981; color: #10b981; padding: 8px 16px; border-radius: 8px; display: inline-block; font-size: 0.8rem; font-weight: 700; margin-top: 10px;">
                                             ✅ Windows 10 OS Running inside NantaraVM MicroVM
                                         </div>
@@ -869,7 +869,12 @@
                 <td>${ram} MB</td>
                 <td>${os}</td>
                 <td>VirtIO Net + Block</td>
-                <td><button onclick="alert('Starting ${name} via KVM...')" style="background:#10b981; color:#000; border:none; padding:4px 10px; border-radius:4px; font-weight:700; cursor:pointer;">▶️ Boot</button></td>
+                <td>
+                    <div style="display:flex; gap:6px;">
+                        <button onclick="handleVmAction('start', '${name}')" style="background:#10b981; color:#000; border:none; padding:4px 10px; border-radius:4px; font-weight:700; cursor:pointer;">▶️ Boot</button>
+                        <button onclick="handleVmAction('delete', '${name}')" style="background:rgba(239,68,68,0.2); color:#ef4444; border:1px solid rgba(239,68,68,0.4); padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:700; cursor:pointer;">🗑️ Hapus</button>
+                    </div>
+                </td>
             `;
             document.getElementById('vm-list-tbody').appendChild(tr);
             closeCreateVmModal();
@@ -882,17 +887,28 @@
                 const radio = tr.querySelector('input[type="radio"]');
                 if (radio && radio.value === vmName) {
                     const statusTd = tr.cells[2];
+                    const osCellText = tr.cells[5] ? tr.cells[5].textContent : '';
+
                     if (statusState === 'start') {
                         statusTd.innerHTML = '<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">🟢 RUNNING</span>';
                         tr.style.background = 'rgba(16,185,129,0.05)';
                         tr.style.borderLeft = '3px solid #10b981';
 
-                        // Show Windows 10 GUI Display screen if win10-workstation-01 is started
-                        if (vmName === 'win10-workstation-01') {
-                            const winScreen = document.getElementById('win10-gui-screen');
-                            const consoleLogs = document.getElementById('vmm-console-logs');
-                            if (winScreen) winScreen.style.display = 'block';
-                            if (consoleLogs) consoleLogs.style.display = 'none';
+                        // Show Windows GUI Display screen if any Windows VM is started
+                        const winScreen = document.getElementById('win10-gui-screen');
+                        const consoleLogs = document.getElementById('vmm-console-logs');
+                        const screenTitle = document.getElementById('win10-screen-arch-title');
+                        const screenDesc = document.getElementById('win10-screen-arch-desc');
+
+                        if (winScreen) winScreen.style.display = 'block';
+                        if (consoleLogs) consoleLogs.style.display = 'none';
+
+                        if (vmName.toLowerCase().includes('32') || osCellText.includes('32')) {
+                            if (screenTitle) screenTitle.innerHTML = '🪟 Windows 10 Pro 32-bit (x86) Workstation';
+                            if (screenDesc) screenDesc.innerHTML = 'Hypervisor: Native KVM (x86 32-bit Protected Mode) · RAM: 2048 MB · VirtIO-GPU Active';
+                        } else {
+                            if (screenTitle) screenTitle.innerHTML = '🪟 Windows 10 Pro 64-bit Workstation';
+                            if (screenDesc) screenDesc.innerHTML = 'Hypervisor: Native KVM (x86_64 Long Mode) · RAM: 4096 MB · VirtIO-GPU Active';
                         }
                     } else if (statusState === 'pause') {
                         statusTd.innerHTML = '<span style="background:rgba(245,158,11,0.2); color:#f59e0b; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">⏸️ PAUSED</span>';
@@ -903,12 +919,10 @@
                         tr.style.background = 'transparent';
                         tr.style.borderLeft = 'none';
 
-                        if (vmName === 'win10-workstation-01') {
-                            const winScreen = document.getElementById('win10-gui-screen');
-                            const consoleLogs = document.getElementById('vmm-console-logs');
-                            if (winScreen) winScreen.style.display = 'none';
-                            if (consoleLogs) consoleLogs.style.display = 'block';
-                        }
+                        const winScreen = document.getElementById('win10-gui-screen');
+                        const consoleLogs = document.getElementById('vmm-console-logs');
+                        if (winScreen) winScreen.style.display = 'none';
+                        if (consoleLogs) consoleLogs.style.display = 'block';
                     }
                 }
             });
