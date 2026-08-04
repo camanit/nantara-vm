@@ -379,6 +379,7 @@
                                 <div style="display:flex; gap:8px; align-items:center;">
                                     <button id="btn-mode-cli" onclick="switchDisplayMode('cli')" style="background:#10b981; color:#000; font-weight:700; border:none; padding:4px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer;">💻 Terminal Shell (CLI)</button>
                                     <button id="btn-mode-gui" onclick="switchDisplayMode('gui')" style="background:rgba(255,255,255,0.1); color:#cbd5e1; font-weight:600; border:1px solid rgba(255,255,255,0.2); padding:4px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer;">🖥️ Graphical Desktop (GUI)</button>
+                                    <button id="btn-fullscreen" onclick="toggleScreenFullscreen()" style="background:rgba(6,182,212,0.2); color:#06b6d4; font-weight:700; border:1px solid rgba(6,182,212,0.4); padding:4px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer;">⛶ Fullscreen</button>
                                 </div>
                             </div>
                             <div class="screen-canvas" id="screen-canvas" style="background: #020617; text-align: left; padding: 20px; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #10b981; line-height: 1.6; display: block; overflow-y: auto; min-height: 280px; position: relative;">
@@ -1087,6 +1088,18 @@
                     btnGui.style.background = 'rgba(255,255,255,0.1)';
                     btnGui.style.color = '#cbd5e1';
                 }
+            }
+        }
+
+        function toggleScreenFullscreen() {
+            const frame = document.getElementById('live-terminal-frame');
+            if (!frame) return;
+            if (!document.fullscreenElement) {
+                if (frame.requestFullscreen) frame.requestFullscreen();
+                else if (frame.webkitRequestFullscreen) frame.webkitRequestFullscreen();
+                else if (frame.msRequestFullscreen) frame.msRequestFullscreen();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
             }
         }
     </script>
