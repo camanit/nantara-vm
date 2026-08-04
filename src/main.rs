@@ -91,7 +91,8 @@ fn main() {
     }
     if display_gpu {
         let _gpu_dev = virtio::VirtioGpu::new(1024, 768);
-        println!("[NantaraVM virtio-gpu] Outputting Framebuffer to Web Console (noVNC Active)...");
+        let mut vnc_server = api::VncWebSocketServer::new(5900);
+        let _ = vnc_server.start();
     }
 
     let mut vmm = match Vmm::new() {
