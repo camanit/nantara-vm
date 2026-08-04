@@ -65,6 +65,10 @@ fn main() {
         }
     };
 
+    if let Err(e) = vmm.start_api_server() {
+        println!("[NantaraVM API Warning] Could not start REST API server: {}", e);
+    }
+
     println!("\n--- [Phase 1: Real KVM Initialization] ---");
     let sample_kernel_path = Path::new("vmlinux");
     vmm.set_cmdline("console=ttyS0 root=/dev/vda rw panic=1 quiet");
