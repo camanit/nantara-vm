@@ -1057,6 +1057,7 @@
                 localStorage.removeItem('nantara_deleted_vms');
                 localStorage.removeItem('nantara_custom_vms');
                 const defaultNames = ['nantara-microvm-01', 'ubuntu-2404-server', 'kali-linux-sandbox'];
+                defaultNames.forEach(name => localStorage.removeItem('nantara_vm_status_' + name));
                 location.reload();
             }
         }
