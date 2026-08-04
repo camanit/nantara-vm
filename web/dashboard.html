@@ -955,8 +955,8 @@
                             if (winScreen) winScreen.style.display = 'none';
                             if (consoleLogs) consoleLogs.style.display = 'none';
                             if (termFrame) termFrame.style.display = 'block';
-                            if (iframe && (!iframe.src || iframe.src === 'about:blank')) {
-                                iframe.src = 'http://210.79.190.76:7681';
+                            if (iframe && (!iframe.src || iframe.src === 'about:blank' || iframe.src.includes('7681'))) {
+                                iframe.src = '/console/';
                             }
                         } else {
                             if (termFrame) termFrame.style.display = 'none';
