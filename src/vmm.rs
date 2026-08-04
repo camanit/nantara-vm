@@ -225,10 +225,44 @@ impl Vmm {
         self.api_server.start()
     }
 
-    /// Save VM State Snapshot to Disk
+    /// Save VM State Snapshot to Disk — real file I/O
     pub fn save_snapshot(&self, snapshot_path: &Path) -> Result<(), String> {
-        println!("[NantaraVM Snapshot] Saving microVM state snapshot to {:?}...", snapshot_path);
-        println!("[NantaraVM Snapshot] Dumped vCPU registers, KVM state, device queues, and dirty RAM pages (< 8ms).");
+        #[cfg(target_os = "linux")]
+        {
+            // Read the entire guest RAM into a temporary buffer and write to snapshot file
+            let ram_size = GUEST_RAM_SIZE;
+            let mut ram_buf = vec![0u8; ram_size];
+            self.guest_memory
+                .read_slice(&mut ram_buf, GuestAddress(0))
+                .map_err(|e| format!("Failed to read guest RAM for snapshot: {:?}", e))?;
+            self.lazy_restore.save_snapshot_bytes(&ram_buf, snapshot_path)?;
+        }
+
+        #[cfg(not(target_os = "linux"))]
+        {
+            self.lazy_restore.save_snapshot_bytes(&self.guest_memory_stub, snapshot_path)?;
+        }
+
+        Ok(())
+    }
+
+    /// Restore VM State from a snapshot file — real file I/O
+    pub fn restore_snapshot(&mut self, snapshot_path: &Path) -> Result<(), String> {
+        #[cfg(target_os = "linux")]
+        {
+            let ram_size = GUEST_RAM_SIZE;
+            let mut ram_buf = vec![0u8; ram_size];
+            self.lazy_restore.restore_snapshot_bytes(&mut ram_buf, snapshot_path)?;
+            self.guest_memory
+                .write_slice(&ram_buf, GuestAddress(0))
+                .map_err(|e| format!("Failed to write restored RAM to guest memory: {:?}", e))?;
+        }
+
+        #[cfg(not(target_os = "linux"))]
+        {
+            self.lazy_restore.restore_snapshot_bytes(&mut self.guest_memory_stub, snapshot_path)?;
+        }
+
         Ok(())
     }
 

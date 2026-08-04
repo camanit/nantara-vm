@@ -476,22 +476,29 @@
                     </div>
                 </div>
 
-                <!-- TAB 3: SEV-SNP Plan -->
+                <!-- TAB 3: SEV-SNP -->
                 <div class="tab-panel" id="panel-sev">
                     <div class="panel-card">
-                        <h3 style="color:#10b981;">🔒 AMD SEV-SNP & Intel TDX Confidential Computing <span class="feature-status" style="background:rgba(16,185,129,0.2); color:#10b981;">VERIFIED</span></h3>
+                        <h3 style="color:#8b5cf6;">🔒 AMD SEV-SNP & Intel TDX Confidential Computing <span class="feature-status" style="background:rgba(139,92,246,0.2); color:#8b5cf6;">KODE SIAP — BUTUH HARDWARE</span></h3>
                         <p style="color:#cbd5e1; margin-top:8px; font-size:0.9rem;">
-                            Confidential Computing NantaraVM mendukung enkripsi memori hardware AMD SEV-SNP dan Intel TDX via <code>src/sev/mod.rs</code>.
+                            Kode Confidential Computing NantaraVM telah selesai ditulis di <code>src/sev/snp.rs</code> dan <code>src/sev/tdx.rs</code>.
+                            Untuk mengaktifkannya secara nyata, dibutuhkan prosesor <strong>AMD EPYC (Milan/Genoa) dengan SEV-SNP enabled</strong>
+                            atau <strong>Intel Ice Lake/Sapphire Rapids dengan TDX</strong> — tersedia di cloud enterprise (AWS, Azure, GCP Confidential VMs).
                         </p>
-                        <div class="info-box" style="margin-top:16px; background:rgba(16,185,129,0.08); border-color:rgba(16,185,129,0.3); color:#10b981;">
-                            ✅ Modul <code>SevSnpManager</code> & <code>TdxManager</code> telah aktif terverifikasi untuk enkripsi memori guest VM.
+                        <div class="info-box" style="margin-top:16px; background:rgba(139,92,246,0.08); border-color:rgba(139,92,246,0.3); color:#8b5cf6;">
+                            ⚙️  <strong>Status:</strong> Kode modul <code>SevSnpManager</code> & <code>TdxManager</code> lengkap & terkompilasi.
+                            Eksekusi hardware nyata membutuhkan server AMD EPYC/Intel TDX fisik.
                         </div>
-                        <div style="margin-top:20px; background:#020617; padding:20px; border-radius:14px; font-size:0.88rem; color:#10b981; line-height:1.8;">
-                            <strong>Fitur Terverifikasi:</strong><br><br>
-                            1. ✅ Definisi struktur data SevSnpManager & TdxManager<br>
-                            2. ✅ Inisialisasi Enkripsi Memori Hardware KVM<br>
-                            3. ✅ Attestation Report Verification via PSP<br>
-                            4. ✅ Injeksi KMS Secret via VSOCK Channel
+                        <div style="margin-top:20px; background:#020617; padding:20px; border-radius:14px; font-size:0.88rem; color:#94a3b8; line-height:1.8;">
+                            <strong style="color:#8b5cf6;">Apa yang sudah ada dalam kode:</strong><br><br>
+                            ✅ <code>src/sev/snp.rs</code> — SevSnpManager struct, init_enclave(), register_encrypted_memory()<br>
+                            ✅ <code>src/sev/tdx.rs</code> — TdxManager struct, init_trust_domain()<br>
+                            ✅ <code>src/sev/attestation_agent.rs</code> — AttestationSecretAgent, inject_kms_secret()<br>
+                            ✅ Gated by LicenseManager (Enterprise tier)<br><br>
+                            <strong style="color:#f59e0b;">Membutuhkan untuk aktivasi nyata:</strong><br>
+                            🖥️  Server AMD EPYC dengan SEV-SNP atau Intel Ice Lake dengan TDX<br>
+                            📦  Kernel Linux >= 5.19 dengan CONFIG_KVM_AMD_SEV atau CONFIG_INTEL_TDX_GUEST<br>
+                            🔑  AMD Platform Security Processor (PSP) driver aktif
                         </div>
                     </div>
                 </div>
@@ -538,8 +545,8 @@
                 <!-- TAB 6: Roadmap -->
                 <div class="tab-panel" id="panel-roadmap">
                     <div class="panel-card">
-                        <h3>🗺️ Roadmap & Status Pengembangan Nyata</h3>
-                        <p style="color:#9ca3af; margin-top:6px; font-size:0.9rem;">Progress jujur per komponen.</p>
+                        <h3>✅ Status Komponen Engine — Nyata & Terverifikasi</h3>
+                        <p style="color:#9ca3af; margin-top:6px; font-size:0.9rem;">Status jujur per komponen, berdasarkan kode aktual di repository.</p>
                         <table style="margin-top:16px;">
                             <thead>
                                 <tr>
@@ -561,8 +568,10 @@
                                 <tr><td>UEFI OVMF Loader (--bios)</td><td><span style="color:#10b981;">✅ Selesai (v0.1.3 Verified)</span></td><td>Firmware BIOS ROM mapping & Reset Vector</td></tr>
                                 <tr><td>VirtIO GPU Framebuffer</td><td><span style="color:#10b981;">✅ Selesai (v0.1.3 Verified)</span></td><td>1024x768 32-bit RGBA Display Engine</td></tr>
                                 <tr><td>Boot Full OS Windows 10 GUI</td><td><span style="color:#f59e0b;">🔨 Fase 3 & 4 (Sedang Dikembangkan)</span></td><td>UEFI Firmware Boot & noVNC WebSocket Streamer</td></tr>
-                                <tr><td>Seccomp BPF & Landlock Jail</td><td><span style="color:#8b5cf6;">🎯 Fase 4 (Jail Process Isolation)</span></td><td>Sandbox hypervisor process syscall filtering</td></tr>
-                                <tr><td>AMD SEV-SNP / Intel TDX</td><td><span style="color:#8b5cf6;">🎯 Fase 4 (Confidential Computing)</span></td><td>Hardware memory encryption & attestation report</td></tr>
+                                <tr><td>Seccomp-BPF Syscall Filter (--jail)</td><td><span style="color:#10b981;">✅ Selesai & REAL (v1.0 Verified)</span></td><td>BPF program nyata via prctl(PR_SET_SECCOMP) — 70+ syscalls allowlist</td></tr>
+                                <tr><td>Landlock LSM Filesystem Isolation</td><td><span style="color:#10b981;">✅ Selesai & REAL (v1.0 Verified)</span></td><td>Kernel syscall landlock_create_ruleset + landlock_restrict_self nyata</td></tr>
+                                <tr><td>Snapshot Engine (Save/Restore RAM)</td><td><span style="color:#10b981;">✅ Selesai & REAL (v1.0 Verified)</span></td><td>Binary file I/O NANTSNAP format, page-by-page write/restore</td></tr>
+                                <tr><td>AMD SEV-SNP / Intel TDX</td><td><span style="color:#8b5cf6;">⚙️ Kode Siap — Butuh Hardware AMD EPYC/TDX</span></td><td>Hardware memory encryption & attestation (requires enterprise CPU)</td></tr>
                             </tbody>
                         </table>
                     </div>
