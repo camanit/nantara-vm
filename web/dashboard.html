@@ -460,20 +460,20 @@
                             <h4 style="font-size:1rem; font-weight:700;">⚙️ REST API Endpoints (Port 8080)</h4>
                             <p style="color:#9ca3af; font-size:0.8rem;">Kontrol Live VM via REST API:</p>
 
-                            <div style="background:#020617; border-radius:10px; padding:14px; font-family:'Fira Code',monospace; font-size:0.75rem; color:#10b981; line-height:1.8;">
-                                GET  /api/v1/status  [200 OK - Active]<br>
-                                GET  /api/v1/vm/info [200 OK - Active]<br>
-                                POST /api/v1/vm/start [200 OK - Active]<br>
-                                POST /api/v1/vm/stop  [200 OK - Active]
+                            <div style="background:#020617; border-radius:10px; padding:14px; font-family:'Fira Code',monospace; font-size:0.75rem; color:#cbd5e1; line-height:1.8;">
+                                <strong>API Spec Endpoints:</strong><br>
+                                • GET /api/v1/status<br>
+                                • GET /api/v1/vm/info<br>
+                                • POST /api/v1/vm/start<br>
+                                • POST /api/v1/vm/stop
+                                <div id="real-api-status-badge" style="margin-top:10px; padding:6px 10px; background:rgba(245,158,11,0.15); color:#f59e0b; border-radius:6px; font-weight:700; font-size:0.78rem;">
+                                    📡 Menghubungkan ke REST API Port 8080...
+                                </div>
                             </div>
 
                             <div style="display: flex; gap: 10px; margin-top: 12px;">
                                 <button id="btn-api-start-vm" onclick="handleVmAction('start')" style="background: #10b981; color: #000; font-weight: 700; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; flex: 1;">▶️ Start MicroVM</button>
                                 <button id="btn-api-stop-vm" onclick="handleVmAction('stop')" style="background: #ef4444; color: #fff; font-weight: 700; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; flex: 1;">⏹️ Stop MicroVM</button>
-                            </div>
-
-                            <div class="info-box" style="margin-top: 10px; background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.3); color: #10b981;">
-                                ✅ REST API Server aktif mendengarkan di <code>http://127.0.0.1:8080</code>.
                             </div>
                         </div>
                     </div>
@@ -1040,8 +1040,30 @@
                 localStorage.setItem('nantara_vm_status_nantara-microvm-01', 'start');
             }
         }
+        function checkLiveApiHealth() {
+            const badge = document.getElementById('real-api-status-badge');
+            fetch('/api/v1/status')
+                .then(res => res.json())
+                .then(data => {
+                    if (badge) {
+                        badge.style.background = 'rgba(16,185,129,0.2)';
+                        badge.style.color = '#10b981';
+                        badge.innerHTML = '✅ REST API Connected: 200 OK (' + (data.engine || 'NantaraVM Engine') + ')';
+                    }
+                })
+                .catch(err => {
+                    if (badge) {
+                        badge.style.background = 'rgba(107,114,128,0.2)';
+                        badge.style.color = '#9ca3af';
+                        badge.innerHTML = 'ℹ️ REST API Spec Endpoint (Port 8080)';
+                    }
+                });
+        }
 
-        window.addEventListener('DOMContentLoaded', restoreVmStatusesOnLoad);
+        window.addEventListener('DOMContentLoaded', () => {
+            restoreVmStatusesOnLoad();
+            checkLiveApiHealth();
+        });
 
         function handleVmAction(action, targetVmName) {
             const selected = document.querySelector('input[name="vm-select"]:checked');
