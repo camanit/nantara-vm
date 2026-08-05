@@ -180,11 +180,18 @@ Jika Anda ingin mendukung keberlanjutan pengembangan **NantaraVM** (Hypervisor M
 
 *Dukungan Anda sangat berharga untuk biaya infrastruktur server pengujian, lisensi hardware AMD/Intel enclave, serta pengembangan fitur-fitur baru NantaraVM.*
 
----
+## ⚖️ Lisensi & Hak Cipta (Dual-Licensing Model)
 
-## 📄 Lisensi
+**NantaraVM** dilindungi oleh lisensi **Commercial Fair-Source / Dual-Licensing**:
 
-Di bawah lisensi **Apache License 2.0** — Lihat [LICENSE](LICENSE) untuk detail.
+1. **Penggunaan Non-Komersial / Komunitas (GRATIS):**
+   - Bebas digunakan, dipelajari, dan dikembangkan untuk penggunaan pribadi, edukasi, akademis, dan riset non-profit.
+2. **Penggunaan Komersial & Perusahaan (WAJIB LISENSI BERBAYAR):**
+   - **Dilarang keras** bagi perusahaan, vendor IT, atau pihak ketiga mana pun untuk memperjualbelikan, mendistribusikan ulang untuk tujuan komersial, atau meng-host NantaraVM sebagai layanan berbayar (*Commercial SaaS / Cloud Provider*) **tanpa izin tertulis dan Lisensi Komersial resmi dari nantara.cloud / Pengembang**.
+   - Untuk pembelian Lisensi Komersial Enterprise, hak jual kembali (reseller), atau integrasi sistem, hubungi:
+     - 🌐 **Website:** [nantara.cloud](https://nantara.cloud)
+     - 📧 **Email:** `dev@nantara.cloud`
+     - 💬 **WhatsApp SLA Support:** [+62 812-6000-6666](https://wa.me/6281260006666)
 
 ---
 
