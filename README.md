@@ -204,6 +204,38 @@ Jika Anda ingin mendukung keberlanjutan pengembangan **NantaraVM** (Hypervisor M
 ---
 
 <div align="center">
+   
+**Fullscreen:**
+
+<img width="60%" height="auto" alt="WhatsApp Image 2026-08-06 at 00 38 37 (2)" src="https://github.com/user-attachments/assets/16c64223-eeac-48cf-b718-4ca98dccafdf" />
+
+-
+
+**Settings Local Scaling:**
+
+<img width="60%" height="auto" alt="WhatsApp Image 2026-08-06 at 00 35 00" src="https://github.com/user-attachments/assets/976521b6-5a2c-43b6-bc39-8ed4c16ba3e8" />
+
+-
+
+**Boot & Start:**
+
+<img width="60%" height="auto" alt="WhatsApp Image 2026-08-06 at 00 38 37" src="https://github.com/user-attachments/assets/eed59e8d-5527-4a0f-b0da-ba8c3fa432be" />
+
+-
+
+**Normal Layout:**
+
+<img width="60%" height="auto" alt="WhatsApp Image 2026-08-06 at 00 38 37 (1)" src="https://github.com/user-attachments/assets/adf55159-e296-4a65-aad4-d78d9430e02d" />
+
+-
+
+**Open Browser:**
+
+<img width="60%" height="auto" alt="WhatsApp Image 2026-08-06 at 00 53 34" src="https://github.com/user-attachments/assets/f20897b1-70dd-4df7-8e2d-2ece20d83fa7" />
+</div>
+
+---
+<div align="center">
 
 Dibangun dengan ❤️ oleh engineer Indonesia 🇮🇩
 
