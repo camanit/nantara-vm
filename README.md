@@ -232,8 +232,17 @@ Jika Anda ingin mendukung keberlanjutan pengembangan **NantaraVM** (Hypervisor M
 **Open Browser:**
 
 <img width="60%" height="auto" alt="WhatsApp Image 2026-08-06 at 00 53 34" src="https://github.com/user-attachments/assets/f20897b1-70dd-4df7-8e2d-2ece20d83fa7" />
-</div>
 
+
+-
+
+**RAM 2Gb:** 
+( Maaf Jika Dashboard HTML Blank atau Hitam tidak ada gambar, tetapi terminal bisa, sebab Kita Kehabisan Pemakaian RAM jika terlalu banyak yang mengakses, bagi rekan-rekan yang ingin ini terus dikembangkan kita mohon itikad baiknya membantu dan donasi nya)
+
+
+<img width="60%" height="auto" alt="WhatsApp Image 2026-08-06 at 10 58 54" src="https://github.com/user-attachments/assets/885f84f9-3b0e-4c4f-af54-465ab54e129e" />
+
+</div>
 ---
 <div align="center">
 
