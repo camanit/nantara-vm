@@ -385,6 +385,7 @@
                                 <div style="display:flex; gap:8px; align-items:center;">
                                     <button id="btn-mode-cli" onclick="switchDisplayMode('cli')" style="background:#10b981; color:#000; font-weight:700; border:none; padding:4px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer;">💻 Terminal Shell (CLI)</button>
                                     <button id="btn-mode-gui" onclick="switchDisplayMode('gui')" style="background:rgba(255,255,255,0.1); color:#cbd5e1; font-weight:600; border:1px solid rgba(255,255,255,0.2); padding:4px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer;">🖥️ Graphical Desktop (GUI)</button>
+                                    <button id="btn-open-gui-tab" onclick="openGuiInNewTab()" style="display:none; background:#06b6d4; color:#fff; font-weight:700; border:none; padding:4px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer;">🔗 Buka GUI di Tab Baru</button>
                                     <button id="btn-fullscreen" onclick="toggleScreenFullscreen()" style="background:rgba(6,182,212,0.2); color:#06b6d4; font-weight:700; border:1px solid rgba(6,182,212,0.4); padding:4px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer;">⛶ Fullscreen</button>
                                 </div>
                             </div>
@@ -401,6 +402,39 @@
                                 </div>
                                 <div id="live-terminal-frame" style="display: block; width: 100%; height: 580px; border-radius: 8px; border: 1px solid rgba(16,185,129,0.4); overflow: hidden; background: #020617;">
                                     <iframe id="terminal-iframe" src="/console/" allow="fullscreen; clipboard-read; clipboard-write;" style="width: 100%; height: 100%; min-height: 580px; border: none; background: #020617;"></iframe>
+                                </div>
+
+                                <div id="gui-screen-fallback" style="display: none; width: 100%; height: 580px; border-radius: 8px; border: 1px solid rgba(6,182,212,0.4); background: linear-gradient(135deg, #0f172a, #1e293b); position: relative; font-family: sans-serif;">
+                                    <div style="background: rgba(15, 23, 42, 0.9); padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <span style="font-size: 1.2rem;">🖥️</span>
+                                            <div>
+                                                <div style="font-weight: 700; color: #fff; font-size: 0.9rem;" id="gui-vm-title">Graphical Desktop Workstation (GUI Mode)</div>
+                                                <div style="font-size: 0.75rem; color: #38bdf8;">1024x768 32-bit RGBA • VirtIO-GPU Accelerated</div>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; gap: 8px;">
+                                            <span style="background: rgba(16,185,129,0.2); color: #10b981; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">🟢 Display Ready</span>
+                                        </div>
+                                    </div>
+                                    <div style="height: calc(100% - 100px); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px;">
+                                        <div style="font-size: 3.5rem; margin-bottom: 16px;">🖥️</div>
+                                        <h3 style="color: #fff; margin: 0 0 10px 0; font-size: 1.2rem;" id="gui-main-heading">Graphical Desktop Display (GUI Mode)</h3>
+                                        <p style="color: #94a3b8; max-width: 500px; font-size: 0.85rem; line-height: 1.6; margin-bottom: 20px;">
+                                            Tampilan GUI Workstation berbasis VirtIO-GPU. Untuk kontrol cepat & responsif tanpa keterbatasan display cloud, gunakan Terminal Shell (CLI) atau buka GUI di Tab Baru.
+                                        </p>
+                                        <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+                                            <button onclick="switchDisplayMode('cli')" style="background: #10b981; color: #000; font-weight: 700; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">💻 Buka Terminal Shell (CLI)</button>
+                                            <button onclick="openGuiInNewTab()" style="background: #06b6d4; color: #fff; font-weight: 700; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">🔗 Buka GUI di Tab Baru</button>
+                                        </div>
+                                    </div>
+                                    <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 44px; background: rgba(2, 6, 23, 0.95); border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: space-between; padding: 0 16px;">
+                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                            <div style="background: linear-gradient(135deg, #0284c7, #0369a1); width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; cursor: pointer; font-size: 0.8rem;">🪟</div>
+                                            <span style="color: #cbd5e1; font-size: 0.8rem; font-weight: 600;">NantaraVM Workstation GUI</span>
+                                        </div>
+                                        <div style="color: #94a3b8; font-size: 0.78rem; font-family: monospace;">VirtIO-GPU 1024x768</div>
+                                    </div>
                                 </div>
 
                             </div>
@@ -1094,10 +1128,27 @@
                 location.reload();
             }
         }
+        function openGuiInNewTab() {
+            const selectedVm = localStorage.getItem('nantara_selected_vm') || 'kali-linux-sandbox';
+            const domainPrefix = (window.location.protocol === 'file:') ? 'http://210.79.190.76' : 'https://nantara.cloud';
+            let targetUrl = domainPrefix + '/desktop/index.html';
+            if (selectedVm.toLowerCase().includes('win')) {
+                targetUrl += '?os=windows';
+            } else if (selectedVm.toLowerCase().includes('kali')) {
+                targetUrl += '?os=kali';
+            } else {
+                targetUrl += '?os=ubuntu';
+            }
+            window.open(targetUrl, '_blank');
+        }
+
         function switchDisplayMode(mode) {
             const iframe = document.getElementById('terminal-iframe');
             const btnCli = document.getElementById('btn-mode-cli');
             const btnGui = document.getElementById('btn-mode-gui');
+            const btnTab = document.getElementById('btn-open-gui-tab');
+            const guiTitle = document.getElementById('gui-vm-title');
+            const guiHeading = document.getElementById('gui-main-heading');
             if (!iframe) return;
 
             localStorage.setItem('nantara_display_mode', mode);
@@ -1107,11 +1158,17 @@
 
             if (mode === 'gui') {
                 if (selectedVm.toLowerCase().includes('win')) {
-                    iframe.src = domainPrefix + '/desktop/?os=windows&resize=remote';
+                    iframe.src = domainPrefix + '/desktop/index.html?os=windows&resize=remote';
+                    if (guiTitle) guiTitle.textContent = '🪟 Windows Workstation Desktop (GUI Mode)';
+                    if (guiHeading) guiHeading.textContent = '🪟 Windows Desktop Display (GUI Mode)';
                 } else if (selectedVm.toLowerCase().includes('kali')) {
-                    iframe.src = domainPrefix + '/desktop/?os=kali&resize=remote';
+                    iframe.src = domainPrefix + '/desktop/index.html?os=kali&resize=remote';
+                    if (guiTitle) guiTitle.textContent = '💀 Kali Linux Security Desktop (GUI Mode)';
+                    if (guiHeading) guiHeading.textContent = '💀 Kali Linux Desktop Display (GUI Mode)';
                 } else {
-                    iframe.src = domainPrefix + '/desktop/?os=ubuntu&resize=remote';
+                    iframe.src = domainPrefix + '/desktop/index.html?os=ubuntu&resize=remote';
+                    if (guiTitle) guiTitle.textContent = '🐧 Ubuntu 24.04 LTS Workstation (GUI Mode)';
+                    if (guiHeading) guiHeading.textContent = '🐧 Ubuntu Workstation Display (GUI Mode)';
                 }
                 if (btnGui) {
                     btnGui.style.background = '#06b6d4';
@@ -1120,6 +1177,9 @@
                 if (btnCli) {
                     btnCli.style.background = 'rgba(255,255,255,0.1)';
                     btnCli.style.color = '#cbd5e1';
+                }
+                if (btnTab) {
+                    btnTab.style.display = 'inline-block';
                 }
             } else {
                 iframe.src = domainPrefix + '/console/';
@@ -1130,6 +1190,9 @@
                 if (btnGui) {
                     btnGui.style.background = 'rgba(255,255,255,0.1)';
                     btnGui.style.color = '#cbd5e1';
+                }
+                if (btnTab) {
+                    btnTab.style.display = 'none';
                 }
             }
         }

@@ -57,20 +57,32 @@ if (Test-Path $LocalIco) {
     }
 }
 
-# Create Desktop Shortcut for NantaraVM Workstation
+# Create Desktop Shortcut for NantaraVM Workstation (.lnk)
 $DesktopPath = [Environment]::GetFolderPath("Desktop")
-$ShortcutPath = Join-Path $DesktopPath "NantaraVM Workstation.url"
-$ShortcutLines = @(
-    "[InternetShortcut]",
-    "URL=https://nantara.cloud/dashboard.html",
-    "IconIndex=0",
-    "IconFile=$IcoPath"
-)
-$ShortcutLines | Out-File -FilePath $ShortcutPath -Encoding ascii -Force
+$ShortcutPath = Join-Path $DesktopPath "NantaraVM Workstation.lnk"
 
-Write-Host "[OK] Shortcut NantaraVM Workstation berhasil dibuat dengan Ikon Kustom di Desktop Anda!" -ForegroundColor Green
+try {
+    $WScriptShell = New-Object -ComObject WScript.Shell
+    $Shortcut = $WScriptShell.CreateShortcut($ShortcutPath)
+    $Shortcut.TargetPath = "$RunnerPath"
+    if (Test-Path $IcoPath) { $Shortcut.IconLocation = "$IcoPath,0" }
+    $Shortcut.Description = "NantaraVM Workstation Hypervisor & Web Control Plane"
+    $Shortcut.Save()
+} catch {
+    $ShortcutPath = Join-Path $DesktopPath "NantaraVM Workstation.url"
+    $ShortcutLines = @(
+        "[InternetShortcut]",
+        "URL=https://nantara.cloud/dashboard.html",
+        "IconIndex=0",
+        "IconFile=$IcoPath"
+    )
+    $ShortcutLines | Out-File -FilePath $ShortcutPath -Encoding ascii -Force
+}
+
+Write-Host "[OK] Shortcut NantaraVM Workstation berhasil dibuat di Desktop Anda!" -ForegroundColor Green
 
 Write-Host "`n====================================================" -ForegroundColor Cyan
 Write-Host " NantaraVM Windows Installation Completed!" -ForegroundColor Green
 Write-Host " Double-click shortcut NantaraVM Workstation di Desktop Anda!" -ForegroundColor White
 Write-Host "====================================================" -ForegroundColor Cyan
+
