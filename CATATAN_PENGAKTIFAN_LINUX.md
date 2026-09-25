@@ -343,4 +343,81 @@ Jika saat awal membuat VM IP Publik kosong (`Not Assigned`):
 * 🖥️ **Ubuntu Desktop noVNC GUI:** [https://sg.nantara.cloud/desktop/](https://sg.nantara.cloud/desktop/)
 * 🌐 **Akses IP Langsung:** [http://140.245.106.37/](http://140.245.106.37/)
 
+---
+
+## 💻 11. Arsitektur Hybrid NantaraVM: Menjalankan Windows 10/11 di Lokal dengan `nantara.cloud`
+
+Bagi pengguna yang ingin menjalankan sistem operasi berat seperti **Windows 10 atau Windows 11**, pendekatan **Hybrid Cloud (Local Compute + Cloud Dashboard)** adalah solusi paling tepat, hemat, dan realistis.
+
+### A. Mengapa Pendekatan Lokal Ini Pilihan Terbaik?
+1. **Cloud VPS Murah Tidak Kuat:**
+   * Di VPS IDCloudHost RAM hanya 2 GB, dan di Oracle Micro hanya 1 GB.
+   * Windows 10/11 membutuhkan minimal 4 GB RAM dan 20 GB disk hanya untuk booting. Memaksakan Windows di VPS murah pasti menyebabkan server *hang total / Out Of Memory (OOM)*.
+2. **Cloud Besar (24 GB RAM) Tidak Benar-Benar Gratis:**
+   * Opsi server besar (seperti Oracle Ampere 24 GB) sering kehabisan kapasitas (*Out of capacity*) di region gratis atau mewajibkan upgrade kartu kredit berbayar (Pay-As-You-Go).
+3. **Laptop Pengguna Sudah Memiliki Hardware Mumpuni:**
+   * Rata-rata laptop pengguna sudah memiliki prosesor kencang (Intel Core i5/i7 atau AMD Ryzen) dan RAM 8 GB – 16 GB yang **100% gratis tanpa biaya sewa bulanan**.
+
+---
+
+### B. Syarat Mutlak di Laptop Lokal Pengguna
+Agar laptop lokal bisa menjalankan virtualisasi Windows 10/11:
+1. **Virtualisasi Hardware Aktif di BIOS (Intel VT-x / AMD-V):**
+   * Periksa di Task Manager Windows ➡️ Tab **Performance** ➡️ **CPU** ➡️ Pastikan tulisan **Virtualization: Enabled**.
+2. **Fitur Hypervisor Aktif di Windows:**
+   * **Untuk Windows 10/11 Pro:**
+     Buka PowerShell (Run as Administrator) dan aktifkan Hyper-V:
+     ```powershell
+     Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+     ```
+   * **Untuk Windows 10/11 Home (atau sistem berbasis KVM):**
+     Gunakan engine **WSL2** dengan KVM atau **QEMU-WHPX** yang tidak memerlukan lisensi Windows Pro:
+     ```powershell
+     wsl --install -d Ubuntu-24.04
+     ```
+
+---
+
+### C. Alur Kerja Integrasi dengan `nantara.cloud` (User Journey)
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 1. PENGGUNA MEMBUKA WEBSITE: https://nantara.cloud          │
+│    Memilih: "Run Local Windows 10 Workstation"              │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+                Jalankan Nantara Agent di Laptop
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 2. LAPTOP PENGGUNA (LOCAL COMPUTE NODE)                     │
+│    • Menjalankan 1 baris perintah PowerShell:               │
+│      iwr -useb https://nantara.cloud/install.ps1 | iex      │
+│    • Membaca file ISO Windows 10 lokal dari harddisk laptop │
+│    • Hyper-V / QEMU lokal memproses CPU & RAM secara native │
+│    • Layar Web Viewer berjalan di port lokal 8006           │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+               Jalur Terowongan (SSH Reverse Tunnel)
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 3. DASHBOARD CLOUD (https://nantara.cloud)                  │
+│    • Tombol [Start win10-workstation-01] aktif              │
+│    • Iframe Graphical Desktop menampilkan Windows 10        │
+│    • Pengguna mengontrol Windows dari mana saja lewat web,   │
+│      tapi beban komputasi 100% di laptop sendiri!           │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### D. Perintah Menghubungkan Windows Lokal ke Cloud (Reverse Tunnel)
+Jika pengguna sudah menjalankan VM Windows di port lokal `8006`, jalankan 1 perintah ini di PowerShell laptop untuk menyambungkannya ke dashboard cloud:
+```powershell
+ssh -N -R 8006:localhost:8006 -i "$env:USERPROFILE\Downloads\ssh-key-2026-09-25.key" ubuntu@140.245.106.37
+```
+*Dengan perintah ini, dashboard `nantara.cloud` / `sg.nantara.cloud` otomatis menerima stream Windows 10 dari laptop tanpa perlu membuka port publik di router rumah!*
+
+
 
