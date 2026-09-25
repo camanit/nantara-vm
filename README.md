@@ -11,10 +11,16 @@
 [![Status](https://img.shields.io/badge/status-v1.0%20Verified-brightgreen.svg)]()
 [![Platform](https://img.shields.io/badge/platform-Linux%20KVM%20%7C%20Windows-green.svg)]()
 [![Website](https://img.shields.io/badge/website-nantara.cloud-cyan.svg)](https://nantara.cloud)
+[![Hosting](https://img.shields.io/badge/hosting-Vercel%20Edge%20(Free)-black.svg?logo=vercel)](https://nantara.cloud)
 
 *Membangun hypervisor dan fondasi cloud sovereign NKRI — Cepat, Aman, Berdaulat.*
 
 </div>
+
+---
+
+> 🚀 **Pembaruan Infrastruktur (Migrasi ke Vercel Edge):**  
+> Web Portal & Dashboard Arsitektur NantaraVM sebelumnya dijalankan di Cloud VPS berbayar (IDCloudHost). Untuk efisiensi biaya dan menjamin ketersediaan 24/7 tanpa risiko server mati akibat saldo/billing, **seluruh frontend & dashboard resmi dipindahkan ke Vercel Global Edge (100% Gratis & High Availability)** di domain utama [nantara.cloud](https://nantara.cloud). Core Engine Hypervisor (Rust + KVM) difokuskan berjalan di laptop lokal atau server bare-metal pengguna.
 
 ---
 
@@ -37,14 +43,15 @@ Terinspirasi dari [Firecracker (AWS)](https://firecracker-microvm.github.io/), [
 
 ---
 
-## 🌐 Dual Mode Execution (Cloud & Local)
+## 🌐 Arsitektur Dual-Mode (Vercel Cloud Edge & Local Engine)
 
-NantaraVM dirancang untuk bekerja secara **Dual-Mode** yang sangat fleksibel:
+NantaraVM dirancang untuk bekerja secara **Dual-Mode** yang sangat fleksibel dan hemat biaya:
 
-1. **☁️ Mode Cloud Demo (`https://nantara.cloud`)**:
-   Dashboard kontrol web terpusat untuk uji coba instan di server cloud.
-2. **💻 Mode Local Edge (Di Laptop / PC Lokal Anda)**:
-   Jalankan Engine NantaraVM di laptop Windows/Linux Anda sendiri untuk memutar OS **Windows 32-bit / 64-bit, Kali Linux, atau Ubuntu** dengan 100% kecepatan hardware lokal Anda tanpa membebankan server cloud!
+1. **☁️ Mode Web Dashboard Edge (`https://nantara.cloud`)**:
+   - Di-hosting gratis dan permanen di **Vercel Global CDN** dengan SSL otomatis.
+   - Menyediakan antarmuka monitoring, terminal shell interaktif, dokumentasi, dan kontrol panel cloud tanpa membebani biaya VPS bulanan.
+2. **💻 Mode Local Engine (Di Laptop / PC Lokal Anda)**:
+   - Jalankan Engine NantaraVM di komputer Windows/Linux Anda sendiri dengan akselerasi hardware native (KVM / QEMU TCG) untuk menjalankan OS **Windows 10/11, Kali Linux, atau Ubuntu** tanpa latensi internet dan tanpa biaya sewa cloud!
    ```powershell
    # Di Windows (PowerShell):
    cargo build --release --bin nantara-engine
@@ -236,8 +243,8 @@ Jika Anda ingin mendukung keberlanjutan pengembangan **NantaraVM** (Hypervisor M
 
 -
 
-**RAM 2Gb:** 
-( Maaf Jika Dashboard HTML Blank atau Hitam tidak ada gambar, tetapi terminal bisa, sebab Kita Kehabisan Pemakaian RAM jika terlalu banyak yang mengakses, bagi rekan-rekan yang ingin ini terus dikembangkan kita mohon itikad baiknya membantu dan donasi nya)
+**Infrastruktur Web Edge:**  
+*(Sebelumnya pada server 2GB IDCloudHost sering terjadi kehabisan RAM jika traffic tinggi. Kini seluruh web interface & dashboard telah dialihkan ke Vercel Global Edge, menjamin website selalu aktif, cepat, dan 100% andal tanpa batasan memori server).*
 
 
 <img width="60%" height="auto" alt="WhatsApp Image 2026-08-06 at 10 58 54" src="https://github.com/user-attachments/assets/885f84f9-3b0e-4c4f-af54-465ab54e129e" />
