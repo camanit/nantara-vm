@@ -11,24 +11,25 @@
         body {
             background-color: #020617;
             color: #f8fafc;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             height: 100vh;
             width: 100vw;
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            user-select: none;
         }
 
         /* Top Virtual Monitor Header */
         .vm-monitor-bar {
-            height: 48px;
-            background: #0f172a;
+            height: 44px;
+            background: #0b1329;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 16px;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             z-index: 50;
             flex-shrink: 0;
         }
@@ -46,31 +47,34 @@
             color: #fff;
             padding: 3px 10px;
             border-radius: 6px;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: 700;
         }
 
         .monitor-actions {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .monitor-btn {
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.15);
             color: #cbd5e1;
-            padding: 5px 12px;
+            padding: 4px 10px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.78rem;
+            font-size: 0.75rem;
             font-weight: 600;
             transition: all 0.2s;
             text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .monitor-btn:hover {
-            background: rgba(255, 255, 255, 0.16);
+            background: rgba(255, 255, 255, 0.18);
             color: #fff;
         }
 
@@ -82,60 +86,180 @@
             background-size: cover;
             background-position: center;
             overflow: hidden;
-            user-select: none;
-        }
-
-        /* Desktop Icons */
-        .desktop-icons {
-            position: absolute;
-            top: 20px;
-            left: 20px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+        }
+
+        /* Top Notification Ribbon */
+        .tier-ribbon {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 6px 16px;
+            font-size: 0.76rem;
+            color: #94a3b8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .tier-ribbon a {
+            color: #38bdf8;
+            font-weight: 700;
+            text-decoration: none;
+            background: rgba(56, 189, 248, 0.12);
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        .tier-ribbon a:hover {
+            background: #38bdf8;
+            color: #000;
+        }
+
+        /* Desktop Icons Grid */
+        .desktop-icons {
+            position: absolute;
+            top: 48px;
+            left: 18px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
             z-index: 5;
         }
 
         .desktop-icon {
-            width: 74px;
+            width: 76px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
             cursor: pointer;
-            padding: 8px;
+            padding: 8px 4px;
             border-radius: 8px;
-            transition: background 0.15s;
+            transition: all 0.15s;
         }
 
         .desktop-icon:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
         .desktop-icon-img {
-            font-size: 2.2rem;
+            font-size: 2.1rem;
             margin-bottom: 4px;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
         }
 
         .desktop-icon-label {
-            font-size: 0.74rem;
+            font-size: 0.72rem;
             color: #fff;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+            text-shadow: 0 1px 4px rgba(0,0,0,0.9);
             font-weight: 600;
+            word-break: break-word;
+        }
+
+        /* Center Watermark */
+        .center-watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: rgba(255,255,255,0.7);
+            pointer-events: none;
+            transition: all 0.3s;
+        }
+
+        /* Window System */
+        .app-window {
+            display: none;
+            position: absolute;
+            top: 55px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 88%;
+            max-width: 680px;
+            height: 480px;
+            background: #0f172a;
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            border-radius: 10px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85);
+            z-index: 150;
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+        }
+
+        .window-titlebar {
+            background: #1e293b;
+            padding: 8px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: move;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        .window-title {
+            font-weight: 700;
+            font-size: 0.82rem;
+            color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .window-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .window-controls button {
+            background: rgba(255,255,255,0.08);
+            border: none;
+            color: #cbd5e1;
+            font-size: 0.8rem;
+            width: 26px;
+            height: 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s;
+        }
+
+        .window-controls button.btn-close:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        .window-content {
+            flex: 1;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background: #020617;
         }
 
         /* Taskbar */
         .win-taskbar {
-            height: 44px;
-            background: rgba(15, 23, 42, 0.92);
-            backdrop-filter: blur(12px);
+            height: 42px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(14px);
             border-top: 1px solid rgba(255, 255, 255, 0.12);
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 12px;
-            z-index: 100;
+            z-index: 200;
             flex-shrink: 0;
         }
 
@@ -147,7 +271,7 @@
         }
 
         .start-btn {
-            height: 36px;
+            height: 32px;
             padding: 0 12px;
             background: #0284c7;
             border: none;
@@ -155,34 +279,33 @@
             color: #fff;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             cursor: pointer;
             transition: background 0.15s;
         }
 
-        .start-btn:hover {
-            background: #0369a1;
-        }
+        .start-btn:hover { background: #0369a1; }
 
         .taskbar-app-btn {
-            height: 36px;
+            height: 32px;
             padding: 0 10px;
             background: transparent;
             border: none;
             border-radius: 6px;
-            color: #cbd5e1;
+            color: #94a3b8;
             display: flex;
             align-items: center;
             gap: 6px;
-            font-size: 0.78rem;
+            font-size: 0.76rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.15s;
+            transition: all 0.15s;
         }
 
-        .taskbar-app-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
+        .taskbar-app-btn:hover, .taskbar-app-btn.active {
+            background: rgba(255, 255, 255, 0.12);
             color: #fff;
         }
 
@@ -190,31 +313,31 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 0.78rem;
-            color: #cbd5e1;
+            font-size: 0.76rem;
+            color: #94a3b8;
         }
 
         /* Windows Start Menu */
         .win-start-menu {
             display: none;
             position: absolute;
-            bottom: 48px;
-            left: 12px;
+            bottom: 46px;
+            left: 10px;
             width: 320px;
-            background: rgba(15, 23, 42, 0.96);
-            backdrop-filter: blur(16px);
+            background: rgba(15, 23, 42, 0.98);
+            backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 12px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
-            z-index: 200;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            z-index: 300;
             padding: 16px;
         }
 
         .start-menu-header {
             font-weight: 700;
             color: #38bdf8;
-            font-size: 0.9rem;
-            margin-bottom: 12px;
+            font-size: 0.88rem;
+            margin-bottom: 10px;
             padding-bottom: 8px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
@@ -226,75 +349,191 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 8px 10px;
-            border-radius: 8px;
+            padding: 7px 10px;
+            border-radius: 6px;
             color: #e2e8f0;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             cursor: pointer;
             transition: background 0.15s;
         }
 
         .start-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
         }
 
-        /* Window Modal Frame */
-        .app-window {
-            display: none;
-            position: absolute;
-            top: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 640px;
-            background: rgba(15, 23, 42, 0.98);
-            border: 1px solid rgba(56, 189, 248, 0.35);
-            border-radius: 10px;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.85);
-            z-index: 150;
-            overflow: hidden;
-        }
-
-        .window-titlebar {
-            background: #1e293b;
-            padding: 8px 14px;
+        /* Terminal Styling */
+        .term-container {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-direction: column;
+            height: 100%;
+            background: #020617;
+            font-family: 'Fira Code', 'Courier New', monospace;
         }
 
-        .window-title {
-            font-weight: 700;
-            font-size: 0.85rem;
-            color: #f1f5f9;
+        .term-history {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: #38bdf8;
+            white-space: pre-wrap;
+        }
+
+        .term-input-bar {
+            background: #0b1329;
+            border-top: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 8px 12px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .window-controls button {
-            background: none;
+        .term-prompt {
+            color: #10b981;
+            font-weight: 700;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        .term-input {
+            flex: 1;
+            background: transparent;
             border: none;
-            color: #94a3b8;
-            font-size: 1rem;
-            padding: 2px 8px;
+            outline: none;
+            color: #f8fafc;
+            font-family: inherit;
+            font-size: 0.82rem;
+        }
+
+        /* File Manager Styling */
+        .explorer-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: #0b1329;
+        }
+
+        .explorer-toolbar {
+            padding: 8px 12px;
+            background: #0f172a;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+        }
+
+        .explorer-path {
+            flex: 1;
+            background: #020617;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 4px;
-            cursor: pointer;
+            padding: 4px 10px;
+            color: #38bdf8;
+            font-family: monospace;
         }
 
-        .window-controls button.btn-close:hover {
-            background: #ef4444;
-            color: #fff;
-        }
-
-        .window-content {
-            padding: 18px;
-            font-size: 0.84rem;
-            color: #e2e8f0;
-            max-height: 400px;
+        .explorer-grid {
+            flex: 1;
+            padding: 16px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 14px;
             overflow-y: auto;
+            align-content: flex-start;
+        }
+
+        .file-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 8px 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .file-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .file-icon { font-size: 2rem; margin-bottom: 4px; }
+        .file-name { font-size: 0.72rem; color: #cbd5e1; word-break: break-all; }
+
+        /* System Monitor Styling */
+        .sysmon-container {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            height: 100%;
+            overflow-y: auto;
+            background: #0b1329;
+        }
+
+        .sysmon-stat-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .sysmon-card {
+            background: #020617;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .sysmon-title {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .sysmon-val {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #38bdf8;
+            margin-bottom: 6px;
+        }
+
+        .sysmon-bar-bg {
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .sysmon-bar-fill {
+            height: 100%;
+            background: #06b6d4;
+            transition: width 0.6s ease;
+        }
+
+        /* Notepad Styling */
+        .editor-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .editor-textarea {
+            flex: 1;
+            background: #020617;
+            border: none;
+            outline: none;
+            padding: 14px;
+            color: #f1f5f9;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.82rem;
+            resize: none;
+            line-height: 1.6;
         }
     </style>
 </head>
@@ -309,7 +548,7 @@
             <span style="background: rgba(16,185,129,0.2); color: #10b981; padding: 2px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700;">🟢 VirtIO-GPU 1024x768 @ 60 FPS</span>
         </div>
         <div class="monitor-actions">
-            <select id="os-switcher" onchange="changeDesktopOS(this.value)" style="background: #020617; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 0.78rem;">
+            <select id="os-switcher" onchange="changeDesktopOS(this.value)" style="background: #020617; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem;">
                 <option value="windows" selected>🪟 Windows 10 Workstation</option>
                 <option value="kali">💀 Kali Linux Security</option>
                 <option value="ubuntu">🐧 Ubuntu 24.04 LTS</option>
@@ -321,50 +560,59 @@
 
     <!-- Interactive Desktop Surface -->
     <div class="desktop-surface" id="desktop-bg">
+        
+        <!-- Live Tier Information Ribbon -->
+        <div class="tier-ribbon">
+            <span>🌐 <strong>Browser WASM Sandbox Mode:</strong> Berjalan 100% di browser Anda (Bebas server VPS, aktif 24/7).</span>
+            <span>Butuh Server Linux KVM Asli? <a href="https://nantara.cloud/dashboard.html" target="_blank">⚡ Beralih ke nantara.cloud ↗</a></span>
+        </div>
+
         <!-- Desktop Shortcuts -->
-        <div class="desktop-icons">
+        <div class="desktop-icons" id="desktop-icons-container">
             <div class="desktop-icon" onclick="openApp('thispc')">
-                <div class="desktop-icon-img">💻</div>
-                <div class="desktop-icon-label">This PC</div>
+                <div class="desktop-icon-img" id="icon-thispc-img">💻</div>
+                <div class="desktop-icon-label" id="icon-thispc-label">This PC</div>
             </div>
             <div class="desktop-icon" onclick="openApp('cmd')">
-                <div class="desktop-icon-img">⌨️</div>
-                <div class="desktop-icon-label">Command Prompt</div>
+                <div class="desktop-icon-img" id="icon-cmd-img">⌨️</div>
+                <div class="desktop-icon-label" id="icon-cmd-label">Terminal Shell</div>
             </div>
-            <div class="desktop-icon" onclick="openApp('powershell')">
-                <div class="desktop-icon-img">⚡</div>
-                <div class="desktop-icon-label">PowerShell</div>
+            <div class="desktop-icon" onclick="openApp('sysmon')">
+                <div class="desktop-icon-img">📊</div>
+                <div class="desktop-icon-label">Task Manager</div>
             </div>
-            <div class="desktop-icon" onclick="openApp('control')">
-                <div class="desktop-icon-img">⚙️</div>
-                <div class="desktop-icon-label">Control Panel</div>
-            </div>
-            <div class="desktop-icon" onclick="openApp('security')">
-                <div class="desktop-icon-img">🛡️</div>
-                <div class="desktop-icon-label">Security</div>
+            <div class="desktop-icon" onclick="openApp('editor')">
+                <div class="desktop-icon-img">📝</div>
+                <div class="desktop-icon-label">Notepad</div>
             </div>
             <div class="desktop-icon" onclick="openApp('edge')">
                 <div class="desktop-icon-img">🌐</div>
-                <div class="desktop-icon-label">Edge Browser</div>
+                <div class="desktop-icon-label">Web Browser</div>
+            </div>
+            <div class="desktop-icon" onclick="openApp('control')">
+                <div class="desktop-icon-img">⚙️</div>
+                <div class="desktop-icon-label">Settings</div>
             </div>
         </div>
 
         <!-- Center Watermark Info -->
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: rgba(255,255,255,0.85); pointer-events: none;">
-            <div style="font-size: 4rem; margin-bottom: 12px; filter: drop-shadow(0 6px 16px rgba(0,0,0,0.5));" id="center-icon">🪟</div>
-            <h1 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.8);" id="center-title">Windows 10 Pro Workstation</h1>
-            <p style="font-size: 0.9rem; color: #bae6fd; max-width: 480px; text-shadow: 0 1px 4px rgba(0,0,0,0.8); line-height: 1.5;" id="center-desc">
+        <div class="center-watermark" id="center-watermark">
+            <div style="font-size: 3.8rem; margin-bottom: 10px; filter: drop-shadow(0 6px 16px rgba(0,0,0,0.5));" id="center-icon">🪟</div>
+            <h1 style="font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; text-shadow: 0 2px 10px rgba(0,0,0,0.8);" id="center-title">Windows 10 Pro Workstation</h1>
+            <p style="font-size: 0.85rem; color: #bae6fd; max-width: 440px; text-shadow: 0 1px 4px rgba(0,0,0,0.8); line-height: 1.5;" id="center-desc">
                 NantaraVM VirtIO-GPU 1024x768 32-bit RGBA Graphics Display Active.<br>
-                Klik ikon desktop atau tombol <strong>Start</strong> di kiri bawah untuk berinteraksi.
+                Klik ikon desktop di sebelah kiri untuk membuka aplikasi interaktif.
             </p>
         </div>
 
-        <!-- In-Desktop App Window -->
+        <!-- In-Desktop App Window (Interactive Modal Window) -->
         <div class="app-window" id="app-window">
-            <div class="window-titlebar">
+            <div class="window-titlebar" id="window-titlebar">
                 <div class="window-title" id="window-title">App Window</div>
                 <div class="window-controls">
-                    <button class="btn-close" onclick="closeApp()">✕</button>
+                    <button onclick="minimizeApp()" title="Minimize">─</button>
+                    <button onclick="maximizeApp()" title="Maximize">□</button>
+                    <button class="btn-close" onclick="closeApp()" title="Close">✕</button>
                 </div>
             </div>
             <div class="window-content" id="window-body">
@@ -376,15 +624,15 @@
         <div class="win-start-menu" id="start-menu">
             <div class="start-menu-header">
                 <span id="start-menu-title">🪟 Windows 10 Start Menu</span>
-                <span style="font-size:0.75rem; color:#94a3b8; font-weight:normal;">NantaraVM</span>
+                <span style="font-size:0.72rem; color:#94a3b8; font-weight:normal;">NantaraVM</span>
             </div>
             <div style="display: flex; flex-direction: column; gap: 4px;">
-                <div class="start-item" onclick="openApp('thispc')">📁 File Explorer (This PC)</div>
-                <div class="start-item" onclick="openApp('cmd')">💻 Command Prompt (cmd.exe)</div>
-                <div class="start-item" onclick="openApp('powershell')">⚡ Windows PowerShell</div>
-                <div class="start-item" onclick="openApp('control')">⚙️ Control Panel</div>
-                <div class="start-item" onclick="openApp('security')">🛡️ Windows Defender Antivirus</div>
-                <div class="start-item" onclick="openApp('edge')">🌐 Microsoft Edge Browser</div>
+                <div class="start-item" onclick="openApp('cmd')">⌨️ Terminal Console (Interactive Shell)</div>
+                <div class="start-item" onclick="openApp('thispc')">📁 File Manager (Virtual Filesystem)</div>
+                <div class="start-item" onclick="openApp('sysmon')">📊 Task Manager (CPU & RAM Monitor)</div>
+                <div class="start-item" onclick="openApp('editor')">📝 Text Editor (Notes & Code)</div>
+                <div class="start-item" onclick="openApp('edge')">🌐 Web Browser (Edge / Firefox)</div>
+                <div class="start-item" onclick="openApp('control')">⚙️ Control Panel & Device Info</div>
                 <div class="start-item" onclick="location.href='dashboard.html'" style="color: #ef4444; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 6px; padding-top: 8px;">⏹️ Tutup Workstation & Kembali</div>
             </div>
         </div>
@@ -397,19 +645,42 @@
                 <span>🪟</span>
                 <span>Start</span>
             </button>
-            <button class="taskbar-app-btn" onclick="openApp('thispc')">📁 Explorer</button>
-            <button class="taskbar-app-btn" onclick="openApp('cmd')">💻 CMD</button>
-            <button class="taskbar-app-btn" onclick="openApp('edge')">🌐 Edge</button>
+            <button class="taskbar-app-btn" onclick="openApp('thispc')" id="tb-btn-thispc">📁 Files</button>
+            <button class="taskbar-app-btn" onclick="openApp('cmd')" id="tb-btn-cmd">⌨️ Terminal</button>
+            <button class="taskbar-app-btn" onclick="openApp('sysmon')" id="tb-btn-sysmon">📊 Monitor</button>
+            <button class="taskbar-app-btn" onclick="openApp('editor')" id="tb-btn-editor">📝 Editor</button>
         </div>
         <div class="taskbar-right">
-            <span>🔊</span>
-            <span>📶 VirtIO-Net (tap0)</span>
-            <span style="color: #10b981; font-weight: bold;">🟢 1024x768</span>
-            <span id="taskbar-clock" style="font-weight: 600;">12:00</span>
+            <span style="font-size:0.75rem;">📶 VirtIO-Net (tap0)</span>
+            <span style="font-size:0.75rem; color:#10b981;">● Online</span>
+            <span id="taskbar-clock" style="font-weight:700; color:#f8fafc; font-family:monospace;">00:00</span>
         </div>
     </div>
 
     <script>
+        let currentOS = 'windows';
+        let termHistory = [];
+        let currentPath = '/home/user';
+        let sysmonInterval = null;
+
+        // Virtual Filesystem
+        const vfs = {
+            '/home/user': [
+                { name: 'Documents', type: 'dir', icon: '📁' },
+                { name: 'Downloads', type: 'dir', icon: '📁' },
+                { name: 'welcome.txt', type: 'file', icon: '📄', content: 'Selamat datang di NantaraVM WebAssembly Playground!\nIni adalah simulasi virtual workstation yang berjalan langsung di browser Anda via WebAssembly.\n\nUntuk OS Linux fisik nyata dengan KVM dan Docker, kunjungi https://nantara.cloud/' },
+                { name: 'nantara.conf', type: 'file', icon: '⚙️', content: '# NantaraVM Configuration\nhypervisor=kvm\nvcpu=2\nram_mb=4096\nvirtio_net=tap0\nacceleration=hardware' },
+                { name: 'demo.sh', type: 'file', icon: '📜', content: '#!/bin/bash\necho "Menjalankan MicroVM Nantara..."\nuname -a\nneofetch' }
+            ],
+            '/home/user/Documents': [
+                { name: 'catatan-proyek.txt', type: 'file', icon: '📄', content: 'NantaraVM NKRI 2026: Hypervisor berdaulat pertama di Indonesia.' }
+            ],
+            '/home/user/Downloads': [
+                { name: 'nantara-vm.exe', type: 'file', icon: '📦', content: '[Binary Executable NantaraVM Windows CLI Installer]' },
+                { name: 'ubuntu-24.04-live-server.iso', type: 'file', icon: '💿', content: '[UEFI Bootable ISO Image]' }
+            ]
+        };
+
         function updateClock() {
             const now = new Date();
             const h = String(now.getHours()).padStart(2, '0');
@@ -427,7 +698,6 @@
             }
         }
 
-        // Close start menu when clicking on desktop surface
         document.getElementById('desktop-bg').addEventListener('click', (e) => {
             if (!e.target.closest('#start-menu') && !e.target.closest('#btn-start')) {
                 const menu = document.getElementById('start-menu');
@@ -444,99 +714,95 @@
             const body = document.getElementById('window-body');
             if (!win || !title || !body) return;
 
-            win.style.display = 'block';
+            win.style.display = 'flex';
+
+            // Clear previous intervals if any
+            if (sysmonInterval) { clearInterval(sysmonInterval); sysmonInterval = null; }
 
             if (appName === 'cmd') {
-                title.innerHTML = '💻 Command Prompt (cmd.exe)';
+                const isWin = currentOS === 'windows';
+                title.innerHTML = isWin ? '💻 Command Prompt (cmd.exe)' : '💻 Terminal Bash (Ubuntu/Kali)';
                 body.innerHTML = `
-                    <div style="font-family:'Fira Code',monospace; background:#000; padding:14px; border-radius:6px; color:#10b981; font-size:0.8rem; line-height:1.7;">
-                        Microsoft Windows [Version 10.0.19045.3803]<br>
-                        (c) Microsoft Corporation. All rights reserved.<br><br>
-                        C:\\Users\\NantaraVM&gt; systeminfo | findstr /B /C:"OS Name" /C:"Hypervisor"<br>
-                        OS Name:                   Microsoft Windows 10 Pro (64-bit)<br>
-                        Hypervisor Detected:       NantaraVM Native Linux KVM / VirtIO<br><br>
-                        C:\\Users\\NantaraVM&gt; ipconfig<br>
-                        Ethernet adapter VirtIO-Net (tap0):<br>
-                           IPv4 Address. . . . . . . . . . . : 192.168.100.15<br>
-                           Subnet Mask . . . . . . . . . . . : 255.255.255.0<br>
-                           Default Gateway . . . . . . . . . : 192.168.100.1<br><br>
-                        C:\\Users\\NantaraVM&gt; _
-                    </div>
-                `;
-            } else if (appName === 'powershell') {
-                title.innerHTML = '⚡ Windows PowerShell';
-                body.innerHTML = `
-                    <div style="font-family:'Fira Code',monospace; background:#012456; padding:14px; border-radius:6px; color:#fff; font-size:0.8rem; line-height:1.7;">
-                        Windows PowerShell<br>
-                        Copyright (C) Microsoft Corporation. All rights reserved.<br><br>
-                        PS C:\\Users\\NantaraVM&gt; Get-Service NantaraVMM<br>
-                        Status   Name               DisplayName<br>
-                        ------   ----               -----------<br>
-                        Running  NantaraVMM         NantaraVM Cloud-Native Hypervisor Service<br><br>
-                        PS C:\\Users\\NantaraVM&gt; Get-WmiObject Win32_Processor | Select-Object Name<br>
-                        Name: AMD EPYC (KVM Virtual vCPU Processor)<br><br>
-                        PS C:\\Users\\NantaraVM&gt; _
-                    </div>
-                `;
-            } else if (appName === 'control') {
-                title.innerHTML = '⚙️ Control Panel - System & Hardware Properties';
-                body.innerHTML = `
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                        <div style="background:rgba(255,255,255,0.05); padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
-                            <strong>🖥️ Display Adapter</strong><br>
-                            <small style="color:#38bdf8;">VirtIO-GPU 1024x768 32-bit RGBA (Hardware Accelerated)</small>
+                    <div class="term-container">
+                        <div class="term-history" id="term-history">================================================================================
+ 🚀 NantaraVM In-Desktop Virtual Shell — ${isWin ? 'Windows cmd.exe' : 'Linux bash'}
+================================================================================
+ Type 'help', 'neofetch', 'ls', 'cat welcome.txt', 'date', 'top', or 'clear'.
+================================================================================
+</div>
+                        <div class="term-input-bar">
+                            <span class="term-prompt" id="term-prompt">${isWin ? 'C:\\Users\\NantaraVM>' : 'user@nantara:~$'}</span>
+                            <input type="text" class="term-input" id="term-input" autocomplete="off" autofocus onkeydown="handleTermKey(event)">
+                            <button onclick="execTermInput()" style="background:#0284c7; color:#fff; border:none; padding:4px 10px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Run</button>
                         </div>
-                        <div style="background:rgba(255,255,255,0.05); padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
+                    </div>
+                `;
+                setTimeout(() => {
+                    const inp = document.getElementById('term-input');
+                    if (inp) inp.focus();
+                }, 100);
+            } 
+            else if (appName === 'thispc') {
+                title.innerHTML = '📁 File Explorer — ' + (currentOS === 'windows' ? 'This PC' : 'Home Directory');
+                renderExplorer(body);
+            } 
+            else if (appName === 'sysmon') {
+                title.innerHTML = '📊 Task Manager & System Monitor (VirtIO-KVM)';
+                renderSysmon(body);
+            } 
+            else if (appName === 'editor') {
+                title.innerHTML = '📝 Notepad — Editor Catatan';
+                body.innerHTML = `
+                    <div class="editor-container">
+                        <div style="background:#1e293b; padding:6px 12px; border-bottom:1px solid rgba(255,255,255,0.1); display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:0.75rem; color:#94a3b8;">File: catatan-baru.txt</span>
+                            <button onclick="alert('✅ Catatan berhasil disimpan ke virtual memory disk!')" style="background:#0284c7; color:#fff; border:none; padding:3px 10px; border-radius:4px; font-size:0.75rem; cursor:pointer;">💾 Simpan</button>
+                        </div>
+                        <textarea class="editor-textarea" placeholder="Ketik catatan atau kode program Anda di sini..."># NantaraVM Sovereign MicroVM
+Tuliskan rencana deployment atau konfigurasi MicroVM Anda di sini.
+Virtual Machine aktif berjalan di browser via WebAssembly engine.</textarea>
+                    </div>
+                `;
+            } 
+            else if (appName === 'edge') {
+                title.innerHTML = '🌐 Web Browser';
+                body.innerHTML = `
+                    <div style="display:flex; flex-direction:column; height:100%; background:#0f172a;">
+                        <div style="background:#1e293b; padding:8px 12px; display:flex; gap:8px; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1);">
+                            <span style="font-size:0.8rem; color:#94a3b8;">🔒</span>
+                            <input type="text" value="https://nantara.cloud" readonly style="flex:1; background:#020617; border:1px solid rgba(255,255,255,0.15); border-radius:4px; padding:4px 10px; color:#38bdf8; font-size:0.78rem;">
+                            <a href="https://nantara.cloud" target="_blank" style="background:#0284c7; color:#fff; text-decoration:none; padding:4px 12px; border-radius:4px; font-size:0.75rem; font-weight:700;">Kunjungi Web Asli ↗</a>
+                        </div>
+                        <div style="flex:1; padding:24px; text-align:center; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                            <h2 style="color:#38bdf8; margin-bottom:8px;">🌐 Nantara Cloud Sovereign Portal</h2>
+                            <p style="color:#94a3b8; font-size:0.85rem; max-width:440px; margin-bottom:18px;">
+                                Browser virtual ini terhubung ke jaringan TAP VirtIO. Anda dapat mengunjungi domain resmi NantaraVM di Cloud VPS IDCloudHost.
+                            </p>
+                            <a href="https://nantara.cloud" target="_blank" style="background:linear-gradient(135deg, #0284c7, #06b6d4); color:#fff; text-decoration:none; padding:10px 20px; border-radius:8px; font-weight:700; font-size:0.85rem; box-shadow:0 4px 14px rgba(6,182,212,0.3);">Buka nantara.cloud di Tab Baru ↗</a>
+                        </div>
+                    </div>
+                `;
+            } 
+            else if (appName === 'control') {
+                title.innerHTML = '⚙️ Settings & Virtual Hardware Properties';
+                body.innerHTML = `
+                    <div style="padding:18px; display:grid; grid-template-columns:1fr 1fr; gap:12px; background:#0b1329; height:100%; overflow-y:auto;">
+                        <div style="background:#020617; padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
+                            <strong>🖥️ Display Adapter</strong><br>
+                            <small style="color:#38bdf8;">VirtIO-GPU 1024x768 32-bit RGBA (WASM Accelerated)</small>
+                        </div>
+                        <div style="background:#020617; padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
                             <strong>🌐 Network Adapter</strong><br>
                             <small style="color:#10b981;">VirtIO Network TAP (nantara-tap0 · 1 Gbps)</small>
                         </div>
-                        <div style="background:rgba(255,255,255,0.05); padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
+                        <div style="background:#020617; padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
                             <strong>🧠 RAM & vCPU</strong><br>
                             <small style="color:#cbd5e1;">4096 MB Guest Physical RAM · 2 vCPU Cores</small>
                         </div>
-                        <div style="background:rgba(255,255,255,0.05); padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
+                        <div style="background:#020617; padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
                             <strong>💾 Storage Controller</strong><br>
-                            <small style="color:#cbd5e1;">VirtIO Block MMIO Device (win10.qcow2)</small>
+                            <small style="color:#cbd5e1;">VirtIO Block MMIO Device (Disk Image Active)</small>
                         </div>
-                    </div>
-                `;
-            } else if (appName === 'thispc') {
-                title.innerHTML = '📁 File Explorer - This PC';
-                body.innerHTML = `
-                    <div style="display:flex; flex-direction:column; gap:10px;">
-                        <div style="background:rgba(255,255,255,0.05); padding:12px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
-                            <div>
-                                <strong>💽 Local Disk (C:)</strong><br>
-                                <small style="color:#94a3b8;">60.0 GB free of 100.0 GB (VirtIO-blk)</small>
-                            </div>
-                            <span style="color:#10b981; font-weight:bold;">NTFS Active</span>
-                        </div>
-                        <div style="background:rgba(255,255,255,0.05); padding:12px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
-                            <div>
-                                <strong>💿 CD Drive (D:) windows10.iso</strong><br>
-                                <small style="color:#94a3b8;">4.8 GB UEFI Bootable Installation Image</small>
-                            </div>
-                            <span style="color:#38bdf8; font-weight:bold;">UDF Active</span>
-                        </div>
-                    </div>
-                `;
-            } else if (appName === 'security') {
-                title.innerHTML = '🛡️ Windows Security / Antivirus';
-                body.innerHTML = `
-                    <div style="background:rgba(16,185,129,0.1); border:1px solid #10b981; padding:16px; border-radius:8px; color:#10b981;">
-                        <h4 style="margin:0 0 6px 0;">✅ Virus & Threat Protection: No Threats Found</h4>
-                        <p style="color:#cbd5e1; font-size:0.85rem; line-height:1.6; margin:0;">
-                            Real-time protection is ON. Sandboxed inside NantaraVM MicroVM with Landlock LSM and Seccomp-BPF isolation.
-                        </p>
-                    </div>
-                `;
-            } else if (appName === 'edge') {
-                title.innerHTML = '🌐 Microsoft Edge Browser';
-                body.innerHTML = `
-                    <div style="background:#0f172a; padding:20px; border-radius:8px; text-align:center;">
-                        <h3 style="color:#38bdf8; margin:0 0 8px 0;">🌐 Connected to Nantara Cloud Sovereign Edge</h3>
-                        <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:14px;">VirtIO-Net Interface aktif dengan kecepatan ultra-cepat via Vercel Edge CDN.</p>
-                        <a href="https://nantara.cloud" target="_blank" style="background:#0284c7; color:#fff; text-decoration:none; padding:8px 16px; border-radius:6px; font-weight:700; font-size:0.82rem;">Kunjungi Beranda nantara.cloud →</a>
                     </div>
                 `;
             }
@@ -545,6 +811,237 @@
         function closeApp() {
             const win = document.getElementById('app-window');
             if (win) win.style.display = 'none';
+            if (sysmonInterval) { clearInterval(sysmonInterval); sysmonInterval = null; }
+        }
+
+        function minimizeApp() {
+            const win = document.getElementById('app-window');
+            if (win) win.style.display = 'none';
+        }
+
+        let isMaximized = false;
+        function maximizeApp() {
+            const win = document.getElementById('app-window');
+            if (!win) return;
+            if (!isMaximized) {
+                win.style.top = '44px';
+                win.style.left = '0';
+                win.style.transform = 'none';
+                win.style.width = '100vw';
+                win.style.maxWidth = '100vw';
+                win.style.height = 'calc(100vh - 86px)';
+                isMaximized = true;
+            } else {
+                win.style.top = '55px';
+                win.style.left = '50%';
+                win.style.transform = 'translateX(-50%)';
+                win.style.width = '88%';
+                win.style.maxWidth = '680px';
+                win.style.height = '480px';
+                isMaximized = false;
+            }
+        }
+
+        // Terminal Command Processor
+        function handleTermKey(e) {
+            if (e.key === 'Enter') {
+                execTermInput();
+            }
+        }
+
+        function execTermInput() {
+            const input = document.getElementById('term-input');
+            const history = document.getElementById('term-history');
+            if (!input || !history) return;
+
+            const cmd = input.value.trim();
+            if (!cmd) return;
+
+            const isWin = currentOS === 'windows';
+            const prompt = isWin ? 'C:\\Users\\NantaraVM>' : 'user@nantara:~$';
+            history.textContent += `\n${prompt} ${cmd}\n`;
+            input.value = '';
+
+            const parts = cmd.toLowerCase().split(' ');
+            const main = parts[0];
+
+            if (main === 'clear' || main === 'cls') {
+                history.textContent = `================================================================================\n 🚀 NantaraVM In-Desktop Virtual Shell — ${isWin ? 'Windows cmd.exe' : 'Linux bash'}\n================================================================================\n`;
+                return;
+            }
+
+            if (main === 'help' || main === '?') {
+                history.textContent += `Perintah yang tersedia:\n  • help / ?     : Menampilkan bantuan perintah\n  • neofetch     : Menampilkan info spesifikasi sistem OS & Logo\n  • ls / dir     : Melihat daftar file & folder\n  • cat <file>   : Membaca isi file teks\n  • uname -a     : Informasi Kernel & Virtual Engine\n  • date         : Tanggal & Waktu sistem\n  • whoami       : Pengguna aktif\n  • top / ps     : Status proses virtual yang sedang berjalan\n  • free         : Penggunaan memori RAM\n  • clear / cls  : Membersihkan layar terminal\n`;
+            } else if (main === 'uname' || main === 'ver') {
+                history.textContent += `Linux nantara-wasm 6.8.0-40-generic #40-Ubuntu SMP PREEMPT_DYNAMIC x86_64 WebAssembly\nNantaraVM Virtual Architecture: KVM v0.1-Release (VirtIO-Enabled)\n`;
+            } else if (main === 'whoami') {
+                history.textContent += `${isWin ? 'nantaravm\\user' : 'user (UID: 1000 GID: 1000)'}\n`;
+            } else if (main === 'date') {
+                history.textContent += `${new Date().toString()}\n`;
+            } else if (main === 'ls' || main === 'dir') {
+                const files = vfs[currentPath] || [];
+                let out = '';
+                files.forEach(f => {
+                    out += `  ${f.icon}  ${f.name.padEnd(24)}  ${f.type === 'dir' ? '<DIR>' : 'FILE'}\n`;
+                });
+                history.textContent += out;
+            } else if (main === 'cat' || main === 'type') {
+                const target = parts[1];
+                if (!target) {
+                    history.textContent += `Gunakan: cat <nama_file> (contoh: cat welcome.txt)\n`;
+                } else {
+                    const files = vfs[currentPath] || [];
+                    const found = files.find(f => f.name.toLowerCase() === target.toLowerCase());
+                    if (found && found.content) {
+                        history.textContent += `${found.content}\n`;
+                    } else {
+                        history.textContent += `cat: ${target}: File tidak ditemukan.\n`;
+                    }
+                }
+            } else if (main === 'neofetch') {
+                if (currentOS === 'ubuntu') {
+                    history.textContent += `            .-/+oossssoo+/-.               user@nantara-ubuntu\n        \`:+ssssssssssssssssss+:\`           --------------------\n      -+ssssssssssssssssssyyssss+-         OS: Ubuntu 24.04 LTS x86_64\n    .ossssssssssssssssssdMMMNysssso.       Host: NantaraVM MicroVM KVM\n   /ssssssssssshdmmNNmmyNMMMMhssssss/      Kernel: 6.8.0-40-generic\n  +ssssssssshmydMMMMMMMNddddyssssssss+     Uptime: 2 days, 4 hours\n /sssssssshNMMMyhhyyyyhmNMMMNhssssssss/    Packages: 1420 (dpkg)\n.ssssssssdMMMNhsssssssssshNMMMdssssssss.   Shell: bash 5.2.21\n+sssshhhyNMMNyssssssssssssyNMMMysssssss+   CPU: Virtual AMD EPYC (2) @ 2.80GHz\n+ssssyhhhNMMNyssssssssssssyNMMMysssssss+   GPU: VirtIO-GPU 1024x768 32-bit\n.ssssssssdMMMNhsssssssssshNMMMdssssssss.   Memory: 1420MB / 4096MB\n /sssssssshNMMMyhhyyyyhdNMMMNhssssssss/ \n  +sssssssssdmydMMMMMMMMddddyssssssss+  \n   /ssssssssssshdmNNNNmyNMMMMhssssss/   \n    .ossssssssssssssssssdMMMNysssso.    \n      -+sssssssssssssssssyyyssss+-      \n        \`:+ssssssssssssssssss+:\`        \n            .-/+oossssoo+/-.            \n`;
+                } else if (currentOS === 'kali') {
+                    history.textContent += `   ..............             user@nantara-kali\n               ..,;:ccc,.      -----------------\n                ......''';lxO. OS: Kali Linux Rolling 2024.3\n     .....''''..........,:ld;  Host: NantaraVM Security Sandbox\n            .';;;:::;,,.x...   Kernel: 6.8.11-kali1-amd64\n       ..'''.            0Xx   Shell: zsh 5.9\n     ...                  k:   Tools: nmap, metasploit, wireshark\n    .                      ;   Memory: 1100MB / 4096MB\n`;
+                } else {
+                    history.textContent += `                                  user@nantara-windows\n        ,.=:!!t3Z3z.,             --------------------\n       :!;Bulk=7Y3:               OS: Windows 10 Pro 64-bit\n      .1ZXw;;:!Z3;                Host: NantaraVM KVM Workstation\n     .!Z3;     .                  Kernel: Windows NT 10.0.19045\n    .!3Z;      ..                 CPU: Virtual Intel Xeon (2) @ 3.00GHz\n    .!Z3;     .                   GPU: VirtIO-GPU 1024x768\n     :Z3;     :Z3;                RAM: 1540MB / 4096MB\n      ;Z3w;:::w3Z;                Display: 1024x768 @ 60 FPS\n       :!;Bulk=7Y3:  \n        \`:;!i1I3Z3; \n`;
+                }
+            } else if (main === 'free') {
+                history.textContent += `               total        used        free      shared  buff/cache   available\nMem:         4096Mi      1420Mi      1980Mi        32Mi       696Mi      2644Mi\nSwap:        2048Mi         0Mi      2048Mi\n`;
+            } else if (main === 'top' || main === 'ps') {
+                history.textContent += `PID  USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND\n  1  root      20   0  168420  13200   8400 S   0.0   0.3   0:02.14 systemd\n412  nantara   20   0  782100  94120  42100 S   2.1   2.3   0:15.82 nantara-engine\n890  nantara   20   0  321000  48200  28100 S   0.8   1.2   0:04.10 virtio-gpu\n954  user      20   0   18420   4200   3100 S   0.0   0.1   0:00.45 bash\n`;
+            } else {
+                history.textContent += `Command not recognized: '${cmd}'. Type 'help' for assistance.\n`;
+            }
+
+            history.scrollTop = history.scrollHeight;
+        }
+
+        // File Explorer Renderer
+        function renderExplorer(container) {
+            const files = vfs[currentPath] || [];
+            let html = `
+                <div class="explorer-container">
+                    <div class="explorer-toolbar">
+                        <button onclick="navigateExplorer('/home/user')" style="background:rgba(255,255,255,0.08); border:none; color:#cbd5e1; padding:3px 8px; border-radius:4px; cursor:pointer;">🏠 Home</button>
+                        <button onclick="navigateUpExplorer()" style="background:rgba(255,255,255,0.08); border:none; color:#cbd5e1; padding:3px 8px; border-radius:4px; cursor:pointer;">⬆️ Up</button>
+                        <div class="explorer-path">${currentPath}</div>
+                    </div>
+                    <div class="explorer-grid">
+            `;
+
+            files.forEach(f => {
+                html += `
+                    <div class="file-item" onclick="handleFileClick('${f.name}', '${f.type}')">
+                        <div class="file-icon">${f.icon}</div>
+                        <div class="file-name">${f.name}</div>
+                    </div>
+                `;
+            });
+
+            html += `</div></div>`;
+            container.innerHTML = html;
+        }
+
+        function navigateExplorer(path) {
+            currentPath = path;
+            const body = document.getElementById('window-body');
+            if (body) renderExplorer(body);
+        }
+
+        function navigateUpExplorer() {
+            if (currentPath === '/home/user') return;
+            currentPath = '/home/user';
+            const body = document.getElementById('window-body');
+            if (body) renderExplorer(body);
+        }
+
+        function handleFileClick(name, type) {
+            if (type === 'dir') {
+                const newPath = currentPath + '/' + name;
+                if (vfs[newPath]) {
+                    currentPath = newPath;
+                    const body = document.getElementById('window-body');
+                    if (body) renderExplorer(body);
+                }
+            } else {
+                const files = vfs[currentPath] || [];
+                const f = files.find(item => item.name === name);
+                if (f) {
+                    alert(`📄 [${name}]\n\n${f.content}`);
+                }
+            }
+        }
+
+        // System Monitor Renderer
+        function renderSysmon(container) {
+            container.innerHTML = `
+                <div class="sysmon-container">
+                    <div class="sysmon-stat-row">
+                        <div class="sysmon-card">
+                            <div class="sysmon-title"><span>CPU USAGE (vCPU 1 & 2)</span><span id="cpu-num">18%</span></div>
+                            <div class="sysmon-val" id="cpu-text" style="color:#06b6d4;">2.80 GHz Virtual EPYC</div>
+                            <div class="sysmon-bar-bg"><div class="sysmon-bar-fill" id="cpu-bar" style="width:18%;"></div></div>
+                        </div>
+                        <div class="sysmon-card">
+                            <div class="sysmon-title"><span>RAM USAGE</span><span id="ram-num">1.42 / 4.0 GB</span></div>
+                            <div class="sysmon-val" id="ram-text" style="color:#10b981;">35% Allocated</div>
+                            <div class="sysmon-bar-bg"><div class="sysmon-bar-fill" id="ram-bar" style="background:#10b981; width:35%;"></div></div>
+                        </div>
+                    </div>
+                    <div class="sysmon-card" style="flex:1;">
+                        <div style="font-weight:700; font-size:0.8rem; margin-bottom:10px; color:#cbd5e1; display:flex; justify-content:space-between;">
+                            <span>Active Virtual Processes</span>
+                            <span style="color:#10b981;">● Hypervisor Running</span>
+                        </div>
+                        <table style="width:100%; border-collapse:collapse; font-size:0.75rem; text-align:left;">
+                            <thead>
+                                <tr style="border-bottom:1px solid rgba(255,255,255,0.1); color:#94a3b8;">
+                                    <th style="padding:4px;">PID</th>
+                                    <th>Name</th>
+                                    <th>CPU%</th>
+                                    <th>Memory</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); color:#f8fafc;">
+                                    <td style="padding:6px 4px;">412</td>
+                                    <td>nantara-engine.wasm</td>
+                                    <td id="proc-cpu-1">8.4%</td>
+                                    <td>420 MB</td>
+                                    <td style="color:#10b981;">Running</td>
+                                </tr>
+                                <tr style="border-bottom:1px solid rgba(255,255,255,0.05); color:#f8fafc;">
+                                    <td style="padding:6px 4px;">890</td>
+                                    <td>virtio-gpu-worker</td>
+                                    <td id="proc-cpu-2">4.2%</td>
+                                    <td>180 MB</td>
+                                    <td style="color:#10b981;">Active 60FPS</td>
+                                </tr>
+                                <tr style="color:#f8fafc;">
+                                    <td style="padding:6px 4px;">1024</td>
+                                    <td>network-tap0</td>
+                                    <td>1.1%</td>
+                                    <td>64 MB</td>
+                                    <td style="color:#10b981;">Connected</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            // Live periodic update
+            sysmonInterval = setInterval(() => {
+                const cpuVal = Math.floor(12 + Math.random() * 20);
+                const cpuEl = document.getElementById('cpu-num');
+                const cpuBar = document.getElementById('cpu-bar');
+                const proc1 = document.getElementById('proc-cpu-1');
+                if (cpuEl) cpuEl.textContent = cpuVal + '%';
+                if (cpuBar) cpuBar.style.width = cpuVal + '%';
+                if (proc1) proc1.textContent = (cpuVal * 0.4).toFixed(1) + '%';
+            }, 1800);
         }
 
         function toggleDesktopFullscreen() {
@@ -556,6 +1053,7 @@
         }
 
         function changeDesktopOS(os) {
+            currentOS = os;
             const bg = document.getElementById('desktop-bg');
             const hName = document.getElementById('header-vm-name');
             const hBadge = document.getElementById('header-os-badge');
@@ -563,6 +1061,8 @@
             const cTitle = document.getElementById('center-title');
             const sTitle = document.getElementById('start-menu-title');
             const sBtn = document.getElementById('btn-start');
+            const iconThisPc = document.getElementById('icon-thispc-img');
+            const labelThisPc = document.getElementById('icon-thispc-label');
 
             if (os === 'kali') {
                 bg.style.background = 'linear-gradient(135deg, #1e1b4b 0%, #311042 50%, #0f172a 100%)';
@@ -574,6 +1074,8 @@
                 sTitle.textContent = '💀 Kali Applications';
                 sBtn.style.background = '#8b5cf6';
                 sBtn.innerHTML = '<span>💀</span><span>Kali</span>';
+                if (iconThisPc) iconThisPc.textContent = '📁';
+                if (labelThisPc) labelThisPc.textContent = 'Filesystem';
             } else if (os === 'ubuntu') {
                 bg.style.background = 'linear-gradient(135deg, #7c2d12 0%, #431407 50%, #0f172a 100%)';
                 hName.textContent = 'Ubuntu Linux 24.04 LTS Workstation';
@@ -584,6 +1086,8 @@
                 sTitle.textContent = '🐧 Activities';
                 sBtn.style.background = '#ea580c';
                 sBtn.innerHTML = '<span>🐧</span><span>Apps</span>';
+                if (iconThisPc) iconThisPc.textContent = '📁';
+                if (labelThisPc) labelThisPc.textContent = 'Home Files';
             } else {
                 bg.style.background = 'linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%)';
                 hName.textContent = 'Windows 10 Pro 64-bit Workstation';
@@ -594,7 +1098,37 @@
                 sTitle.textContent = '🪟 Windows 10 Start Menu';
                 sBtn.style.background = '#0284c7';
                 sBtn.innerHTML = '<span>🪟</span><span>Start</span>';
+                if (iconThisPc) iconThisPc.textContent = '💻';
+                if (labelThisPc) labelThisPc.textContent = 'This PC';
             }
+        }
+
+        // Draggable window mechanism
+        let isDragging = false;
+        let dragOffsetX = 0;
+        let dragOffsetY = 0;
+
+        const titlebar = document.getElementById('window-titlebar');
+        const win = document.getElementById('app-window');
+
+        if (titlebar && win) {
+            titlebar.addEventListener('mousedown', (e) => {
+                if (isMaximized) return;
+                isDragging = true;
+                const rect = win.getBoundingClientRect();
+                dragOffsetX = e.clientX - rect.left;
+                dragOffsetY = e.clientY - rect.top;
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging || isMaximized) return;
+                win.style.left = (e.clientX - dragOffsetX + (win.offsetWidth / 2)) + 'px';
+                win.style.top = (e.clientY - dragOffsetY) + 'px';
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
         }
 
         // Check URL params on load (e.g. ?os=windows / ?os=kali / ?os=ubuntu)
