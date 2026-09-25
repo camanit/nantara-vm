@@ -394,46 +394,14 @@
                                     <div>====================================================</div>
                                     <div>🚀 NantaraVM NKRI 2026 - Cloud-Native MicroVM VMM</div>
                                     <div>====================================================</div>
-                                    <div style="color: #cbd5e1;">[NantaraVM] Host: Ubuntu 24.04 LTS (IP: 210.79.190.76)</div>
+                                    <div style="color: #cbd5e1;">[NantaraVM] Host: Ubuntu 24.04 LTS (IP: 103.226.138.53)</div>
                                     <div style="color: #cbd5e1;">[NantaraVM Docker Engine] Cloud Sandbox Container Active</div>
                                     <div style="color: #cbd5e1;">[NantaraVM Web Console] Live WebSocket Terminal listening at port 7681</div>
                                     <div style="color: #10b981; font-weight: bold;">[NantaraVM] Live Interactive Terminal Console Active.</div>
                                     <div>====================================================</div>
                                 </div>
-                                <div id="live-terminal-frame" style="display: flex; flex-direction: column; width: 100%; height: 580px; border-radius: 8px; border: 1px solid rgba(16,185,129,0.4); overflow: hidden; background: #020617; font-family: 'Fira Code', monospace;">
-                                    <!-- Terminal Header Bar -->
-                                    <div style="background: #0f172a; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 8px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: #94a3b8;">
-                                        <div style="display: flex; align-items: center; gap: 8px;">
-                                            <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #ef4444;"></span>
-                                            <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #f59e0b;"></span>
-                                            <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #10b981;"></span>
-                                            <span style="margin-left: 8px; color: #cbd5e1; font-weight: 600;">caman@nantara-node: ~ (NantaraVM v0.1 Core Console)</span>
-                                        </div>
-                                        <div style="display: flex; gap: 10px; align-items: center;">
-                                            <span id="term-status-badge" style="color: #10b981; font-weight: 700;">🟢 CONSOLE READY</span>
-                                            <button onclick="clearTerminalScreen()" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #cbd5e1; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer;">Clear</button>
-                                        </div>
-                                    </div>
-
-                                    <!-- Terminal Output Stream -->
-                                    <div id="terminal-output" style="flex: 1; padding: 14px; overflow-y: auto; font-size: 0.8rem; line-height: 1.6; color: #10b981; white-space: pre-wrap; background: #020617;">================================================================================
- 🚀 NantaraVM v0.1 - Cloud-Native MicroVM Hypervisor Console (NKRI 2026)
-================================================================================
- [System] VMM Core: Rust 2021 · VirtIO MMIO Engine · PVH Direct Kernel Boot
- [Node]   Host: nantara.cloud (Vercel Global Edge Connected)
- [Status] Hypervisor Ready. Type 'help' or click '▶️ Boot' on any VM to launch.
-================================================================================</div>
-
-                                    <!-- Terminal Command Input Bar -->
-                                    <div style="background: #0b1329; border-top: 1px solid rgba(16,185,129,0.3); padding: 8px 14px; display: flex; align-items: center; gap: 8px;">
-                                        <span style="color: #10b981; font-weight: bold; font-size: 0.82rem;">caman@nantara:~$</span>
-                                        <input type="text" id="term-cmd-input" placeholder="Type 'help', 'status', 'boot', 'vms', 'clear'..." style="flex: 1; background: transparent; border: none; outline: none; color: #f3f4f6; font-family: 'Fira Code', monospace; font-size: 0.82rem;" onkeydown="handleTerminalInput(event)">
-                                        <button onclick="execCurrentTerminalInput()" style="background: #10b981; color: #000; border: none; font-weight: 700; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor: pointer;">Send</button>
-                                    </div>
-                                </div>
-
-                                <div id="gui-screen-fallback" style="display: none; width: 100%; height: 580px; border-radius: 8px; border: 1px solid rgba(6,182,212,0.4); overflow: hidden; background: #020617; position: relative;">
-                                    <iframe id="gui-iframe" src="desktop.html?os=windows" style="width: 100%; height: 100%; border: none; display: block;"></iframe>
+                                <div id="live-terminal-frame" style="display: block; width: 100%; height: 580px; border-radius: 8px; border: 1px solid rgba(16,185,129,0.4); overflow: hidden; background: #020617;">
+                                    <iframe id="terminal-iframe" src="/console/" allow="fullscreen; clipboard-read; clipboard-write;" style="width: 100%; height: 100%; min-height: 580px; border: none; background: #020617;"></iframe>
                                 </div>
 
                             </div>
@@ -1216,40 +1184,22 @@
         }
 
         function openGuiInNewTab() {
-            const selectedVm = localStorage.getItem('nantara_selected_vm') || 'win10-workstation-01';
-            let osParam = 'windows';
-            if (selectedVm.toLowerCase().includes('kali')) {
-                osParam = 'kali';
-            } else if (selectedVm.toLowerCase().includes('ubuntu')) {
-                osParam = 'ubuntu';
-            }
-            window.open(`desktop.html?vm=${encodeURIComponent(selectedVm)}&os=${osParam}`, '_blank');
+            const domainPrefix = (window.location.protocol === 'file:') ? 'http://103.226.138.53' : '';
+            window.open(domainPrefix + '/desktop/?resize=remote', '_blank');
         }
 
         function switchDisplayMode(mode) {
-            const termFrame = document.getElementById('live-terminal-frame');
-            const guiScreen = document.getElementById('gui-screen-fallback');
+            const iframe = document.getElementById('terminal-iframe');
             const btnCli = document.getElementById('btn-mode-cli');
             const btnGui = document.getElementById('btn-mode-gui');
             const btnTab = document.getElementById('btn-open-gui-tab');
-            const guiIframe = document.getElementById('gui-iframe');
+            if (!iframe) return;
 
             localStorage.setItem('nantara_display_mode', mode);
-            const selectedVm = localStorage.getItem('nantara_selected_vm') || 'win10-workstation-01';
-
-            let osParam = 'windows';
-            if (selectedVm.toLowerCase().includes('kali')) {
-                osParam = 'kali';
-            } else if (selectedVm.toLowerCase().includes('ubuntu')) {
-                osParam = 'ubuntu';
-            }
+            const domainPrefix = (window.location.protocol === 'file:') ? 'http://103.226.138.53' : '';
 
             if (mode === 'gui') {
-                if (termFrame) termFrame.style.display = 'none';
-                if (guiScreen) guiScreen.style.display = 'block';
-                if (guiIframe) {
-                    guiIframe.src = `desktop.html?vm=${encodeURIComponent(selectedVm)}&os=${osParam}`;
-                }
+                iframe.src = domainPrefix + '/desktop/?resize=remote';
                 if (btnGui) {
                     btnGui.style.background = '#06b6d4';
                     btnGui.style.color = '#fff';
@@ -1262,8 +1212,7 @@
                     btnTab.style.display = 'inline-block';
                 }
             } else {
-                if (guiScreen) guiScreen.style.display = 'none';
-                if (termFrame) termFrame.style.display = 'flex';
+                iframe.src = domainPrefix + '/console/';
                 if (btnCli) {
                     btnCli.style.background = '#10b981';
                     btnCli.style.color = '#000';
@@ -1275,8 +1224,6 @@
                 if (btnTab) {
                     btnTab.style.display = 'none';
                 }
-                const input = document.getElementById('term-cmd-input');
-                if (input) input.focus();
             }
         }
 
