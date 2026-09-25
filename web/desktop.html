@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NantaraVM — Interactive Graphical Workstation (VirtIO-GPU)</title>
+    <link rel="icon" type="image/png" href="assets/icon.png">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: #020617;
+            color: #f8fafc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Virtual Monitor Header */
+        .vm-monitor-bar {
+            height: 48px;
+            background: #0f172a;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            font-size: 0.82rem;
+            z-index: 50;
+            flex-shrink: 0;
+        }
+
+        .vm-monitor-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            color: #e2e8f0;
+        }
+
+        .os-badge {
+            background: #0284c7;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .monitor-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .monitor-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #cbd5e1;
+            padding: 5px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .monitor-btn:hover {
+            background: rgba(255, 255, 255, 0.16);
+            color: #fff;
+        }
+
+        /* Desktop Surface */
+        .desktop-surface {
+            flex: 1;
+            position: relative;
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* Desktop Icons */
+        .desktop-icons {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 5;
+        }
+
+        .desktop-icon {
+            width: 74px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background 0.15s;
+        }
+
+        .desktop-icon:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .desktop-icon-img {
+            font-size: 2.2rem;
+            margin-bottom: 4px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+        }
+
+        .desktop-icon-label {
+            font-size: 0.74rem;
+            color: #fff;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+            font-weight: 600;
+        }
+
+        /* Taskbar */
+        .win-taskbar {
+            height: 44px;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .taskbar-left {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 100%;
+        }
+
+        .start-btn {
+            height: 36px;
+            padding: 0 12px;
+            background: #0284c7;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .start-btn:hover {
+            background: #0369a1;
+        }
+
+        .taskbar-app-btn {
+            height: 36px;
+            padding: 0 10px;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .taskbar-app-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .taskbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.78rem;
+            color: #cbd5e1;
+        }
+
+        /* Windows Start Menu */
+        .win-start-menu {
+            display: none;
+            position: absolute;
+            bottom: 48px;
+            left: 12px;
+            width: 320px;
+            background: rgba(15, 23, 42, 0.96);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+            z-index: 200;
+            padding: 16px;
+        }
+
+        .start-menu-header {
+            font-weight: 700;
+            color: #38bdf8;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .start-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .start-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        /* Window Modal Frame */
+        .app-window {
+            display: none;
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 640px;
+            background: rgba(15, 23, 42, 0.98);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            border-radius: 10px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.85);
+            z-index: 150;
+            overflow: hidden;
+        }
+
+        .window-titlebar {
+            background: #1e293b;
+            padding: 8px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .window-title {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .window-controls button {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .window-controls button.btn-close:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        .window-content {
+            padding: 18px;
+            font-size: 0.84rem;
+            color: #e2e8f0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Virtual Monitor Header -->
+    <div class="vm-monitor-bar">
+        <div class="vm-monitor-title">
+            <span style="font-size: 1.1rem;">🖥️</span>
+            <span id="header-vm-name">Windows 10 Pro 64-bit Workstation</span>
+            <span class="os-badge" id="header-os-badge">🪟 Windows 10</span>
+            <span style="background: rgba(16,185,129,0.2); color: #10b981; padding: 2px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700;">🟢 VirtIO-GPU 1024x768 @ 60 FPS</span>
+        </div>
+        <div class="monitor-actions">
+            <select id="os-switcher" onchange="changeDesktopOS(this.value)" style="background: #020617; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 0.78rem;">
+                <option value="windows" selected>🪟 Windows 10 Workstation</option>
+                <option value="kali">💀 Kali Linux Security</option>
+                <option value="ubuntu">🐧 Ubuntu 24.04 LTS</option>
+            </select>
+            <button class="monitor-btn" onclick="toggleDesktopFullscreen()">⛶ Fullscreen</button>
+            <a href="dashboard.html" class="monitor-btn">⬅️ Ke Dashboard</a>
+        </div>
+    </div>
+
+    <!-- Interactive Desktop Surface -->
+    <div class="desktop-surface" id="desktop-bg">
+        <!-- Desktop Shortcuts -->
+        <div class="desktop-icons">
+            <div class="desktop-icon" onclick="openApp('thispc')">
+                <div class="desktop-icon-img">💻</div>
+                <div class="desktop-icon-label">This PC</div>
+            </div>
+            <div class="desktop-icon" onclick="openApp('cmd')">
+                <div class="desktop-icon-img">⌨️</div>
+                <div class="desktop-icon-label">Command Prompt</div>
+            </div>
+            <div class="desktop-icon" onclick="openApp('powershell')">
+                <div class="desktop-icon-img">⚡</div>
+                <div class="desktop-icon-label">PowerShell</div>
+            </div>
+            <div class="desktop-icon" onclick="openApp('control')">
+                <div class="desktop-icon-img">⚙️</div>
+                <div class="desktop-icon-label">Control Panel</div>
+            </div>
+            <div class="desktop-icon" onclick="openApp('security')">
+                <div class="desktop-icon-img">🛡️</div>
+                <div class="desktop-icon-label">Security</div>
+            </div>
+            <div class="desktop-icon" onclick="openApp('edge')">
+                <div class="desktop-icon-img">🌐</div>
+                <div class="desktop-icon-label">Edge Browser</div>
+            </div>
+        </div>
+
+        <!-- Center Watermark Info -->
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: rgba(255,255,255,0.85); pointer-events: none;">
+            <div style="font-size: 4rem; margin-bottom: 12px; filter: drop-shadow(0 6px 16px rgba(0,0,0,0.5));" id="center-icon">🪟</div>
+            <h1 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.8);" id="center-title">Windows 10 Pro Workstation</h1>
+            <p style="font-size: 0.9rem; color: #bae6fd; max-width: 480px; text-shadow: 0 1px 4px rgba(0,0,0,0.8); line-height: 1.5;" id="center-desc">
+                NantaraVM VirtIO-GPU 1024x768 32-bit RGBA Graphics Display Active.<br>
+                Klik ikon desktop atau tombol <strong>Start</strong> di kiri bawah untuk berinteraksi.
+            </p>
+        </div>
+
+        <!-- In-Desktop App Window -->
+        <div class="app-window" id="app-window">
+            <div class="window-titlebar">
+                <div class="window-title" id="window-title">App Window</div>
+                <div class="window-controls">
+                    <button class="btn-close" onclick="closeApp()">✕</button>
+                </div>
+            </div>
+            <div class="window-content" id="window-body">
+                <!-- Content Injected Dynamically -->
+            </div>
+        </div>
+
+        <!-- Start Menu -->
+        <div class="win-start-menu" id="start-menu">
+            <div class="start-menu-header">
+                <span id="start-menu-title">🪟 Windows 10 Start Menu</span>
+                <span style="font-size:0.75rem; color:#94a3b8; font-weight:normal;">NantaraVM</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+                <div class="start-item" onclick="openApp('thispc')">📁 File Explorer (This PC)</div>
+                <div class="start-item" onclick="openApp('cmd')">💻 Command Prompt (cmd.exe)</div>
+                <div class="start-item" onclick="openApp('powershell')">⚡ Windows PowerShell</div>
+                <div class="start-item" onclick="openApp('control')">⚙️ Control Panel</div>
+                <div class="start-item" onclick="openApp('security')">🛡️ Windows Defender Antivirus</div>
+                <div class="start-item" onclick="openApp('edge')">🌐 Microsoft Edge Browser</div>
+                <div class="start-item" onclick="location.href='dashboard.html'" style="color: #ef4444; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 6px; padding-top: 8px;">⏹️ Tutup Workstation & Kembali</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Windows Taskbar -->
+    <div class="win-taskbar">
+        <div class="taskbar-left">
+            <button class="start-btn" onclick="toggleStartMenu()" id="btn-start">
+                <span>🪟</span>
+                <span>Start</span>
+            </button>
+            <button class="taskbar-app-btn" onclick="openApp('thispc')">📁 Explorer</button>
+            <button class="taskbar-app-btn" onclick="openApp('cmd')">💻 CMD</button>
+            <button class="taskbar-app-btn" onclick="openApp('edge')">🌐 Edge</button>
+        </div>
+        <div class="taskbar-right">
+            <span>🔊</span>
+            <span>📶 VirtIO-Net (tap0)</span>
+            <span style="color: #10b981; font-weight: bold;">🟢 1024x768</span>
+            <span id="taskbar-clock" style="font-weight: 600;">12:00</span>
+        </div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const el = document.getElementById('taskbar-clock');
+            if (el) el.textContent = `${h}:${m}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        function toggleStartMenu() {
+            const menu = document.getElementById('start-menu');
+            if (menu) {
+                menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+            }
+        }
+
+        // Close start menu when clicking on desktop surface
+        document.getElementById('desktop-bg').addEventListener('click', (e) => {
+            if (!e.target.closest('#start-menu') && !e.target.closest('#btn-start')) {
+                const menu = document.getElementById('start-menu');
+                if (menu) menu.style.display = 'none';
+            }
+        });
+
+        function openApp(appName) {
+            const menu = document.getElementById('start-menu');
+            if (menu) menu.style.display = 'none';
+
+            const win = document.getElementById('app-window');
+            const title = document.getElementById('window-title');
+            const body = document.getElementById('window-body');
+            if (!win || !title || !body) return;
+
+            win.style.display = 'block';
+
+            if (appName === 'cmd') {
+                title.innerHTML = '💻 Command Prompt (cmd.exe)';
+                body.innerHTML = `
+                    <div style="font-family:'Fira Code',monospace; background:#000; padding:14px; border-radius:6px; color:#10b981; font-size:0.8rem; line-height:1.7;">
+                        Microsoft Windows [Version 10.0.19045.3803]<br>
+                        (c) Microsoft Corporation. All rights reserved.<br><br>
+                        C:\\Users\\NantaraVM&gt; systeminfo | findstr /B /C:"OS Name" /C:"Hypervisor"<br>
+                        OS Name:                   Microsoft Windows 10 Pro (64-bit)<br>
+                        Hypervisor Detected:       NantaraVM Native Linux KVM / VirtIO<br><br>
+                        C:\\Users\\NantaraVM&gt; ipconfig<br>
+                        Ethernet adapter VirtIO-Net (tap0):<br>
+                           IPv4 Address. . . . . . . . . . . : 192.168.100.15<br>
+                           Subnet Mask . . . . . . . . . . . : 255.255.255.0<br>
+                           Default Gateway . . . . . . . . . : 192.168.100.1<br><br>
+                        C:\\Users\\NantaraVM&gt; _
+                    </div>
+                `;
+            } else if (appName === 'powershell') {
+                title.innerHTML = '⚡ Windows PowerShell';
+                body.innerHTML = `
+                    <div style="font-family:'Fira Code',monospace; background:#012456; padding:14px; border-radius:6px; color:#fff; font-size:0.8rem; line-height:1.7;">
+                        Windows PowerShell<br>
+                        Copyright (C) Microsoft Corporation. All rights reserved.<br><br>
+                        PS C:\\Users\\NantaraVM&gt; Get-Service NantaraVMM<br>
+                        Status   Name               DisplayName<br>
+                        ------   ----               -----------<br>
+                        Running  NantaraVMM         NantaraVM Cloud-Native Hypervisor Service<br><br>
+                        PS C:\\Users\\NantaraVM&gt; Get-WmiObject Win32_Processor | Select-Object Name<br>
+                        Name: AMD EPYC (KVM Virtual vCPU Processor)<br><br>
+                        PS C:\\Users\\NantaraVM&gt; _
+                    </div>
+                `;
+            } else if (appName === 'control') {
+                title.innerHTML = '⚙️ Control Panel - System & Hardware Properties';
+                body.innerHTML = `
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                        <div style="background:rgba(255,255,255,0.05); padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
+                            <strong>🖥️ Display Adapter</strong><br>
+                            <small style="color:#38bdf8;">VirtIO-GPU 1024x768 32-bit RGBA (Hardware Accelerated)</small>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.05); padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
+                            <strong>🌐 Network Adapter</strong><br>
+                            <small style="color:#10b981;">VirtIO Network TAP (nantara-tap0 · 1 Gbps)</small>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.05); padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
+                            <strong>🧠 RAM & vCPU</strong><br>
+                            <small style="color:#cbd5e1;">4096 MB Guest Physical RAM · 2 vCPU Cores</small>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.05); padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
+                            <strong>💾 Storage Controller</strong><br>
+                            <small style="color:#cbd5e1;">VirtIO Block MMIO Device (win10.qcow2)</small>
+                        </div>
+                    </div>
+                `;
+            } else if (appName === 'thispc') {
+                title.innerHTML = '📁 File Explorer - This PC';
+                body.innerHTML = `
+                    <div style="display:flex; flex-direction:column; gap:10px;">
+                        <div style="background:rgba(255,255,255,0.05); padding:12px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <strong>💽 Local Disk (C:)</strong><br>
+                                <small style="color:#94a3b8;">60.0 GB free of 100.0 GB (VirtIO-blk)</small>
+                            </div>
+                            <span style="color:#10b981; font-weight:bold;">NTFS Active</span>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.05); padding:12px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <strong>💿 CD Drive (D:) windows10.iso</strong><br>
+                                <small style="color:#94a3b8;">4.8 GB UEFI Bootable Installation Image</small>
+                            </div>
+                            <span style="color:#38bdf8; font-weight:bold;">UDF Active</span>
+                        </div>
+                    </div>
+                `;
+            } else if (appName === 'security') {
+                title.innerHTML = '🛡️ Windows Security / Antivirus';
+                body.innerHTML = `
+                    <div style="background:rgba(16,185,129,0.1); border:1px solid #10b981; padding:16px; border-radius:8px; color:#10b981;">
+                        <h4 style="margin:0 0 6px 0;">✅ Virus & Threat Protection: No Threats Found</h4>
+                        <p style="color:#cbd5e1; font-size:0.85rem; line-height:1.6; margin:0;">
+                            Real-time protection is ON. Sandboxed inside NantaraVM MicroVM with Landlock LSM and Seccomp-BPF isolation.
+                        </p>
+                    </div>
+                `;
+            } else if (appName === 'edge') {
+                title.innerHTML = '🌐 Microsoft Edge Browser';
+                body.innerHTML = `
+                    <div style="background:#0f172a; padding:20px; border-radius:8px; text-align:center;">
+                        <h3 style="color:#38bdf8; margin:0 0 8px 0;">🌐 Connected to Nantara Cloud Sovereign Edge</h3>
+                        <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:14px;">VirtIO-Net Interface aktif dengan kecepatan ultra-cepat via Vercel Edge CDN.</p>
+                        <a href="https://nantara.cloud" target="_blank" style="background:#0284c7; color:#fff; text-decoration:none; padding:8px 16px; border-radius:6px; font-weight:700; font-size:0.82rem;">Kunjungi Beranda nantara.cloud →</a>
+                    </div>
+                `;
+            }
+        }
+
+        function closeApp() {
+            const win = document.getElementById('app-window');
+            if (win) win.style.display = 'none';
+        }
+
+        function toggleDesktopFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => console.log(err));
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        }
+
+        function changeDesktopOS(os) {
+            const bg = document.getElementById('desktop-bg');
+            const hName = document.getElementById('header-vm-name');
+            const hBadge = document.getElementById('header-os-badge');
+            const cIcon = document.getElementById('center-icon');
+            const cTitle = document.getElementById('center-title');
+            const sTitle = document.getElementById('start-menu-title');
+            const sBtn = document.getElementById('btn-start');
+
+            if (os === 'kali') {
+                bg.style.background = 'linear-gradient(135deg, #1e1b4b 0%, #311042 50%, #0f172a 100%)';
+                hName.textContent = 'Kali Linux Security Sandbox Workstation';
+                hBadge.textContent = '💀 Kali Linux';
+                hBadge.style.background = '#8b5cf6';
+                cIcon.textContent = '💀';
+                cTitle.textContent = 'Kali Linux Security OS';
+                sTitle.textContent = '💀 Kali Applications';
+                sBtn.style.background = '#8b5cf6';
+                sBtn.innerHTML = '<span>💀</span><span>Kali</span>';
+            } else if (os === 'ubuntu') {
+                bg.style.background = 'linear-gradient(135deg, #7c2d12 0%, #431407 50%, #0f172a 100%)';
+                hName.textContent = 'Ubuntu Linux 24.04 LTS Workstation';
+                hBadge.textContent = '🐧 Ubuntu 24.04';
+                hBadge.style.background = '#ea580c';
+                cIcon.textContent = '🐧';
+                cTitle.textContent = 'Ubuntu 24.04 LTS Desktop';
+                sTitle.textContent = '🐧 Activities';
+                sBtn.style.background = '#ea580c';
+                sBtn.innerHTML = '<span>🐧</span><span>Apps</span>';
+            } else {
+                bg.style.background = 'linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #0f172a 100%)';
+                hName.textContent = 'Windows 10 Pro 64-bit Workstation';
+                hBadge.textContent = '🪟 Windows 10';
+                hBadge.style.background = '#0284c7';
+                cIcon.textContent = '🪟';
+                cTitle.textContent = 'Windows 10 Pro Workstation';
+                sTitle.textContent = '🪟 Windows 10 Start Menu';
+                sBtn.style.background = '#0284c7';
+                sBtn.innerHTML = '<span>🪟</span><span>Start</span>';
+            }
+        }
+
+        // Check URL params on load (e.g. ?os=windows / ?os=kali / ?os=ubuntu)
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const os = params.get('os') || params.get('vm');
+            if (os) {
+                const lower = os.toLowerCase();
+                const sel = document.getElementById('os-switcher');
+                if (lower.includes('kali')) {
+                    if (sel) sel.value = 'kali';
+                    changeDesktopOS('kali');
+                } else if (lower.includes('ubuntu')) {
+                    if (sel) sel.value = 'ubuntu';
+                    changeDesktopOS('ubuntu');
+                } else {
+                    if (sel) sel.value = 'windows';
+                    changeDesktopOS('windows');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

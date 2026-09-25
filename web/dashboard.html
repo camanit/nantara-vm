@@ -432,37 +432,8 @@
                                     </div>
                                 </div>
 
-                                <div id="gui-screen-fallback" style="display: none; width: 100%; height: 580px; border-radius: 8px; border: 1px solid rgba(6,182,212,0.4); background: linear-gradient(135deg, #0f172a, #1e293b); position: relative; font-family: sans-serif;">
-                                    <div style="background: rgba(15, 23, 42, 0.9); padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <span style="font-size: 1.2rem;">🖥️</span>
-                                            <div>
-                                                <div style="font-weight: 700; color: #fff; font-size: 0.9rem;" id="gui-vm-title">Graphical Desktop Workstation (GUI Mode)</div>
-                                                <div style="font-size: 0.75rem; color: #38bdf8;">1024x768 32-bit RGBA • VirtIO-GPU Accelerated</div>
-                                            </div>
-                                        </div>
-                                        <div style="display: flex; gap: 8px;">
-                                            <span style="background: rgba(16,185,129,0.2); color: #10b981; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">🟢 Display Ready</span>
-                                        </div>
-                                    </div>
-                                    <div style="height: calc(100% - 100px); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px;">
-                                        <div style="font-size: 3.5rem; margin-bottom: 16px;">🖥️</div>
-                                        <h3 style="color: #fff; margin: 0 0 10px 0; font-size: 1.2rem;" id="gui-main-heading">Graphical Desktop Display (GUI Mode)</h3>
-                                        <p style="color: #94a3b8; max-width: 500px; font-size: 0.85rem; line-height: 1.6; margin-bottom: 20px;">
-                                            Tampilan GUI Workstation berbasis VirtIO-GPU. Untuk kontrol cepat & responsif tanpa keterbatasan display cloud, gunakan Terminal Shell (CLI) atau buka GUI di Tab Baru.
-                                        </p>
-                                        <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
-                                            <button onclick="switchDisplayMode('cli')" style="background: #10b981; color: #000; font-weight: 700; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">💻 Buka Terminal Shell (CLI)</button>
-                                            <button onclick="openGuiInNewTab()" style="background: #06b6d4; color: #fff; font-weight: 700; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">🔗 Buka GUI di Tab Baru</button>
-                                        </div>
-                                    </div>
-                                    <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 44px; background: rgba(2, 6, 23, 0.95); border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: space-between; padding: 0 16px;">
-                                        <div style="display: flex; align-items: center; gap: 12px;">
-                                            <div style="background: linear-gradient(135deg, #0284c7, #0369a1); width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; cursor: pointer; font-size: 0.8rem;">🪟</div>
-                                            <span style="color: #cbd5e1; font-size: 0.8rem; font-weight: 600;">NantaraVM Workstation GUI</span>
-                                        </div>
-                                        <div style="color: #94a3b8; font-size: 0.78rem; font-family: monospace;">VirtIO-GPU 1024x768</div>
-                                    </div>
+                                <div id="gui-screen-fallback" style="display: none; width: 100%; height: 580px; border-radius: 8px; border: 1px solid rgba(6,182,212,0.4); overflow: hidden; background: #020617; position: relative;">
+                                    <iframe id="gui-iframe" src="desktop.html?os=windows" style="width: 100%; height: 100%; border: none; display: block;"></iframe>
                                 </div>
 
                             </div>
@@ -557,6 +528,21 @@
                                         <div style="display:flex; gap:6px;">
                                             <button onclick="handleVmAction('start', 'ubuntu-2404-server')" style="background:#06b6d4; color:#000; border:none; padding:4px 10px; border-radius:4px; font-weight:700; cursor:pointer;">▶️ Boot</button>
                                             <button onclick="handleVmAction('delete', 'ubuntu-2404-server')" style="background:rgba(239,68,68,0.2); color:#ef4444; border:1px solid rgba(239,68,68,0.4); padding:4px 8px; border-radius:4px; font-weight:600; cursor:pointer;">🗑️ Hapus</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="radio" name="vm-select" value="win10-workstation-01"></td>
+                                    <td><strong>win10-workstation-01</strong><br><small style="color:#9ca3af;">(Windows 10 Pro 64-bit Workstation)</small></td>
+                                    <td><span style="background:rgba(156,163,175,0.2); color:#9ca3af; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.8rem;">⏹️ STOPPED</span></td>
+                                    <td>2 vCPU</td>
+                                    <td>4096 MB</td>
+                                    <td>Windows 10 Pro (UEFI)</td>
+                                    <td>VirtIO-GPU + Net + Block</td>
+                                    <td>
+                                        <div style="display:flex; gap:6px;">
+                                            <button onclick="handleVmAction('start', 'win10-workstation-01')" style="background:#0284c7; color:#fff; border:none; padding:4px 10px; border-radius:4px; font-weight:700; cursor:pointer;">▶️ Boot</button>
+                                            <button onclick="handleVmAction('delete', 'win10-workstation-01')" style="background:rgba(239,68,68,0.2); color:#ef4444; border:1px solid rgba(239,68,68,0.4); padding:4px 8px; border-radius:4px; font-weight:600; cursor:pointer;">🗑️ Hapus</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -1022,7 +1008,7 @@
             }
 
             // Restore VM statuses (Auto-boot nantara-microvm-01 by default on first load)
-            const defaultNames = ['nantara-microvm-01', 'ubuntu-2404-server', 'kali-linux-sandbox'];
+            const defaultNames = ['nantara-microvm-01', 'ubuntu-2404-server', 'win10-workstation-01', 'kali-linux-sandbox'];
             const allVmNames = [...defaultNames, ...customVms.map(v => v.name)];
 
             let anyRunning = false;
@@ -1062,17 +1048,33 @@
             checkLiveApiHealth();
             const savedMode = localStorage.getItem('nantara_display_mode') || 'cli';
             switchDisplayMode(savedMode);
-            const savedSelected = localStorage.getItem('nantara_selected_vm') || 'kali-linux-sandbox';
+            const savedSelected = localStorage.getItem('nantara_selected_vm') || 'win10-workstation-01';
             const btnStart = document.getElementById('btn-api-start-vm');
             const btnStop = document.getElementById('btn-api-stop-vm');
             if (btnStart) btnStart.innerHTML = '▶️ Start ' + savedSelected;
             if (btnStop) btnStop.innerHTML = '⏹️ Stop ' + savedSelected;
+
+            document.addEventListener('change', (e) => {
+                if (e.target && e.target.name === 'vm-select') {
+                    const vmName = e.target.value;
+                    localStorage.setItem('nantara_selected_vm', vmName);
+                    if (btnStart) btnStart.innerHTML = '▶️ Start ' + vmName;
+                    if (btnStop) btnStop.innerHTML = '⏹️ Stop ' + vmName;
+                    const guiIframe = document.getElementById('gui-iframe');
+                    if (guiIframe) {
+                        let osParam = 'windows';
+                        if (vmName.toLowerCase().includes('kali')) osParam = 'kali';
+                        else if (vmName.toLowerCase().includes('ubuntu')) osParam = 'ubuntu';
+                        guiIframe.src = `desktop.html?vm=${encodeURIComponent(vmName)}&os=${osParam}`;
+                    }
+                }
+            });
         });
 
         function handleVmAction(action, targetVmName) {
             const selected = document.querySelector('input[name="vm-select"]:checked');
             const savedSelected = localStorage.getItem('nantara_selected_vm');
-            const vmName = targetVmName || (selected ? selected.value : (savedSelected || 'kali-linux-sandbox'));
+            const vmName = targetVmName || (selected ? selected.value : (savedSelected || 'win10-workstation-01'));
 
             // Remember selected VM
             localStorage.setItem('nantara_selected_vm', vmName);
@@ -1104,7 +1106,7 @@
                 const screenTitle = document.getElementById('screen-title-text');
                 if (screenTitle) {
                     if (vmName.toLowerCase().includes('win')) {
-                        screenTitle.innerHTML = '📺 NantaraVM Live Display - <span style="color:#3b82f6; font-weight:700;">[Windows 10 / 32-bit Workstation Active]</span>';
+                        screenTitle.innerHTML = '📺 NantaraVM Live Display - <span style="color:#3b82f6; font-weight:700;">[Windows 10 Pro 64-bit Workstation Active]</span>';
                     } else if (vmName.toLowerCase().includes('kali')) {
                         screenTitle.innerHTML = '📺 NantaraVM Live Display - <span style="color:#8b5cf6; font-weight:700;">[Kali Linux Security OS Active]</span>';
                     } else if (vmName.toLowerCase().includes('ubuntu')) {
@@ -1113,6 +1115,14 @@
                         screenTitle.innerHTML = '📺 NantaraVM Live Display - <span style="color:#10b981; font-weight:700;">[' + vmName + ' Active]</span>';
                     }
                 }
+
+                const guiIframe = document.getElementById('gui-iframe');
+                if (guiIframe) {
+                    let osParam = 'windows';
+                    if (vmName.toLowerCase().includes('kali')) osParam = 'kali';
+                    else if (vmName.toLowerCase().includes('ubuntu')) osParam = 'ubuntu';
+                    guiIframe.src = `desktop.html?vm=${encodeURIComponent(vmName)}&os=${osParam}`;
+                }
             } else if (action === 'pause') {
                 applyVmStatusUI(vmName, 'pause');
                 localStorage.setItem('nantara_vm_status_' + vmName, 'pause');
@@ -1120,7 +1130,7 @@
                 applyVmStatusUI(vmName, 'stop');
                 localStorage.setItem('nantara_vm_status_' + vmName, 'stop');
             } else if (action === 'settings') {
-                alert(`⚙️ Pengaturan VM '${vmName}':\n\n- Host: Ubuntu 24.04 LTS (IP: 210.79.190.76)\n- Engine: NantaraVM MicroVM Container Engine\n- Network: VirtIO TAP Interface\n- Storage: VirtIO Block Device\n- Security: Docker Seccomp-BPF Active`);
+                alert(`⚙️ Pengaturan VM '${vmName}':\n\n- Engine: NantaraVM MicroVM Workstation Engine\n- Graphics: VirtIO-GPU 1024x768 32-bit RGBA\n- Network: VirtIO TAP Interface (Zero-Copy)\n- Storage: VirtIO Block Device\n- Security: Landlock & Seccomp-BPF Active`);
             } else if (action === 'delete') {
                 if (confirm(`🗑️ Apakah Anda yakin ingin menghapus Mesin Virtual '${vmName}'?`)) {
                     localStorage.removeItem('nantara_vm_status_' + vmName);
@@ -1139,7 +1149,7 @@
             if (confirm('🔄 Apakah Anda yakin ingin mereset daftar VM kembali ke tampilan default murni?')) {
                 localStorage.removeItem('nantara_deleted_vms');
                 localStorage.removeItem('nantara_custom_vms');
-                const defaultNames = ['nantara-microvm-01', 'ubuntu-2404-server', 'kali-linux-sandbox'];
+                const defaultNames = ['nantara-microvm-01', 'ubuntu-2404-server', 'win10-workstation-01', 'kali-linux-sandbox'];
                 defaultNames.forEach(name => localStorage.removeItem('nantara_vm_status_' + name));
                 location.reload();
             }
@@ -1206,44 +1216,14 @@
         }
 
         function openGuiInNewTab() {
-            const selectedVm = localStorage.getItem('nantara_selected_vm') || 'kali-linux-sandbox';
-            const win = window.open('', '_blank');
-            if (win) {
-                win.document.write(`
-                    <!DOCTYPE html>
-                    <html lang="id">
-                    <head>
-                        <meta charset="UTF-8">
-                        <title>NantaraVM Workstation - ${selectedVm}</title>
-                        <style>
-                            body { margin:0; padding:0; background:#020617; color:#fff; font-family:'Segoe UI',sans-serif; display:flex; flex-direction:column; height:100vh; overflow:hidden; }
-                            .header { background:#0f172a; padding:12px 20px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); }
-                            .workspace { flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; background:linear-gradient(135deg, #0f172a, #1e293b); text-align:center; padding:20px; }
-                            .taskbar { height:46px; background:#020617; border-top:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; padding:0 16px; justify-content:space-between; }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="header">
-                            <div><strong>🖥️ NantaraVM Workstation Display</strong> — ${selectedVm}</div>
-                            <div style="color:#10b981; font-weight:bold; font-size:0.85rem;">🟢 VirtIO-GPU 1024x768 32-bit RGBA Active</div>
-                        </div>
-                        <div class="workspace">
-                            <div style="font-size:4.5rem; margin-bottom:16px;">🖥️</div>
-                            <h2 style="margin:0 0 10px 0; color:#38bdf8;">${selectedVm} Display Output</h2>
-                            <p style="color:#94a3b8; max-width:520px; line-height:1.6;">Grafis akselerasi VirtIO-GPU telah aktif. Workstation siap digunakan untuk deployment microVM dan container terisolasi.</p>
-                        </div>
-                        <div class="taskbar">
-                            <div style="display:flex; align-items:center; gap:10px;">
-                                <span style="background:#0284c7; padding:4px 10px; border-radius:4px; font-weight:bold; font-size:0.8rem; cursor:pointer;">🪟 Start</span>
-                                <span style="color:#cbd5e1; font-size:0.82rem;">NantaraVM Workspace</span>
-                            </div>
-                            <div style="font-family:monospace; color:#94a3b8; font-size:0.8rem;">VirtIO-GPU @ 60 FPS</div>
-                        </div>
-                    </body>
-                    </html>
-                `);
-                win.document.close();
+            const selectedVm = localStorage.getItem('nantara_selected_vm') || 'win10-workstation-01';
+            let osParam = 'windows';
+            if (selectedVm.toLowerCase().includes('kali')) {
+                osParam = 'kali';
+            } else if (selectedVm.toLowerCase().includes('ubuntu')) {
+                osParam = 'ubuntu';
             }
+            window.open(`desktop.html?vm=${encodeURIComponent(selectedVm)}&os=${osParam}`, '_blank');
         }
 
         function switchDisplayMode(mode) {
@@ -1252,26 +1232,23 @@
             const btnCli = document.getElementById('btn-mode-cli');
             const btnGui = document.getElementById('btn-mode-gui');
             const btnTab = document.getElementById('btn-open-gui-tab');
-            const guiTitle = document.getElementById('gui-vm-title');
-            const guiHeading = document.getElementById('gui-main-heading');
+            const guiIframe = document.getElementById('gui-iframe');
 
             localStorage.setItem('nantara_display_mode', mode);
-            const selectedVm = localStorage.getItem('nantara_selected_vm') || 'kali-linux-sandbox';
+            const selectedVm = localStorage.getItem('nantara_selected_vm') || 'win10-workstation-01';
+
+            let osParam = 'windows';
+            if (selectedVm.toLowerCase().includes('kali')) {
+                osParam = 'kali';
+            } else if (selectedVm.toLowerCase().includes('ubuntu')) {
+                osParam = 'ubuntu';
+            }
 
             if (mode === 'gui') {
                 if (termFrame) termFrame.style.display = 'none';
                 if (guiScreen) guiScreen.style.display = 'block';
-                if (guiTitle && guiHeading) {
-                    if (selectedVm.toLowerCase().includes('win')) {
-                        guiTitle.textContent = '🪟 Windows Workstation Desktop (GUI Mode)';
-                        guiHeading.textContent = '🪟 Windows Desktop Display (GUI Mode)';
-                    } else if (selectedVm.toLowerCase().includes('kali')) {
-                        guiTitle.textContent = '💀 Kali Linux Security Desktop (GUI Mode)';
-                        guiHeading.textContent = '💀 Kali Linux Desktop Display (GUI Mode)';
-                    } else {
-                        guiTitle.textContent = '🐧 Ubuntu 24.04 LTS Workstation (GUI Mode)';
-                        guiHeading.textContent = '🐧 Ubuntu Workstation Display (GUI Mode)';
-                    }
+                if (guiIframe) {
+                    guiIframe.src = `desktop.html?vm=${encodeURIComponent(selectedVm)}&os=${osParam}`;
                 }
                 if (btnGui) {
                     btnGui.style.background = '#06b6d4';
