@@ -217,22 +217,22 @@ sudo docker exec -u 0 nantara-desktop bash -c 'echo -e "#!/bin/bash\nexec /usr/b
 
 ## 🏛️ 7. Arsitektur Dua Edisi (Dual-Tier Architecture)
 
-NantaraVM dirancang memiliki **2 Edisi Resmi** yang saling melengkapi:
+NantaraVM dirancang memiliki **2 Node Cloud Resmi** yang saling melengkapi:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                           ARSITEKTUR DUA EDISI                              │
+│                       ARSITEKTUR DUA NODE CLOUD                             │
 ├──────────────────────────────────────┬──────────────────────────────────────┤
-│    🌐 EDISI 1: BROWSER WASM TIER     │    ⚡ EDISI 2: DEDICATED CLOUD TIER  │
-│    https://nantara-vm.vercel.app/    │    https://nantara.cloud/ (VPS)      │
+│    🇸🇬 NODE 1: ORACLE CLOUD SINGAPORE │    🇮🇩 NODE 2: IDCLOUDHOST JAKARTA    │
+│    https://sg.nantara.cloud/         │    https://nantara.cloud/            │
 ├──────────────────────────────────────┼──────────────────────────────────────┤
-│ • Hosting: Vercel Edge Server        │ • Hosting: IDCloudHost KVM VPS       │
+│ • Hosting: Oracle Cloud Always Free  │ • Hosting: IDCloudHost KVM VPS       │
 │ • Biaya: 100% Gratis Selamanya       │ • Biaya: VPS Hourly / Saldo Akun     │
-│ • Engine: WebAssembly (WASM) di RAM  │ • Engine: Hardware Kernel Ubuntu 24  │
+│ • RAM: 1 GB Fisik + 4 GB Swap        │ • RAM: 2 GB Fisik KVM Server         │
 │ • Ketersediaan: Online 24/7/365      │ • Ketersediaan: Tergantung VPS Aktif │
-│ • Terminal: Sandbox Shell Instan     │ • Terminal: Real Root Bash (ttyd)    │
-│ • Desktop: GUI Workstation Preview   │ • Desktop: Real Container noVNC GUI  │
-│ • Cocok untuk: Demo & Edukasi Cepat  │ • Cocok untuk: Produksi & Dev Berat  │
+│ • Terminal: Real Root Bash (ttyd)    │ • Terminal: Real Root Bash (ttyd)    │
+│ • Desktop: Real Container noVNC GUI  │ • Desktop: Real Container noVNC GUI  │
+│ • Cocok untuk: Produksi & Always Free│ • Cocok untuk: Produksi Domestik     │
 └──────────────────────────────────────┴──────────────────────────────────────┘
 ```
 
@@ -241,11 +241,10 @@ NantaraVM dirancang memiliki **2 Edisi Resmi** yang saling melengkapi:
    ```powershell
    iwr -useb https://raw.githubusercontent.com/camanit/nantara-vm/main/web/install.ps1 | iex
    ```
-   Aplikasi CLI di laptop membutuhkan endpoint kontrol pusat untuk mengelola VM, mengambil template image OS (Ubuntu/Kali), dan berkomunikasi dengan hypervisor. Karena Vercel adalah *serverless static hosting*, Vercel tidak bisa menerima koneksi socket CLI background. Oleh karena itu, target instalasi diarahkan ke **`https://nantara.cloud/`**.
-2. **Dashboard yang Sama, Mode yang Berbeda:**
-   Dashboard NantaraVM (`dashboard.html`) dilengkapi fitur **Smart Auto-Detection**:
-   - Jika dibuka di `nantara-vm.vercel.app`, dashboard otomatis menyalakan **Mode WebAssembly**, memunculkan tombol interaktif bantuan, dan memberikan opsi beralih ke Dedicated VPS jika butuh tenaga server asli.
-   - Jika dibuka di `nantara.cloud` atau `103.226.138.53`, dashboard otomatis menyalakan **Mode Dedicated Cloud**, menghubungkan iframe terminal langsung ke `ttyd` (port 7681) dan GUI langsung ke `noVNC` (port 6080).
+   Aplikasi CLI di laptop membutuhkan endpoint kontrol pusat untuk mengelola VM, mengambil template image OS (Ubuntu/Kali), dan berkomunikasi dengan hypervisor. Oleh karena itu, target instalasi diarahkan langsung ke cloud control plane **`https://nantara.cloud/`** atau **`https://sg.nantara.cloud/`**.
+2. **Dashboard yang Sama, Multi-Node Support:**
+   Dashboard NantaraVM (`dashboard.html`) mendukung multi-node cloud:
+   - Terhubung langsung ke backend server (Nginx Reverse Proxy), menghubungkan iframe terminal langsung ke `ttyd` (port 7681) dan GUI langsung ke `noVNC` (port 6080).
 
 ---
 
@@ -262,12 +261,13 @@ sudo git clone --depth 1 https://github.com/camanit/nantara-vm.git /tmp/nantara-
 
 ## 🌐 9. Troubleshooting DNS Cache ISP / Router Rumah
 
-Jika sobat membuka `https://nantara.cloud/` tapi masih melihat tampilan 404 Vercel, jangan panik:
+Jika sobat membuka domain tapi masih melihat tampilan lama / not secure, jangan panik:
 * **Penyebab:** DNS router WiFi rumah (biasanya Telkom/Indihome/FirstMedia) menyimpan cache domain lama selama 2 - 4 jam (TTL).
 * **Solusi Cepat:**
-  1. Akses langsung melalui IP VPS: **`http://103.226.138.53/`**
+  1. Akses langsung melalui IP VPS: **`http://103.226.138.53/`** atau **`https://sg.nantara.cloud/`**
   2. Atau ganti DNS di Windows ke **Google DNS (`8.8.8.8`)** atau **Cloudflare (`1.1.1.1`)**.
   3. Atau di Google Chrome: Buka **Settings** ➡️ **Privacy and security** ➡️ **Security** ➡️ Pilih **Use secure DNS** ➡️ Pilih **Cloudflare (1.1.1.1)**.
+
 
 ---
 
