@@ -11,7 +11,8 @@
 [![Status](https://img.shields.io/badge/status-v1.0%20Verified-brightgreen.svg)]()
 [![Platform](https://img.shields.io/badge/platform-Linux%20KVM%20%7C%20Windows-green.svg)]()
 [![Website](https://img.shields.io/badge/website-nantara.cloud-cyan.svg)](https://nantara.cloud)
-[![Hosting](https://img.shields.io/badge/hosting-Vercel%20Edge%20(Free)-black.svg?logo=vercel)](https://nantara.cloud)
+[![Hosting](https://img.shields.io/badge/hosting-Oracle%20Cloud%20Always%20Free-red.svg?logo=oracle)](https://sg.nantara.cloud)
+[![Nodes](https://img.shields.io/badge/nodes-Singapore%20%7C%20Jakarta-blue.svg)](https://nantara.cloud)
 
 *Membangun hypervisor dan fondasi cloud sovereign NKRI — Cepat, Aman, Berdaulat.*
 
@@ -19,8 +20,9 @@
 
 ---
 
-> 🚀 **Pembaruan Infrastruktur (Migrasi ke Vercel Edge):**  
-> Web Portal & Dashboard Arsitektur NantaraVM sebelumnya dijalankan di Cloud VPS berbayar (IDCloudHost). Untuk efisiensi biaya dan menjamin ketersediaan 24/7 tanpa risiko server mati akibat saldo/billing, **seluruh frontend & dashboard resmi dipindahkan ke Vercel Global Edge (100% Gratis & High Availability)** di domain utama [nantara.cloud](https://nantara.cloud). Core Engine Hypervisor (Rust + KVM) difokuskan berjalan di laptop lokal atau server bare-metal pengguna.
+> 🚀 **Arsitektur Hybrid (Cloud Control Plane + Local Compute Node):**  
+> Web Portal & Dashboard Arsitektur NantaraVM aktif di cloud sovereign ([nantara.cloud](https://nantara.cloud) & node Oracle Singapore [sg.nantara.cloud](https://sg.nantara.cloud)). Untuk sistem operasi berat seperti **Windows 10 & Windows 11**, komputasi difokuskan **berjalan di laptop/komputer lokal pengguna** dengan syarat virtualisasi hardware (Intel VT-x / AMD-V & KVM/Hyper-V) aktif di lokal. Pendekatan lokal ini menjamin **100% GRATIS tanpa biaya sewa**, performa native tanpa lag, dan menghindari klaim "Cloud 24 GB Gratis" yang pada kenyataannya tidak gratis (sering *out-of-capacity* dan mewajibkan kartu kredit berbayar PAYG).
+
 
 ---
 
@@ -43,22 +45,32 @@ Terinspirasi dari [Firecracker (AWS)](https://firecracker-microvm.github.io/), [
 
 ---
 
-## 🌐 Arsitektur Dual-Mode (Vercel Cloud Edge & Local Engine)
+## 🌐 Arsitektur Hybrid & Dual-Mode (Cloud Control Plane & Local Engine)
 
-NantaraVM dirancang untuk bekerja secara **Dual-Mode** yang sangat fleksibel dan hemat biaya:
+NantaraVM dirancang dengan arsitektur **Hybrid Cloud & Local Edge** yang cerdas, hemat biaya, dan berkinerja tinggi:
 
-1. **☁️ Mode Web Dashboard Edge (`https://nantara.cloud`)**:
-   - Di-hosting gratis dan permanen di **Vercel Global CDN** dengan SSL otomatis.
-   - Menyediakan antarmuka monitoring, terminal shell interaktif, dokumentasi, dan kontrol panel cloud tanpa membebani biaya VPS bulanan.
-2. **💻 Mode Local Engine (Di Laptop / PC Lokal Anda)**:
-   - Jalankan Engine NantaraVM di komputer Windows/Linux Anda sendiri dengan akselerasi hardware native (KVM / QEMU TCG) untuk menjalankan OS **Windows 10/11, Kali Linux, atau Ubuntu** tanpa latensi internet dan tanpa biaya sewa cloud!
+1. **☁️ Cloud Web Control Plane (`https://nantara.cloud` / `https://sg.nantara.cloud`)**:
+   - Berfungsi sebagai **Pusat Monitoring & Antarmuka Kontrol Global**.
+   - Menyediakan antarmuka dashboard arsitektur, web terminal, dan manajemen VM dari mana saja via browser.
+2. **💻 Local Compute Node (Menjalankan Windows 10/11 di Laptop/PC Lokal)**:
+   - Menjalankan beban komputasi berat (seperti sistem operasi **Windows 10, Windows 11, Kali Linux, atau Ubuntu**) langsung di prosesor laptop pengguna (Intel Core i5/i7 atau AMD Ryzen) tanpa latensi dan tanpa biaya sewa cloud!
    ```powershell
-   # Di Windows (PowerShell):
+   # 1. Build & Jalankan Engine NantaraVM Lokal di Windows (PowerShell):
    cargo build --release --bin nantara-engine
    .\target\release\nantara-engine.exe
+
+   # 2. Boot ISO Windows 10/11 Lokal via REST API (Port 8080):
+   Invoke-RestMethod -Uri "http://127.0.0.1:8080/api/v1/vm/start" -Method POST -ContentType "application/json" -Body '{"name":"win10-workstation","iso":"C:/win10.iso","ram":4096,"vcpu":4}'
    ```
 
+> [!IMPORTANT]
+> ### 💡 Mengapa Menjalankan Windows 10/11 di Lokal Jauh Lebih Unggul daripada Cloud?
+> * **Beban Memori Windows 10/11:** Windows 10/11 membutuhkan minimal 4 GB – 8 GB RAM dan 20 GB disk hanya untuk berjalan lancar. Memaksakan Windows di cloud VPS murah (1–2 GB RAM) dipastikan akan *hang/crash (Out Of Memory)*.
+> * **Fakta "Cloud 24 GB Gratis":** Janji cloud gratis 24 GB (seperti Oracle Ampere ARM) di kenyataannya sering terkendala *Out of host capacity*, mewajibkan verifikasi kartu kredit berbayar (*Pay-As-You-Go*) yang berisiko tagihan tak terduga, dan menggunakan prosesor ARM64 yang tidak cocok untuk ISO Windows x86.
+> * **Zero Cost & Native Speed:** Dengan menjalankan engine NantaraVM secara lokal di laptop Anda, Anda mendapatkan akselerasi hardware penuh (**Intel VT-x / AMD-V / Hyper-V / WSL2**) dengan **biaya Rp 0 (100% Gratis Selamanya)** tanpa takut tagihan cloud. Tampilannya tetap dapat dipantau dan dikontrol melalui dashboard [nantara.cloud](https://nantara.cloud)!
+
 ---
+
 
 ## 💻 1-Click Installation Guide
 
