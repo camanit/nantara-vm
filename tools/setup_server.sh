@@ -16,7 +16,15 @@ echo ""
 # 1. Update sistem & dependensi dasar
 echo "[1/6] Mengupdate paket sistem Ubuntu..."
 sudo apt-get update -y
-sudo apt-get install -y nginx curl git ufw wget ca-certificates gnupg lsb-release
+sudo apt-get install -y curl git ufw wget ca-certificates gnupg lsb-release
+sudo apt-get install -y nginx || true
+
+# Perbaiki issue IPv6 IDCloudHost jika dinonaktifkan di kernel
+if [ -f "/etc/nginx/sites-available/default" ]; then
+    sudo sed -i 's/listen \[::\]:80 default_server;/# listen [::]:80 default_server;/g' /etc/nginx/sites-available/default
+    sudo sed -i 's/listen \[::\]:80;/# listen [::]:80;/g' /etc/nginx/sites-available/default
+fi
+sudo apt-get install -f -y
 
 # 2. Pasang Web Terminal (ttyd) untuk /console/
 echo "[2/6] Memasang ttyd (Web Terminal Engine)..."
@@ -89,7 +97,6 @@ echo "[5/6] Mengonfigurasi Nginx Reverse Proxy (/console/ & /desktop/)..."
 sudo bash -c 'cat <<EOF > /etc/nginx/sites-available/default
 server {
     listen 80 default_server;
-    listen [::]:80 default_server;
     server_name nantara.cloud www.nantara.cloud _;
 
     root /var/www/html;
