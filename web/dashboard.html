@@ -1266,8 +1266,10 @@
         }
 
         function isRunningOnCloudServer() {
-            return window.location.hostname.includes('nantara.cloud') || 
-                   window.location.hostname.includes('103.226.138.53');
+            const h = window.location.hostname;
+            return h.includes('nantara.cloud') || 
+                   h.includes('140.245.106.37') ||
+                   h.includes('103.226.138.53');
         }
 
         function initDualTierDeployment() {
@@ -1278,22 +1280,28 @@
             const tierBtn = document.getElementById('tier-switch-btn');
             const liveFrame = document.getElementById('live-terminal-frame');
             const wasmFrame = document.getElementById('wasm-terminal-frame');
+            const guiFallback = document.getElementById('gui-screen-fallback');
             const logHostIp = document.getElementById('log-host-ip');
             const iframe = document.getElementById('terminal-iframe');
 
             if (onCloud) {
-                if (tierTitle) tierTitle.innerHTML = '⚡ Dedicated Cloud Server Node (IDCloudHost KVM Active)';
+                const isOracle = window.location.hostname.includes('140.245.106.37') || window.location.hostname.includes('sg.nantara.cloud');
+                const nodeName = isOracle ? 'Oracle Cloud Always Free (Singapore)' : 'Cloud VPS IDCloudHost (Jakarta)';
+                const nodeIp = isOracle ? '140.245.106.37' : '103.226.138.53';
+                if (tierTitle) tierTitle.innerHTML = `⚡ Dedicated Cloud Server Node (${nodeName})`;
                 if (tierPill) {
-                    tierPill.innerHTML = 'DEDICATED CLOUD HOST';
+                    tierPill.innerHTML = isOracle ? 'ORACLE CLOUD NODE' : 'DEDICATED CLOUD HOST';
                     tierPill.style.background = 'rgba(16,185,129,0.2)';
                     tierPill.style.color = '#10b981';
                 }
-                if (tierDesc) tierDesc.innerHTML = 'Node komputasi berjalan di <strong>Cloud VPS IDCloudHost (IP: 103.226.138.53)</strong> dengan hardware kernel Ubuntu 24.04, Docker Desktop noVNC, & terminal live <code>ttyd</code>.';
+                if (tierDesc) tierDesc.innerHTML = `Node komputasi berjalan di <strong>${nodeName} (IP: ${nodeIp})</strong> dengan hardware kernel Ubuntu 24.04, Docker Desktop noVNC, & terminal live <code>ttyd</code>.`;
                 if (tierBtn) {
                     tierBtn.style.display = 'none';
                 }
                 if (liveFrame) liveFrame.style.display = 'block';
                 if (wasmFrame) wasmFrame.style.display = 'none';
+                if (guiFallback) guiFallback.style.display = 'none';
+                if (logHostIp) logHostIp.textContent = `[NantaraVM Host] Ubuntu 24.04 LTS (IP: ${nodeIp})`;
                 if (iframe && (!iframe.src || iframe.src === 'about:blank')) {
                     iframe.src = '/console/';
                 }
@@ -1343,6 +1351,10 @@
 
             if (onCloud) {
                 if (!iframe) return;
+                if (liveFrame) liveFrame.style.display = 'block';
+                if (wasmFrame) wasmFrame.style.display = 'none';
+                if (guiFallback) guiFallback.style.display = 'none';
+
                 if (mode === 'gui') {
                     iframe.src = '/desktop/?resize=remote';
                     if (btnGui) { btnGui.style.background = '#06b6d4'; btnGui.style.color = '#fff'; }
