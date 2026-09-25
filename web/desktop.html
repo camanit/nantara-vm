@@ -549,9 +549,10 @@
         </div>
         <div class="monitor-actions">
             <select id="os-switcher" onchange="changeDesktopOS(this.value)" style="background: #020617; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem;">
-                <option value="windows" selected>🪟 Windows 10 Workstation</option>
-                <option value="kali">💀 Kali Linux Security</option>
+                <option value="alpine" selected>🏔️ Alpine Linux MicroVM (Core)</option>
                 <option value="ubuntu">🐧 Ubuntu 24.04 LTS</option>
+                <option value="windows">🪟 Windows 10 Workstation</option>
+                <option value="kali">💀 Kali Linux Security</option>
             </select>
             <button class="monitor-btn" onclick="toggleDesktopFullscreen()">⛶ Fullscreen</button>
             <a href="dashboard.html" class="monitor-btn">⬅️ Ke Dashboard</a>
@@ -1064,7 +1065,19 @@ Virtual Machine aktif berjalan di browser via WebAssembly engine.</textarea>
             const iconThisPc = document.getElementById('icon-thispc-img');
             const labelThisPc = document.getElementById('icon-thispc-label');
 
-            if (os === 'kali') {
+            if (os === 'alpine' || os === 'microvm' || os === 'nantara') {
+                bg.style.background = 'linear-gradient(135deg, #064e3b 0%, #065f46 40%, #022c22 100%)';
+                hName.textContent = 'NantaraVM Linux MicroVM Core (Alpine)';
+                hBadge.textContent = '🏔️ Alpine Linux MicroVM';
+                hBadge.style.background = '#059669';
+                cIcon.textContent = '🏔️';
+                cTitle.textContent = 'Alpine Linux MicroVM Core';
+                sTitle.textContent = '🏔️ Alpine MicroVM Console';
+                sBtn.style.background = '#059669';
+                sBtn.innerHTML = '<span>🏔️</span><span>Alpine</span>';
+                if (iconThisPc) iconThisPc.textContent = '📁';
+                if (labelThisPc) labelThisPc.textContent = 'Root Files';
+            } else if (os === 'kali') {
                 bg.style.background = 'linear-gradient(135deg, #1e1b4b 0%, #311042 50%, #0f172a 100%)';
                 hName.textContent = 'Kali Linux Security Sandbox Workstation';
                 hBadge.textContent = '💀 Kali Linux';
@@ -1131,7 +1144,7 @@ Virtual Machine aktif berjalan di browser via WebAssembly engine.</textarea>
             });
         }
 
-        // Check URL params on load (e.g. ?os=windows / ?os=kali / ?os=ubuntu)
+        // Check URL params on load (e.g. ?os=windows / ?os=kali / ?os=ubuntu / ?os=alpine)
         window.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const os = params.get('os') || params.get('vm');
@@ -1144,10 +1157,15 @@ Virtual Machine aktif berjalan di browser via WebAssembly engine.</textarea>
                 } else if (lower.includes('ubuntu')) {
                     if (sel) sel.value = 'ubuntu';
                     changeDesktopOS('ubuntu');
-                } else {
+                } else if (lower.includes('win')) {
                     if (sel) sel.value = 'windows';
                     changeDesktopOS('windows');
+                } else {
+                    if (sel) sel.value = 'alpine';
+                    changeDesktopOS('alpine');
                 }
+            } else {
+                changeDesktopOS('alpine');
             }
         });
     </script>

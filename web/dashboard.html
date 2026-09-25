@@ -421,8 +421,8 @@
                                 </div>
 
                                 <!-- Cloud Mode Live Terminal (ttyd on IDCloudHost) -->
-                                <div id="live-terminal-frame" style="display: block; width: 100%; height: 580px; border-radius: 8px; border: 1px solid rgba(16,185,129,0.4); overflow: hidden; background: #020617;">
-                                    <iframe id="terminal-iframe" src="/console/" allow="fullscreen; clipboard-read; clipboard-write;" style="width: 100%; height: 100%; min-height: 580px; border: none; background: #020617;"></iframe>
+                                <div id="live-terminal-frame" style="display: none; width: 100%; height: 580px; border-radius: 8px; border: 1px solid rgba(16,185,129,0.4); overflow: hidden; background: #020617;">
+                                    <iframe id="terminal-iframe" src="about:blank" allow="fullscreen; clipboard-read; clipboard-write;" style="width: 100%; height: 100%; min-height: 580px; border: none; background: #020617;"></iframe>
                                 </div>
 
                                 <!-- Browser WASM Mode Terminal (for Vercel / Client-side Sandbox) -->
@@ -1075,7 +1075,7 @@
             checkLiveApiHealth();
             const savedMode = localStorage.getItem('nantara_display_mode') || 'cli';
             switchDisplayMode(savedMode);
-            const savedSelected = localStorage.getItem('nantara_selected_vm') || 'win10-workstation-01';
+            const savedSelected = localStorage.getItem('nantara_selected_vm') || 'nantara-microvm-01';
             const btnStart = document.getElementById('btn-api-start-vm');
             const btnStop = document.getElementById('btn-api-stop-vm');
             if (btnStart) btnStart.innerHTML = '▶️ Start ' + savedSelected;
@@ -1089,9 +1089,11 @@
                     if (btnStop) btnStop.innerHTML = '⏹️ Stop ' + vmName;
                     const guiIframe = document.getElementById('gui-iframe');
                     if (guiIframe) {
-                        let osParam = 'windows';
+                        let osParam = 'alpine';
                         if (vmName.toLowerCase().includes('kali')) osParam = 'kali';
                         else if (vmName.toLowerCase().includes('ubuntu')) osParam = 'ubuntu';
+                        else if (vmName.toLowerCase().includes('win')) osParam = 'windows';
+                        else if (vmName.toLowerCase().includes('microvm') || vmName.toLowerCase().includes('alpine') || vmName.toLowerCase().includes('nantara')) osParam = 'alpine';
                         guiIframe.src = `desktop.html?vm=${encodeURIComponent(vmName)}&os=${osParam}`;
                     }
                 }
@@ -1101,7 +1103,7 @@
         function handleVmAction(action, targetVmName) {
             const selected = document.querySelector('input[name="vm-select"]:checked');
             const savedSelected = localStorage.getItem('nantara_selected_vm');
-            const vmName = targetVmName || (selected ? selected.value : (savedSelected || 'win10-workstation-01'));
+            const vmName = targetVmName || (selected ? selected.value : (savedSelected || 'nantara-microvm-01'));
 
             // Remember selected VM
             localStorage.setItem('nantara_selected_vm', vmName);
@@ -1145,9 +1147,11 @@
 
                 const guiIframe = document.getElementById('gui-iframe');
                 if (guiIframe) {
-                    let osParam = 'windows';
+                    let osParam = 'alpine';
                     if (vmName.toLowerCase().includes('kali')) osParam = 'kali';
                     else if (vmName.toLowerCase().includes('ubuntu')) osParam = 'ubuntu';
+                    else if (vmName.toLowerCase().includes('win')) osParam = 'windows';
+                    else if (vmName.toLowerCase().includes('microvm') || vmName.toLowerCase().includes('alpine') || vmName.toLowerCase().includes('nantara')) osParam = 'alpine';
                     guiIframe.src = `desktop.html?vm=${encodeURIComponent(vmName)}&os=${osParam}`;
                 }
             } else if (action === 'pause') {
@@ -1314,10 +1318,12 @@
             if (isRunningOnCloudServer()) {
                 window.open('/desktop/?resize=remote', '_blank');
             } else {
-                const selectedVm = localStorage.getItem('nantara_selected_vm') || 'win10-workstation-01';
-                let osParam = 'windows';
+                const selectedVm = localStorage.getItem('nantara_selected_vm') || 'nantara-microvm-01';
+                let osParam = 'alpine';
                 if (selectedVm.toLowerCase().includes('kali')) osParam = 'kali';
                 else if (selectedVm.toLowerCase().includes('ubuntu')) osParam = 'ubuntu';
+                else if (selectedVm.toLowerCase().includes('win')) osParam = 'windows';
+                else if (selectedVm.toLowerCase().includes('microvm') || selectedVm.toLowerCase().includes('alpine') || selectedVm.toLowerCase().includes('nantara')) osParam = 'alpine';
                 window.open(`desktop.html?vm=${encodeURIComponent(selectedVm)}&os=${osParam}`, '_blank');
             }
         }
@@ -1348,10 +1354,12 @@
                     if (btnTab) { btnTab.style.display = 'none'; }
                 }
             } else {
-                const selectedVm = localStorage.getItem('nantara_selected_vm') || 'win10-workstation-01';
-                let osParam = 'windows';
+                const selectedVm = localStorage.getItem('nantara_selected_vm') || 'nantara-microvm-01';
+                let osParam = 'alpine';
                 if (selectedVm.toLowerCase().includes('kali')) osParam = 'kali';
                 else if (selectedVm.toLowerCase().includes('ubuntu')) osParam = 'ubuntu';
+                else if (selectedVm.toLowerCase().includes('win')) osParam = 'windows';
+                else if (selectedVm.toLowerCase().includes('microvm') || selectedVm.toLowerCase().includes('alpine') || selectedVm.toLowerCase().includes('nantara')) osParam = 'alpine';
 
                 if (mode === 'gui') {
                     if (wasmFrame) wasmFrame.style.display = 'none';
