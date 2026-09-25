@@ -125,7 +125,8 @@ Edit file `/etc/nginx/sites-available/default`:
 ```nginx
 server {
     listen 80 default_server;
-    listen [::]:80 default_server;
+    # CATATAN PENTING: Jangan tambahkan `listen [::]:80` jika kernel VPS menonaktifkan IPv6
+    # agar Nginx tidak gagal bind (Address family not supported by protocol).
     server_name nantara.cloud www.nantara.cloud _;
 
     root /var/www/html;
@@ -135,7 +136,7 @@ server {
         try_files $uri $uri/ /dashboard.html;
     }
 
-    # Teruskan /console/ ke ttyd
+    # Teruskan /console/ ke ttyd (Terminal Bash WebSocket)
     location /console/ {
         proxy_pass http://127.0.0.1:7681/;
         proxy_http_version 1.1;
@@ -145,7 +146,7 @@ server {
         proxy_read_timeout 86400;
     }
 
-    # Teruskan /desktop/ ke noVNC
+    # Teruskan /desktop/ ke noVNC (Desktop Grafis GUI)
     location /desktop/ {
         proxy_pass http://127.0.0.1:6080/;
         proxy_http_version 1.1;
@@ -193,4 +194,77 @@ Agar website aman dengan gembok hijau (`https://`):
 sudo apt install -y certbot python3-certbot-nginx
 sudo certbot --nginx -d nantara.cloud -d www.nantara.cloud
 ```
-Certbot akan otomatis memperbarui konfigurasi Nginx dan memperpanjang sertifikat SSL secara otomatis.
+Certbot akan otomatis memperbarui konfigurasi Nginx dan memperpanjang sertifikat SSL secara berkala.
+
+---
+
+## 🌐 6. Mengatasi Google Chrome Tidak Bisa Dibuka di noVNC
+
+### Mengapa Google Chrome Awalnya Tidak Bisa Terbuka?
+Google Chrome memiliki sistem keamanan ketat bernama **Sandbox (Kernel Namespaces)**. Karena desktop GUI berjalan di dalam container Docker tanpa privilege root kernel host, Chrome mendeteksi hilangnya akses sandbox dan menolak terbuka (demi keamanan default Chromium).
+
+### Solusi 1: Buka Firefox (Sudah Terpasang & Langsung Jalan)
+Di dalam Desktop noVNC, buka menu aplikasi ➡️ **Internet** ➡️ **Firefox Web Browser**. Firefox tidak membutuhkan hak sandbox khusus di Docker dan langsung lancar membuka web.
+
+### Solusi 2: Aktifkan Google Chrome dengan Flag `--no-sandbox`
+Jika sobat ingin ikon Google Chrome di desktop langsung bisa diklik dan terbuka sempurna, jalankan perintah 1 baris ini di terminal SSH IDCloudHost:
+```bash
+sudo docker exec -u 0 nantara-desktop bash -c 'echo -e "#!/bin/bash\nexec /usr/bin/google-chrome-stable --no-sandbox \"\$@\"" > /usr/local/bin/google-chrome-stable && chmod +x /usr/local/bin/google-chrome-stable'
+```
+*Setelah menjalankan perintah di atas, klik ikon Google Chrome di desktop noVNC akan langsung membuka browser tanpa error sandbox lagi.*
+
+---
+
+## 🏛️ 7. Arsitektur Dua Edisi (Dual-Tier Architecture)
+
+NantaraVM dirancang memiliki **2 Edisi Resmi** yang saling melengkapi:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           ARSITEKTUR DUA EDISI                              │
+├──────────────────────────────────────┬──────────────────────────────────────┤
+│    🌐 EDISI 1: BROWSER WASM TIER     │    ⚡ EDISI 2: DEDICATED CLOUD TIER  │
+│    https://nantara-vm.vercel.app/    │    https://nantara.cloud/ (VPS)      │
+├──────────────────────────────────────┼──────────────────────────────────────┤
+│ • Hosting: Vercel Edge Server        │ • Hosting: IDCloudHost KVM VPS       │
+│ • Biaya: 100% Gratis Selamanya       │ • Biaya: VPS Hourly / Saldo Akun     │
+│ • Engine: WebAssembly (WASM) di RAM  │ • Engine: Hardware Kernel Ubuntu 24  │
+│ • Ketersediaan: Online 24/7/365      │ • Ketersediaan: Tergantung VPS Aktif │
+│ • Terminal: Sandbox Shell Instan     │ • Terminal: Real Root Bash (ttyd)    │
+│ • Desktop: GUI Workstation Preview   │ • Desktop: Real Container noVNC GUI  │
+│ • Cocok untuk: Demo & Edukasi Cepat  │ • Cocok untuk: Produksi & Dev Berat  │
+└──────────────────────────────────────┴──────────────────────────────────────┘
+```
+
+### Mengapa Script Instalasi (`install.ps1` & `install.sh`) Mengarah ke `nantara.cloud`?
+1. **Instalasi Lokal Butuh Server Nyata:** Saat pengguna mengunduh NantaraVM ke laptopnya melalui perintah:
+   ```powershell
+   iwr -useb https://raw.githubusercontent.com/camanit/nantara-vm/main/web/install.ps1 | iex
+   ```
+   Aplikasi CLI di laptop membutuhkan endpoint kontrol pusat untuk mengelola VM, mengambil template image OS (Ubuntu/Kali), dan berkomunikasi dengan hypervisor. Karena Vercel adalah *serverless static hosting*, Vercel tidak bisa menerima koneksi socket CLI background. Oleh karena itu, target instalasi diarahkan ke **`https://nantara.cloud/`**.
+2. **Dashboard yang Sama, Mode yang Berbeda:**
+   Dashboard NantaraVM (`dashboard.html`) dilengkapi fitur **Smart Auto-Detection**:
+   - Jika dibuka di `nantara-vm.vercel.app`, dashboard otomatis menyalakan **Mode WebAssembly**, memunculkan tombol interaktif bantuan, dan memberikan opsi beralih ke Dedicated VPS jika butuh tenaga server asli.
+   - Jika dibuka di `nantara.cloud` atau `103.226.138.53`, dashboard otomatis menyalakan **Mode Dedicated Cloud**, menghubungkan iframe terminal langsung ke `ttyd` (port 7681) dan GUI langsung ke `noVNC` (port 6080).
+
+---
+
+## 🔄 8. Cara Update File Web di VPS Jika Ada Perubahan di GitHub
+
+Jika sobat melakukan edit pada file HTML/CSS/JS di repository GitHub, cukup login ke SSH VPS dan jalankan perintah update kilat ini:
+
+```bash
+sudo git clone --depth 1 https://github.com/camanit/nantara-vm.git /tmp/nantara-update && sudo cp -r /tmp/nantara-update/web/* /var/www/html/ && sudo rm -rf /tmp/nantara-update
+```
+*Perintah ini akan langsung menyalin versi terbaru ke `/var/www/html/` tanpa mengganggu proses `ttyd` atau `Docker` yang sedang berjalan.*
+
+---
+
+## 🌐 9. Troubleshooting DNS Cache ISP / Router Rumah
+
+Jika sobat membuka `https://nantara.cloud/` tapi masih melihat tampilan 404 Vercel, jangan panik:
+* **Penyebab:** DNS router WiFi rumah (biasanya Telkom/Indihome/FirstMedia) menyimpan cache domain lama selama 2 - 4 jam (TTL).
+* **Solusi Cepat:**
+  1. Akses langsung melalui IP VPS: **`http://103.226.138.53/`**
+  2. Atau ganti DNS di Windows ke **Google DNS (`8.8.8.8`)** atau **Cloudflare (`1.1.1.1`)**.
+  3. Atau di Google Chrome: Buka **Settings** ➡️ **Privacy and security** ➡️ **Security** ➡️ Pilih **Use secure DNS** ➡️ Pilih **Cloudflare (1.1.1.1)**.
