@@ -255,8 +255,9 @@ Jika Anda ingin mendukung keberlanjutan pengembangan **NantaraVM** (Hypervisor M
 
 -
 
-**Infrastruktur Web Edge:**  
-*(Sebelumnya pada server 2GB IDCloudHost sering terjadi kehabisan RAM jika traffic tinggi. Kini seluruh web interface & dashboard telah dialihkan ke Vercel Global Edge, menjamin website selalu aktif, cepat, dan 100% andal tanpa batasan memori server).*
+**Infrastruktur Web Cloud Sovereign:**  
+*(Web interface, dashboard control plane, real web bash terminal `ttyd`, dan container workstation resmi di-deploy pada **Oracle Cloud Infrastructure Always Free (Node Singapore `sg.nantara.cloud`)** dan **IDCloudHost**, menjamin layanan selalu aktif 24/7 dengan arsitektur cloud sovereign).*
+
 
 
 <img width="60%" height="auto" alt="WhatsApp Image 2026-08-06 at 10 58 54" src="https://github.com/user-attachments/assets/885f84f9-3b0e-4c4f-af54-465ab54e129e" />
