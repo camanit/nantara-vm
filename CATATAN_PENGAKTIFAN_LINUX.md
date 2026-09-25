@@ -268,3 +268,77 @@ Jika sobat membuka `https://nantara.cloud/` tapi masih melihat tampilan 404 Verc
   1. Akses langsung melalui IP VPS: **`http://103.226.138.53/`**
   2. Atau ganti DNS di Windows ke **Google DNS (`8.8.8.8`)** atau **Cloudflare (`1.1.1.1`)**.
   3. Atau di Google Chrome: Buka **Settings** ➡️ **Privacy and security** ➡️ **Security** ➡️ Pilih **Use secure DNS** ➡️ Pilih **Cloudflare (1.1.1.1)**.
+
+---
+
+## ☁️ 10. Panduan Lengkap Oracle Cloud Always Free (Nantara Cloud Node Singapore)
+
+Bagi sobat yang menggunakan server **Oracle Cloud Infrastructure (OCI)** paket **Always Free**, berikut adalah rangkuman konfigurasi, spesifikasi, dan trik krusial yang sudah kita terapkan agar server berjalan stabil tanpa bayar selamanya:
+
+### A. Data & Spesifikasi Node Oracle Cloud
+* **Nama Instance:** `nantara-cloud`
+* **Region / Datacenter:** Singapore (`ap-singapore-1`), Availability Domain: `AD-1`
+* **Sistem Operasi:** `Canonical Ubuntu 24.04 LTS (x86_64)`
+* **Shape Compute:** `VM.Standard.E2.1.Micro` (*Always Free-eligible*)
+* **Alamat Public IP:** `140.245.106.37`
+* **Alamat Private IP:** `10.0.0.212`
+* **Default Username:** `ubuntu` *(Bukan `root` atau `caman`)*
+* **Lokasi SSH Private Key:** `C:\Users\UseR\Downloads\ssh-key-2026-09-25.key`
+
+---
+
+### B. Cara Cepat Login SSH dari Windows PowerShell
+Buka PowerShell di laptop Anda, lalu jalankan:
+```powershell
+ssh -i "$env:USERPROFILE\Downloads\ssh-key-2026-09-25.key" ubuntu@140.245.106.37
+```
+> [!TIP]
+> Jika Windows memunculkan peringatan *"Permissions are too open"*, perbaiki hak akses file key dengan perintah:
+> ```powershell
+> icacls "$env:USERPROFILE\Downloads\ssh-key-2026-09-25.key" /inheritance:r /grant:r "$($env:USERNAME):(R)"
+> ```
+
+---
+
+### C. 3 Rahasia & Gotchas Oracle Cloud (Wajib Tahu!)
+
+#### 1. Wajib Buat Swap Memory 4 GB (Mencegah OOM Crash)
+VM Oracle Micro hanya dibekali RAM fisik 1 GB. Menjalankan Docker Desktop GUI (`noVNC`) dan Chrome di atas RAM 1 GB akan memicu Linux kernel membunuh proses (*Out of Memory*). Kita sudah mengaktifkan **4 GB Swap Space** di harddisk:
+```bash
+sudo fallocate -l 4G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+```
+*Periksa dengan `free -m`. RAM total sekarang menjadi ~5 GB (1 GB fisik + 4 GB swap).*
+
+#### 2. Firewall Ganda (Double Firewall Architecture)
+Oracle Cloud memiliki 2 lapis firewall yang keduanya **wajib dibuka**:
+1. **Lapis Luar (OCI VCN Security List):**
+   - Masuk ke Console Oracle ➡️ VCN `vcn-20260926-0404` ➡️ `Security Lists` ➡️ `Default Security List`.
+   - Tambahkan Ingress Rule: Source `0.0.0.0/0`, Protocol `TCP`, Destination Port `All` (atau `80,443,7681,6080`).
+2. **Lapis Dalam (Ubuntu iptables bawaan Oracle):**
+   - OS Ubuntu versi Oracle Cloud secara default memiliki aturan `REJECT` di baris ke-5/6 yang menolak semua trafik selain SSH (Port 22).
+   - Port web harus disisipkan **sebelum** aturan reject:
+   ```bash
+   sudo iptables -I INPUT 5 -p tcp --dport 80 -j ACCEPT
+   sudo iptables -I INPUT 5 -p tcp --dport 443 -j ACCEPT
+   sudo iptables -I INPUT 5 -p tcp --dport 7681 -j ACCEPT
+   sudo iptables -I INPUT 5 -p tcp --dport 6080 -j ACCEPT
+   sudo netfilter-persistent save
+   ```
+
+#### 3. Mengaktifkan Public IP (Jika Terlewat Saat Create Instance)
+Jika saat awal membuat VM IP Publik kosong (`Not Assigned`):
+1. Buka Instance Details ➡️ Tab **Networking** ➡️ Scroll ke **Attached VNICs** ➡️ Klik `...` ➡️ **View Details**.
+2. Di tab **IP administration (IPv4 addresses)**, klik `...` pada Private IP ➡️ **Edit**.
+3. Pilih bulatan **Ephemeral public IP** ➡️ Klik **Update**.
+
+---
+
+### D. Tautan Akses Langsung Node Oracle Cloud
+* 🌐 **Web Dashboard NantaraVM:** [http://140.245.106.37/](http://140.245.106.37/)
+* 💻 **Root Web Terminal (ttyd):** [http://140.245.106.37/console/](http://140.245.106.37/console/)
+* 🖥️ **Ubuntu Desktop GUI (noVNC):** [http://140.245.106.37/desktop/](http://140.245.106.37/desktop/)
+
