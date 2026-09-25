@@ -337,8 +337,10 @@ Jika saat awal membuat VM IP Publik kosong (`Not Assigned`):
 
 ---
 
-### D. Tautan Akses Langsung Node Oracle Cloud
-* 🌐 **Web Dashboard NantaraVM:** [http://140.245.106.37/](http://140.245.106.37/)
-* 💻 **Root Web Terminal (ttyd):** [http://140.245.106.37/console/](http://140.245.106.37/console/)
-* 🖥️ **Ubuntu Desktop GUI (noVNC):** [http://140.245.106.37/desktop/](http://140.245.106.37/desktop/)
+### D. Tautan Akses Langsung Node Oracle Cloud (Resmi SSL Let's Encrypt)
+* 🔒 **Domain Resmi HTTPS (Gembok Aman):** [https://sg.nantara.cloud/](https://sg.nantara.cloud/)
+* 💻 **Web Bash Terminal (ttyd):** [https://sg.nantara.cloud/console/](https://sg.nantara.cloud/console/)
+* 🖥️ **Ubuntu Desktop noVNC GUI:** [https://sg.nantara.cloud/desktop/](https://sg.nantara.cloud/desktop/)
+* 🌐 **Akses IP Langsung:** [http://140.245.106.37/](http://140.245.106.37/)
+
 
