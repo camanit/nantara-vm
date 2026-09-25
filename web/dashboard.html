@@ -1279,6 +1279,7 @@
             const liveFrame = document.getElementById('live-terminal-frame');
             const wasmFrame = document.getElementById('wasm-terminal-frame');
             const logHostIp = document.getElementById('log-host-ip');
+            const iframe = document.getElementById('terminal-iframe');
 
             if (onCloud) {
                 if (tierTitle) tierTitle.innerHTML = '⚡ Dedicated Cloud Server Node (IDCloudHost KVM Active)';
@@ -1289,13 +1290,13 @@
                 }
                 if (tierDesc) tierDesc.innerHTML = 'Node komputasi berjalan di <strong>Cloud VPS IDCloudHost (IP: 103.226.138.53)</strong> dengan hardware kernel Ubuntu 24.04, Docker Desktop noVNC, & terminal live <code>ttyd</code>.';
                 if (tierBtn) {
-                    tierBtn.href = 'https://nantara-vm.vercel.app/dashboard.html';
-                    tierBtn.innerHTML = '🌐 Coba Browser WASM Playground (Free Vercel) ↗';
-                    tierBtn.style.background = 'rgba(255,255,255,0.08)';
-                    tierBtn.style.border = '1px solid rgba(255,255,255,0.2)';
+                    tierBtn.style.display = 'none';
                 }
                 if (liveFrame) liveFrame.style.display = 'block';
                 if (wasmFrame) wasmFrame.style.display = 'none';
+                if (iframe && (!iframe.src || iframe.src === 'about:blank')) {
+                    iframe.src = '/console/';
+                }
             } else {
                 if (tierTitle) tierTitle.innerHTML = '🌐 Edisi Browser WebAssembly (WASM Playground Edition)';
                 if (tierPill) {
